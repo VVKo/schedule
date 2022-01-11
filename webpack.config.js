@@ -242,6 +242,7 @@ const serverConfig = {
   // server config can't use 'development' mode
   // https://github.com/fossamagna/gas-webpack-plugin/issues/135
   mode: isProd ? 'production' : 'none',
+
   entry: serverEntry,
   output: {
     filename: 'code.js',

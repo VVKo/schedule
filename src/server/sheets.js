@@ -1,23 +1,33 @@
 const BEGIN_SECOND_SEM = {
-  "1": new Date(2021, 0, 10), // 11.01.2021
-  "2": new Date(2021, 0, 10), // 11.01.2021
-  "3": new Date(2021, 1, 0), // 01.02.2021
-  "4": new Date(2021, 1, 0) // 01.02.2021
+  '1': new Date(2021, 0, 10), // 11.01.2021
+  '2': new Date(2021, 0, 10), // 11.01.2021
+  '3': new Date(2021, 1, 0), // 01.02.2021
+  '4': new Date(2021, 1, 0), // 01.02.2021
+};
+
+const MAINID = '1gnuWvvaO0xrobmb44Pj_VfMiGIEyeXORIzuE8dzTIAw';
+
+export const getListOfPidrozdils = () => {
+  const ss = SpreadsheetApp.openById(MAINID);
+  const ws = ss.getSheetByName('Монітор');
+  const data = ws.getRange(2, 1, ws.getLastRow() - 1, 2).getValues();
+
+  return data;
 };
 
 const getSemestrLengh = group => {
   switch (group.slice(0, 1)) {
-    case "1":
+    case '1':
       return 23;
       break;
-    case "2":
+    case '2':
       return 18;
       break;
-    case "3":
-      return "234".indexOf(group.slice(2, 3)) !== -1 ? 15 : 18;
+    case '3':
+      return '234'.indexOf(group.slice(2, 3)) !== -1 ? 15 : 18;
       break;
-    case "4":
-      return "234".indexOf(group.slice(2, 3)) !== -1 ? 12 : 14;
+    case '4':
+      return '234'.indexOf(group.slice(2, 3)) !== -1 ? 12 : 14;
       break;
     default:
       break;
@@ -68,16 +78,16 @@ const getDateByGroup = (group, day, week, para) => {
   const d = new Date();
 
   switch (group.slice(0, 1)) {
-    case "1":
+    case '1':
       return paraToDate(para, d) + new Date(2021, 0, 10 + 7 * (week + 1) + day);
       break;
-    case "2":
+    case '2':
       return paraToDate(para, d) + new Date(2021, 0, 10 + 7 * (week + 1) + day);
       break;
-    case "3":
+    case '3':
       return paraToDate(para, d) + new Date(2021, 1, 0 + 7 * week + day);
       break;
-    case "4":
+    case '4':
       {
         d.setFullYear(2021, 1, 1 + 7 * week + day);
 
@@ -86,7 +96,7 @@ const getDateByGroup = (group, day, week, para) => {
       break;
 
     default:
-      return "fuck";
+      return 'fuck';
   }
 };
 
@@ -101,7 +111,7 @@ export const getSheetsData = () => {
     return {
       name,
       index,
-      isActive: name === activeSheetName
+      isActive: name === activeSheetName,
     };
   });
 };
@@ -126,9 +136,9 @@ export const setActiveSheet = sheetName => {
 
 export const getDataForGroup = group => {
   const rozklad = SpreadsheetApp.openById(
-    "1x6ydHcq-_4FknK9_ivkKV_sb9-a1BqTmyFY04VIZSks" // розклад на 2-й семестр
+    '1x6ydHcq-_4FknK9_ivkKV_sb9-a1BqTmyFY04VIZSks' // розклад на 2-й семестр
   );
-  const ws = rozklad.getSheetByName("2 семестр");
+  const ws = rozklad.getSheetByName('2 семестр');
   const data = ws
     .getDataRange()
     .getValues()
@@ -140,32 +150,32 @@ export const getDataForGroup = group => {
 
 const checkEmailModulni = email => {
   const sh = SpreadsheetApp.openById(
-    "1zv7A0FLqs_XWkDZVQNcejpFog_AfjJsOR89Q4lbL2lw" // Для сайту
+    '1zv7A0FLqs_XWkDZVQNcejpFog_AfjJsOR89Q4lbL2lw' // Для сайту
   );
 
-  const workSheet = sh.getSheetByName("rozklad");
+  const workSheet = sh.getSheetByName('rozklad');
   const rozklad = SpreadsheetApp.openById(
-    "1x6ydHcq-_4FknK9_ivkKV_sb9-a1BqTmyFY04VIZSks" // розклад на 2-й семестр
+    '1x6ydHcq-_4FknK9_ivkKV_sb9-a1BqTmyFY04VIZSks' // розклад на 2-й семестр
   );
-  const ws = rozklad.getSheetByName("2 семестр");
+  const ws = rozklad.getSheetByName('2 семестр');
   const data = ws.getDataRange().getValues();
   const kontSS = SpreadsheetApp.openById(
-    "1TBemg3McWhT44vZpEDTjj5Aqq2uor4fJW2fb0-xNx80"
+    '1TBemg3McWhT44vZpEDTjj5Aqq2uor4fJW2fb0-xNx80'
   );
-  const kontSheet = kontSS.getSheetByName("Студенти");
+  const kontSheet = kontSS.getSheetByName('Студенти');
   const students = kontSheet
     .getRange(2, 1, kontSheet.getLastRow() - 1, 12)
     .getValues()
     .map(r => [r[0], r[1], r[11]]);
   const prepodData = {};
-  return email === "nat_dep_clg@chnu.edu.ua"
-    ? { isLogined: true, email, data, students, role: "Супер адмін" }
+  return email === 'nat_dep_clg@chnu.edu.ua'
+    ? { isLogined: true, email, data, students, role: 'Супер адмін' }
     : {
         isLogined: true,
         email,
         data,
         students,
-        role: prepodData.length === 0 ? "guest" : "Спостерігач ;)"
+        role: prepodData.length === 0 ? 'guest' : 'Спостерігач ;)',
       };
 };
 
@@ -181,95 +191,108 @@ const minusSevenHours = data => {
   return new Date(data.getTime() - 7 * 60 * 60 * 1000);
 };
 
-export const updateRozklad = obj => {
-  const rozklad = SpreadsheetApp.openById(
-    "1x6ydHcq-_4FknK9_ivkKV_sb9-a1BqTmyFY04VIZSks" // розклад на 2-й семестр
-  );
-  const ws = rozklad.getSheetByName("2 семестр");
+const updateRooms = obj => {
+  const stepOldRoom = obj.allrooms.indexOf(obj.oldRoom);
+  const stepNewRoom = obj.allrooms.indexOf(obj.newRoom);
 
-  ws.getRange(Number(obj.row), Number(obj.col)).setValue(obj.aud);
-
-  const groups = [
-    ...new Set(
-      ws
-        .getRange(Number(obj.row), 2)
-        .getValue()
-        .split("+")
-        .map(gr => `${gr.slice(0, 3)} група`)
-    )
-  ].sort();
-  const disc = ws
-    .getRange(Number(obj.row), 1)
-    .getValue()
-    .split("(")[0];
-  const type = ws.getRange(Number(obj.row), 3).getValue();
-  const prepod = ws.getRange(Number(obj.row), 5).getValue();
-  const day = ((Number(obj.col) - 8) / 16) >> 0; // 0 - mon, 1 - tue,...
-  const para = (((Number(obj.col) - 8) % 16) / 2) >> 0;
-  const week = (((Number(obj.col) - 8) % 16) % 2) - 1;
-  console.log(groups);
-  groups.forEach((gro, idx) => {
-    const calID = getOrCrateCalendar(gro);
-    const cal = CalendarApp.getCalendarById(calID);
-    cal.setTimeZone("Europe/Kiev");
-    const duration = getSemestrLengh(gro);
-    console.log(
-      getDateByGroup(gro, day, week, para),
-      disc,
-      prepod,
-      day,
-      para,
-      week,
-      obj.aud
-    );
-
-    const beginEvent = getDateByGroup(gro, day, week, para);
-    const endEvent = new Date(
-      getDateByGroup(gro, day, week, para).getTime() + 80 * 60 * 1000
-    );
-
-    const events = cal.getEvents(beginEvent, endEvent);
-    console.log(events.length, events);
-
-    if (obj.aud === "") {
-      events.forEach((ev, idxn) => {
-        if (ev.getDescription().includes([type, prepod].join("\n"))) {
-          cal.getEventSeriesById(ev.getId()).deleteEventSeries();
-        }
-      });
-    } else {
-      const eventSer = cal.createEventSeries(
-        disc,
-        beginEvent,
-        endEvent,
-        CalendarApp.newRecurrence()
-          .addWeeklyRule()
-          .interval(2)
-          .times(((duration - week) / 2) >> 0),
-        {
-          location: `${obj.aud}`,
-          description: [type, prepod].join("\n"),
-          guests: "v.kovdrysh@chnu.edu.ua",
-          sendInvites: false
-        }
-      );
-      eventSer
-        .setAnyoneCanAddSelf(false)
-        .setGuestsCanInviteOthers(false)
-        .setGuestsCanSeeGuests(false);
-      const apiGet = Calendar.Events.list(calID);
-      console.log("apiGet", apiGet);
-      console.log("eventSer", eventSer.toString(), eventSer.getId());
-    }
-  });
-
-  return "done";
+  switch (obj.newRoom) {
+    case '':
+      if (stepOldRoom > -1)
+        obj.sheet.getRange(obj.col - 5, 4 + stepOldRoom).clear();
+      break;
+    default:
+      if (stepOldRoom > -1)
+        obj.sheet.getRange(obj.col - 5, 4 + stepOldRoom).clear();
+      if (stepNewRoom > -1)
+        obj.sheet
+          .getRange(obj.col - 5, 4 + stepNewRoom)
+          .setHorizontalAlignment('center')
+          .setVerticalAlignment('middle')
+          .setFontFamily('Times New Roman')
+          .setFontSize(10)
+          .setFontWeight('bold')
+          .setBorder(
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            'black',
+            SpreadsheetApp.BorderStyle.SOLID
+          )
+          .setBackground('red')
+          .setFontColor('black')
+          .setValue(obj.text);
+      break;
+  }
 };
 
-export const getUserForRozklad = () => {
-  const userEmail = Session.getActiveUser().getEmail();
-  if (userEmail === "")
-    return { isLogined: false, email: userEmail, role: "guest", data: [] };
+export const updateRozklad = obj => {
+  const rozklad = SpreadsheetApp.openById(obj.table.id);
 
-  return checkEmailModulni(userEmail);
+  const ws = rozklad.getSheetByName(obj.table.pidrozdil);
+  const audFond = rozklad.getSheetByName('Зайнятість аудиторій');
+  const allrooms = audFond
+    .getRange(3, 4, 1, audFond.getLastColumn() - 3)
+    .getValues()[0];
+  const oldRoom = ws.getRange(Number(obj.row), Number(obj.col)).getValue();
+  const newRoom = obj.aud;
+  const group = ws.getRange(Number(obj.row), 2).getValue();
+  const subj = ws.getRange(Number(obj.row), 1).getValue();
+  const subj_type = ws.getRange(Number(obj.row), 3).getValue();
+  const text = `${subj_type}\n${group}\n${subj}`;
+
+  ws.getRange(Number(obj.row), Number(obj.col)).setValue(obj.aud);
+  updateRooms({
+    allrooms,
+    oldRoom,
+    newRoom,
+    text,
+    row: Number(obj.row),
+    col: Number(obj.col),
+    sheet: audFond,
+  });
+};
+
+export const getDataForPidrozdil = pidrozdil => {
+  const userEmail = Session.getActiveUser().getEmail();
+  if (userEmail === '')
+    return {
+      isLogined: false,
+      email: userEmail,
+      role: 'guest',
+      data: [],
+      list: [],
+    };
+
+  const ss = SpreadsheetApp.openById(MAINID);
+  const ws = ss.getSheetByName('Монітор');
+  const row = ws
+    .getRange(2, 1, ws.getLastRow() - 1, 3)
+    .getValues()
+    .filter(r => r[0] === pidrozdil)[0];
+
+  const rozklad = SpreadsheetApp.openById(row[1]);
+  const workSheet = rozklad.getSheetByName(row[0]);
+  const data = workSheet.getDataRange().getValues();
+
+  const rooms = {};
+  const roomsSheet = rozklad.getSheetByName('Аудиторний фонд');
+  const roomsData = roomsSheet
+    .getRange(1, 1, roomsSheet.getLastRow(), 3)
+    .getValues();
+  const labs = roomsData.map(r => r[0]).filter(r => r.toString() !== '');
+  rooms[labs[0]] = labs.slice(1);
+  const others = roomsData.map(r => r[2]).filter(r => r.toString() !== '');
+  rooms[others[0]] = others.slice(1);
+  return {
+    isLogined: true,
+    email: userEmail,
+    data,
+    rooms,
+    students: [],
+    role: row[2].includes(userEmail) ? 'Супер адмін' : 'Спостерігач ;)',
+    table: { id: row[1], pidrozdil: row[0] },
+  };
 };

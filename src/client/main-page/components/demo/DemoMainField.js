@@ -1,13 +1,11 @@
-import React from "react";
+import React from 'react';
 
 const DemoMainField = props => {
-  console.log("Demo", props);
+  console.log('Demo', props);
   return (
     <>
       <h1>ВІТАЮ Вас, дорогий Госте</h1>
-      <p>
-        Нажаль, ...
-      </p>
+      <p>Нажаль, ...</p>
     </>
   );
 };

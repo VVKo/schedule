@@ -1,25 +1,51 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import { BrowserRouter } from "react-router-dom";
-import NavBar from "./dashboard/NavBar";
-import MainField from "./dashboard/MainField";
+import { BrowserRouter } from 'react-router-dom';
+import NavBar from './dashboard/NavBar';
+import MainField from './dashboard/MainField';
+
+import server from '../../utils/server';
+
+const { serverFunctions } = server;
 
 const App = () => {
   const [state, setState] = useState({
     isLogined: false,
-    accessToken: "",
-    email: "",
-    name: "",
-    role: "guest",
-    data: []
+    accessToken: '',
+    email: '',
+    name: '',
+    role: 'guest',
+    data: [],
+    list: [],
   });
-  const [ssss, setSs] = useState("");
+  useEffect(() => {
+    serverFunctions
+      .getListOfPidrozdils()
+      .then(res => {
+        setState(prevState => {
+          const tmp = { ...prevState };
+          tmp.list = res;
+
+          return tmp;
+        });
+      })
+      .catch(alert);
+  }, []);
+
+  const [ssss, setSs] = useState('');
 
   const handleSideBar = from => {
     setSs(from);
   };
   const getLogoutState = st => {
-    setState({ ...st });
+    serverFunctions
+      .getListOfPidrozdils()
+      .then(res => {
+        const tmp = { ...st };
+        tmp.list = res;
+        setState(tmp);
+      })
+      .catch(alert);
   };
 
   const getLoginState = st => {
@@ -27,12 +53,13 @@ const App = () => {
   };
 
   const updateData = obj => {
+    console.log('==================updateData have done');
     setState(prevState => {
       const tmp = { ...prevState };
       tmp.data[Number(obj.row) - 1][Number(obj.col) - 1] = obj.aud;
       tmp.data[Number(obj.row) - 1][7] = tmp.data[Number(obj.row) - 1]
         .slice(8)
-        .filter(r => r !== "").length;
+        .filter(r => r !== '').length;
       return tmp;
     });
   };

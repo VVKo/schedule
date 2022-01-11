@@ -1,42 +1,58 @@
-import React, { useEffect, useState } from "react";
-import { Route, Switch } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Route, Switch } from 'react-router-dom';
 
-import GroupRozklad from "../rozklad/GroupRozklad";
-import Home from "../demo/Home";
+import GroupRozklad from '../rozklad/GroupRozklad';
+import Home from '../demo/Home';
+import Rooms from '../rozklad/Rooms';
 
 const RoutMaker = props => {
-  console.log("RoutMaker", props);
+  console.log('RoutMaker render', props);
   const [DATA, setDATA] = useState(props.state.data);
 
-  const allStudents = props.state.students;
-
   useEffect(() => {
-    console.log("DATA was Changed");
-  }, [DATA]);
+    console.log('DATA was Changed');
+    setDATA(props.state.data);
+  }, [props]);
 
-  const changeData = obj => {
-    console.log("changeData was called");
-    setDATA(prevState => {
-      const tmp = prevState;
-      tmp[Number(obj.row) - 1][Number(obj.col) - 1] = obj.aud;
-      return tmp;
-    });
-  };
+  // const classrooms = {
+  //   'Лаб.': DATA.map(r => r[88])
+  //     .filter(r => r !== '')
+  //     .slice(2),
+  //   інші: DATA.map(r => r[89])
+  //     .filter(r => r !== '')
+  //     .slice(2),
+  // };
 
-  const teachers = [...new Set(DATA.map(r => r[4]))]
+  const classrooms = props.state.rooms;
+
+  const rooms = new Set();
+
+  DATA.slice(6).map(r =>
+    r
+      .slice(8)
+      .filter(ro => ro.toString() !== '')
+      .forEach(aud => rooms.add(aud))
+  );
+
+  const allrooms = [...rooms].sort().filter(r => r !== '');
+
+  const allStudents = props.state.students;
+  const workTable = props.state.table;
+
+  const teachers = [...new Set(DATA.slice(5).map(r => r[4].trim()))]
     .sort()
-    .filter(r => r !== "");
+    .filter(r => r !== '');
 
   const groups = [
     ...new Set(
-      DATA.map(r => r[1].split("+"))
-        .join(",")
-        .split(",")
-        .map(r => r.slice(0, 3))
-    )
+      DATA.map(r => r[1].split('+'))
+        .join(',')
+        .split(',')
+        .map(r => r.split('гр')[0])
+    ),
   ]
     .sort()
-    .filter(r => r !== "");
+    .filter(r => r !== '');
 
   return (
     <Switch>
@@ -47,13 +63,15 @@ const RoutMaker = props => {
             render={RouteProps => {
               return (
                 <GroupRozklad
-                  changeDATA={changeData}
                   updateData={props.updateData}
                   gr={value}
                   role={props.state.role}
                   {...RouteProps}
                   fulldata={DATA.map((val, inx) => [inx, ...val])}
                   students={allStudents}
+                  workTable={workTable}
+                  classrooms={classrooms}
+                  groups={groups}
                 />
               );
             }}
@@ -69,9 +87,35 @@ const RoutMaker = props => {
             render={RouteProps => {
               return (
                 <GroupRozklad
-                  changeDATA={changeData}
                   updateData={props.updateData}
                   gr={value}
+                  role={props.state.role}
+                  {...RouteProps}
+                  fulldata={DATA.map((val, inx) => [inx, ...val])}
+                  workTable={workTable}
+                  classrooms={classrooms}
+                  groups={groups}
+                />
+              );
+            }}
+            path={path}
+            key={idx + 1}
+          />
+        );
+      })}
+
+      {allrooms.map((value, idx) => {
+        const path = `/rooms/${value
+          .replace(' ', '-')
+          .replace('.', '')
+          .replace('(', '-')
+          .replace(')', '-')}`;
+        return (
+          <Route
+            render={RouteProps => {
+              return (
+                <Rooms
+                  room={value}
                   role={props.state.role}
                   {...RouteProps}
                   fulldata={DATA.map((val, inx) => [inx, ...val])}
@@ -83,11 +127,12 @@ const RoutMaker = props => {
           />
         );
       })}
+
       <Route
         render={RouteProps => {
           return <Home {...RouteProps} />;
         }}
-        path={"/"}
+        path={'/'}
       />
     </Switch>
   );

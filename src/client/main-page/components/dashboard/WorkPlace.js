@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
-import DemoMainField from "../demo/DemoMainField";
-import LoginCrutch from "../auth/LoginCrutch";
-import RoutMaker from "../router/RoutMaker";
+import React, { useEffect, useState } from 'react';
+import DemoMainField from '../demo/DemoMainField';
+import LoginCrutch from '../auth/LoginCrutch';
+import RoutMaker from '../router/RoutMaker';
 
 const WorkPlace = props => {
-  console.log("WorkPlace", props);
-
   const [showside, setShow] = useState(props.state.sideBarState);
   useEffect(() => {
-    console.log("props side bar");
     props.state.sidebarHandler(showside);
   }, [showside]);
 
@@ -20,7 +17,7 @@ const WorkPlace = props => {
     <>
       {!props.state.state.isLogined ? (
         <LoginCrutch login={props}></LoginCrutch>
-      ) : props.state.state.role !== "guest" ? (
+      ) : props.state.state.role !== 'guest' ? (
         <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-md-4">
           <RoutMaker
             state={props.state.state}
