@@ -1,3 +1,5 @@
+import { MAINID } from './utils/utils';
+
 const BEGIN_SECOND_SEM = {
   '1': new Date(2021, 0, 10), // 11.01.2021
   '2': new Date(2021, 0, 10), // 11.01.2021
@@ -5,15 +7,7 @@ const BEGIN_SECOND_SEM = {
   '4': new Date(2021, 1, 0), // 01.02.2021
 };
 
-const MAINID = '1gnuWvvaO0xrobmb44Pj_VfMiGIEyeXORIzuE8dzTIAw';
 
-export const getListOfPidrozdils = () => {
-  const ss = SpreadsheetApp.openById(MAINID);
-  const ws = ss.getSheetByName('Монітор');
-  const data = ws.getRange(2, 1, ws.getLastRow() - 1, 2).getValues();
-
-  return data;
-};
 
 const getSemestrLengh = group => {
   switch (group.slice(0, 1)) {

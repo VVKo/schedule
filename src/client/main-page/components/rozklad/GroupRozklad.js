@@ -5,6 +5,44 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import OnClickRozklad from '../helper/OnClickRozklad';
 
 import PrettyCardOfLesson from './PrettyCardOfLesson';
+import Schedule from "../schedule/Schedule";
+
+
+const lorem =
+    "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Laboriosam, sed iure blanditiis voluptatum nulla quidem minus quam tempora obcaecati necessitatibus inventore! Vitae totam quam pariatur facilis fugit maxime adipisci eaque.";
+
+const data = [
+  {
+    id: Math.random(),
+    title: "ПОНЕДІЛОК",
+    text: lorem,
+    bgColor: "#D5CAFA"
+  },
+  {
+    id: Math.random(),
+    title: "ВІВТОРОК",
+    text: lorem,
+    bgColor: "#EDA9A9"
+  },
+  {
+    id: Math.random(),
+    title: "СЕРЕДА",
+    text: lorem,
+    bgColor: "#F2EE8D"
+  },
+  {
+    id: Math.random(),
+    title: "ЧЕТВЕР",
+    text: lorem,
+    bgColor: "#9FEACD"
+  },
+  {
+    id: Math.random(),
+    title: "П`ЯТНИЦЯ",
+    text: lorem,
+    bgColor: "#900ACD"
+  }
+];
 
 const GroupRozklad = props => {
   const CLASSROOMS = { ...props.classrooms };
@@ -390,6 +428,7 @@ const GroupRozklad = props => {
       {/*    })} */}
       {/*  </Form.Control> */}
       {/* </Form.Group> */}
+
       <BootstrapTable
         wrapperClasses="responsive"
         keyField="id"
@@ -415,6 +454,9 @@ const GroupRozklad = props => {
           {/*</div>*/}
         </>
       ) : null}
+
+
+      <Schedule boxData={data}/>
     </>
   );
 };

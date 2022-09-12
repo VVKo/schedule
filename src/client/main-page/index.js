@@ -1,7 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import "./styles.css";
-import App from "./components/App";
+import './styles.css';
+import App from './components/App';
+import Main from './components/Main';
 
-ReactDOM.render(<App />, document.getElementById("index"));
+ReactDOM.render(<Main />, document.getElementById('index'));
