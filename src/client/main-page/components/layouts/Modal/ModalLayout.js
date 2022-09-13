@@ -1,17 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import RozkladContext from '../../../context/RozkladContext';
+import SetModalBody from './SetModalBody';
 
 const ModalLayout = () => {
   const { showModal, setShowModal, dataForModal } = useContext(RozkladContext);
 
-  const SetBody = () => {
-    return dataForModal.body.func !== ''
-      ? dataForModal.body.func({
-          ...dataForModal.body.data,
-        })
-      : null;
-  };
+  console.log('dataForModal', dataForModal)
 
   const handleCloseModal = () => setShowModal(false);
 
@@ -28,7 +23,7 @@ const ModalLayout = () => {
           <Modal.Title>{dataForModal.title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <SetBody />
+          <SetModalBody />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>

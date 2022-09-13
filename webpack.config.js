@@ -82,6 +82,9 @@ const copyFilesConfig = {
 // webpack settings used by both client and server
 const sharedClientAndServerConfig = {
   context: __dirname,
+  // externals: {
+  //   'react-toastify': 'Toastify'
+  // },
 };
 
 // webpack settings used by all client entrypoints
@@ -143,13 +146,13 @@ const DynamicCdnWebpackPluginConfig = {
     // "name" should match the package being imported
     // "var" is important to get right -- this should be the exposed global. Look up "webpack externals" for info.
     switch (packageName) {
-      case 'react-transition-group':
-        return {
-          name: packageName,
-          var: 'ReactTransitionGroup',
-          version: packageVersion,
-          url: `https://unpkg.com/react-transition-group@${packageVersion}/dist/react-transition-group${packageSuffix}`,
-        };
+      // case 'react-transition-group':
+      //   return {
+      //     name: packageName,
+      //     var: 'ReactTransitionGroup',
+      //     version: packageVersion,
+      //     url: `https://unpkg.com/react-transition-group@${packageVersion}/dist/react-transition-group${packageSuffix}`,
+      //   };
       case 'react-bootstrap':
         return {
           name: packageName,
@@ -157,6 +160,13 @@ const DynamicCdnWebpackPluginConfig = {
           version: packageVersion,
           url: `https://unpkg.com/react-bootstrap@${packageVersion}/dist/react-bootstrap${packageSuffix}`,
         };
+      // case 'react-toastify':
+      //   return {
+      //     name: packageName,
+      //     var: 'ReactToastify',
+      //     version: packageVersion,
+      //     url: `https://unpkg.com/react-toastify@${packageVersion}/dist/react-toastify.esm.js`,
+      //   };
       default:
         return null;
     }
@@ -314,6 +324,7 @@ const serverConfig = {
 };
 
 module.exports = [
+
   // 1. Copy appsscript.json to destination,
   // 2. Set up webpack dev server during development
   // Note: devServer settings are only read in the first element when module.exports is an array

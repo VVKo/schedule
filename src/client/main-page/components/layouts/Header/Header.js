@@ -13,21 +13,25 @@ import RozkladContext from '../../../context/RozkladContext';
 const CHeader = ({ text }) => {
   const { data, saveToServer, change } = useContext(RozkladContext);
   return (
-    <StyledNavbar>
-      <a href="#">
-        <h1 className="header"> {text} </h1>
-        <UpdateButtonServer onClick={saveToServer} change={change}>
-          <ImFloppyDisk/>
-        </UpdateButtonServer>
-        <ShareButtonServer>
-          <FaShare />
-        </ShareButtonServer>
-      </a>
-      {data && <GuestPanel />}
-      {/*<UpdateButtonServer onClick={saveToServer} change={change}>*/}
-      {/*  Зберегти дані на сервері*/}
-      {/*</UpdateButtonServer>*/}
-    </StyledNavbar>
+    <>
+      <StyledNavbar>
+        <a href="#">
+          <h1 className="header"> {text} </h1>
+          <UpdateButtonServer onClick={saveToServer} change={change}>
+            <ImFloppyDisk />
+          </UpdateButtonServer>
+          <ShareButtonServer>
+            <FaShare />
+          </ShareButtonServer>
+        </a>
+        {data && <GuestPanel />}
+        {/* <UpdateButtonServer onClick={saveToServer} change={change}> */}
+        {/*  Зберегти дані на сервері */}
+        {/* </UpdateButtonServer> */}
+
+      </StyledNavbar>
+
+    </>
   );
 };
 

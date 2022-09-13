@@ -1,18 +1,23 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useReducer } from 'react';
 
 import server from '../../utils/server';
+import rozkladReducer from './RozkladReducer';
 
 const { serverFunctions } = server;
 
 const RozkladContext = createContext();
 
 export const RozkladProvider = ({ children }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [dataForModal, setDataForModal] = useState({
-    title: 'title',
-    size: 'xl',
-    body: { func: '', data: {} },
-  });
+  const initState = {
+    showModal: false,
+    loading: false,
+    dataForModal: {
+      title: 'title',
+      size: 'xl',
+      body: { func: '', data: {} },
+    },
+  };
+
   const [groupsWeek, setGroupsWeek] = useState(null);
   const [teachersWeek, setTeachersWeek] = useState(null);
 
@@ -40,6 +45,13 @@ export const RozkladProvider = ({ children }) => {
   const [currentTeachers, setCurrentTeachers] = useState([]);
   const [scheduleKey, setScheduleKey] = useState('');
 
+  const [state, dispatch] = useReducer(rozkladReducer, initState);
+
+  const setShowModal = val => dispatch({ type: 'SET_SHOWMODAL', payload: val });
+  const setDataForModal = obj =>
+    dispatch({ type: 'SET_DATAFORMODAL', payload: obj });
+  const setLoading = msg => dispatch({ type: 'SET_LOADING', payload: { msg } });
+
   useEffect(() => {
     setChange(prev => {
       if (flagOfChanges === 0) return false;
@@ -48,16 +60,21 @@ export const RozkladProvider = ({ children }) => {
   }, [flagOfChanges]);
 
   useEffect(() => {
-    // if (!isMounted) {
+    setLoading('Завантажуємо інформацію про підрозділи...');
     serverFunctions
       .getListOfPidrozdilsJSON()
       .then(res => {
         setDepartmentList(JSON.parse(res));
         setDataLoaded(true);
+        dispatch({
+          type: 'UPDATE',
+          payload: {
+            loading: false,
+            status: 'інформацію про підрозділи завантажено',
+          },
+        });
       })
       .catch(alert);
-    // }
-    // return () => setIsMounted(prevState => !prevState);
   }, []);
 
   function getWeekFromData(localdata, sem, val, key, day, para, w) {
@@ -110,6 +127,7 @@ export const RozkladProvider = ({ children }) => {
     return tmp.week;
   }
   const getUserData = obj => {
+    setLoading('Будь ласка, зачекайте...');
     setDataLoaded(false);
     serverFunctions
       .getUserData(obj)
@@ -118,6 +136,10 @@ export const RozkladProvider = ({ children }) => {
         console.log('dataObj', dataObj);
         setDataLoaded(true);
         setUser(dataObj.user);
+        dispatch({
+          type: 'INFO',
+          payload: { loading: true, status: 'Дані про користувача' },
+        });
         setData(dataObj.data.staff);
         setGroupsWeek(() => {
           const tmp = { '1 семестр': {}, '2 семестр': {} };
@@ -161,6 +183,10 @@ export const RozkladProvider = ({ children }) => {
         });
 
         setDataLoaded(true);
+        dispatch({
+          type: 'UPDATE',
+          payload: { loading: false, status: 'Усі дані завантажено' },
+        });
       })
       .catch(alert);
   };
@@ -237,12 +263,6 @@ export const RozkladProvider = ({ children }) => {
   useEffect(() => {
     handleChangePanel();
   }, [publicPanel]);
-
-  // const showButton = () => {
-  //   const { semester, group, teacher } = publicPanel;
-  //
-  //   console.log('реалізовуємо показ розкладу', { semester, group, teacher });
-  // };
 
   const removeAudFromLocalData = obj => {
     const { semester } = publicPanel;
@@ -390,9 +410,9 @@ export const RozkladProvider = ({ children }) => {
         getUserData,
         // showButton,
         setPublicPanel,
-        showModal,
+        showModal: state.showModal,
         setShowModal,
-        dataForModal,
+        dataForModal: state.dataForModal,
         setDataForModal,
         currentGroups,
         setCurrentGroups,
@@ -407,13 +427,6 @@ export const RozkladProvider = ({ children }) => {
         saveToServer,
         setJsonID,
         isDataLoaded,
-        // feedback,
-        // feedbackEdit,
-        // isLoading,
-        // deleteFeedback,
-        // addFeedback,
-        // editFeedback,
-        // updateFeedback,
       }}
     >
       {children}
