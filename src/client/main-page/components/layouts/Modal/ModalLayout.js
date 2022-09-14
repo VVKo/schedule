@@ -1,12 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import RozkladContext from '../../../context/RozkladContext';
 import SetModalBody from './SetModalBody';
 
 const ModalLayout = () => {
   const { showModal, setShowModal, dataForModal } = useContext(RozkladContext);
-
-  console.log('dataForModal', dataForModal)
 
   const handleCloseModal = () => setShowModal(false);
 

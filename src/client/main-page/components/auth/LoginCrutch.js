@@ -4,7 +4,6 @@ import {
   Container,
   DropdownButton,
   Dropdown,
-  Jumbotron,
   Form,
   Spinner,
 } from 'react-bootstrap';
@@ -38,7 +37,7 @@ const LoginCrutch = props => {
     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-md-4">
       <Container>
         {!isLoading ? (
-          <Jumbotron>
+          <Container>
             {props.login.state.state.accessToken !== '' ? (
               <DemoMainField />
             ) : null}
@@ -71,7 +70,7 @@ const LoginCrutch = props => {
                 'до розкладу'
               )}
             </Button>
-          </Jumbotron>
+          </Container>
         ) : (
           <Spinner animation="border" role="status">
             <span className="sr-only">Loading...</span>

@@ -40,6 +40,20 @@ const rozkladReducer = (state, action) => {
         ...state,
         dataForModal: action.payload,
       };
+    case 'GETAUD':
+      return {
+        ...state,
+        audfond: {
+          ...state.audfond,
+          [action.payload.sem]: action.payload.data,
+        },
+      };
+
+    case 'SET_XLSID':
+      return {
+        ...state,
+        xlsID: action.payload,
+      };
     default:
       return state;
   }

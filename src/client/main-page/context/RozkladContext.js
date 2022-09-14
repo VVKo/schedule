@@ -2,14 +2,20 @@ import React, { createContext, useState, useEffect, useReducer } from 'react';
 
 import server from '../../utils/server';
 import rozkladReducer from './RozkladReducer';
+import getData from '../data/Utils';
 
 const { serverFunctions } = server;
 
 const RozkladContext = createContext();
 
+const rozkladChNU_API =
+  'https://script.google.com/macros/s/AKfycbzoA4QFY3CH5ah_HkTRPoIAydi7SPptYyq4PxMzxdg6i13_vGWjKnX39FPp0ILxB9c/exec';
+
 export const RozkladProvider = ({ children }) => {
   const initState = {
     showModal: false,
+    xlsID: '',
+    audfond: { '1 семестр': [], '2 семестр': [] },
     loading: false,
     dataForModal: {
       title: 'title',
@@ -48,9 +54,60 @@ export const RozkladProvider = ({ children }) => {
   const [state, dispatch] = useReducer(rozkladReducer, initState);
 
   const setShowModal = val => dispatch({ type: 'SET_SHOWMODAL', payload: val });
+  const setXlsId = id => dispatch({ type: 'SET_XLSID', payload: id });
   const setDataForModal = obj =>
     dispatch({ type: 'SET_DATAFORMODAL', payload: obj });
   const setLoading = msg => dispatch({ type: 'SET_LOADING', payload: { msg } });
+
+  const deleteRowAud = (sem, id, row) => {
+    setLoading('Робота з серевером ...');
+    getData(
+      `${rozkladChNU_API}?action=DELETEROWAUD&&sem=${sem}&xlsID=${id}&row=${row}`
+    ).then(data => {
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: 'Аудиторію успішно видалено',
+        },
+      });
+    });
+  };
+
+  const addAudToServer = (sem, id,  arr) => {
+    setLoading('Робота з серевером ...');
+    getData(
+      `${rozkladChNU_API}?action=ADDAUD&&sem=${sem}&xlsID=${id}&data=${arr}`
+    ).then(data => {
+
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: 'Аудиторію успішно додано',
+        },
+      });
+    });
+  };
+
+  const getAudsForStaff = (sem, id) => {
+    // setLoading('Завантажуємо аудиторний фонд ...');
+    getData(`${rozkladChNU_API}?action=GETAUD&&sem=${sem}&xlsID=${id}`).then(
+      data => {
+        dispatch({
+          type: 'GETAUD',
+          payload: { sem, data },
+        });
+        dispatch({
+          type: 'INFO',
+          payload: {
+            loading: false,
+            status: 'Аудиторний фонд оновлено ',
+          },
+        });
+      }
+    );
+  };
 
   useEffect(() => {
     setChange(prev => {
@@ -134,6 +191,9 @@ export const RozkladProvider = ({ children }) => {
       .then(res => {
         const dataObj = JSON.parse(res);
         console.log('dataObj', dataObj);
+        setXlsId(dataObj.xlsID);
+        getAudsForStaff('1 семестр', dataObj.xlsID);
+        getAudsForStaff('2 семестр', dataObj.xlsID);
         setDataLoaded(true);
         setUser(dataObj.user);
         dispatch({
@@ -411,8 +471,10 @@ export const RozkladProvider = ({ children }) => {
         // showButton,
         setPublicPanel,
         showModal: state.showModal,
+        xlsID: state.xlsID,
         setShowModal,
         dataForModal: state.dataForModal,
+        auds_first_sem: state['auds 1 семестр'],
         setDataForModal,
         currentGroups,
         setCurrentGroups,
@@ -427,6 +489,11 @@ export const RozkladProvider = ({ children }) => {
         saveToServer,
         setJsonID,
         isDataLoaded,
+
+        getAudsForStaff,
+        audfond: state.audfond,
+        deleteRowAud,
+          addAudToServer,
       }}
     >
       {children}

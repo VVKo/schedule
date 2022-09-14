@@ -12,12 +12,13 @@ const Department = () => {
     dataLoaded,
     departmentList,
     user,
+    publicPanel,
     getUserData,
     setJsonID,
     setShowModal,
     setDataForModal,
   } = useContext(RozkladContext);
-
+  console.log('USER', user, publicPanel);
   const pidrozdil = departmentList[params.id];
 
   useEffect(() => {
@@ -34,16 +35,16 @@ const Department = () => {
     setShowModal(true);
 
     setDataForModal({
-      title: 'Додати аудиторію',
+      title: `Аудиторний фонд ${publicPanel.semester}`,
       size: 'xl',
-      body: { func: FormAddAud, data: {} },
+      body: { func: FormAddAud, data: { semester: publicPanel.semester } },
     });
   };
 
   if (!dataLoaded) return <Spinner />;
   return (
     <>
-      {user.role === 'staff' && (
+      {user.role === 'staff' && publicPanel.semester !== 'Виберіть семестр' && (
         <>
           <nav className="navbar navbar-expand-lg bg-light">
             <div className="container-fluid">
@@ -80,7 +81,7 @@ const Department = () => {
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" onClick={handleAddAud} href="#">
-                      Додати аудиторію
+                      Аудиторний фонд {publicPanel.semester}
                     </a>
                   </li>
                 </ul>
