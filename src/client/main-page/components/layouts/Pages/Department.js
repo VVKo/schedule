@@ -9,19 +9,23 @@ import FormAddAud from '../Forms/FormAddAud';
 const Department = () => {
   const params = useParams();
   const {
+    state,
     dataLoaded,
-    departmentList,
     user,
     publicPanel,
     getUserData,
     setJsonID,
     setShowModal,
     setDataForModal,
+    setCurrentDep,
   } = useContext(RozkladContext);
-  console.log('USER', user, publicPanel);
-  const pidrozdil = departmentList[params.id];
+
+  const { departments } = state;
+
+  const pidrozdil = departments[params.id];
 
   useEffect(() => {
+    setCurrentDep(+params.id);
     getUserData({
       user,
       users: pidrozdil.users,
@@ -48,9 +52,7 @@ const Department = () => {
         <>
           <nav className="navbar navbar-expand-lg bg-light">
             <div className="container-fluid">
-              <a className="navbar-brand" href="#">
-                Navbar
-              </a>
+              <a className="navbar-brand">Адмін</a>
               <button
                 className="navbar-toggler"
                 type="button"

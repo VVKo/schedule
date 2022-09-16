@@ -1,41 +1,24 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import {
-  Container,
-  Panel,
-  StyledBox,
-  StyledButton,
-  StyledCheckBoxDropdown,
-  StyledCheckBoxDropdownList,
-} from '../../Styled/StyledComponents';
+import { Panel, StyledBox } from '../../Styled/StyledComponents';
 import RozkladContext from '../../../context/RozkladContext';
 
 const GuestPanel = () => {
   const {
     publicPanel,
-    showButton,
-    workData,
     setPublicPanel,
     currentGroups,
-    setCurrentGroups,
     currentTeachers,
-    setCurrentTeachers,
+    state,
   } = useContext(RozkladContext);
 
-  // const groups =
-  //   workData && workData['Групи']
-  //     ? workData['Групи'].map(obj => obj['група'])
-  //     : [];
+  const { currentDep } = state;
 
-  // const prepods =
-  //   workData && workData['Викладачі']
-  //     ? workData['Викладачі'].map(obj => obj['викладач'])
-  //     : [];
-
-  console.log('currentGroups', currentGroups, publicPanel);
+  console.log('currentGroups', currentGroups, publicPanel, currentDep);
 
   const groupeRef = useRef();
   const teacherRef = useRef();
   const semesterRef = useRef();
+  const academicYearRef = useRef();
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -50,10 +33,46 @@ const GuestPanel = () => {
   return (
     <Panel onSubmit={handleSubmit}>
       <StyledBox
+        defaultValue={publicPanel.academicYear}
+        name="academicYear"
+        ref={academicYearRef}
+        disabled={false}
+        onChange={e => {
+          const val = e.target.value;
+
+          setPublicPanel(prevState => {
+            return {
+              ...prevState,
+              academicYear: val,
+            };
+          });
+
+          if (val !== 'Виберіть навчальний рік') {
+            semesterRef.current.disabled = false;
+            groupeRef.current.disabled = true;
+            teacherRef.current.disabled = true;
+          } else {
+            semesterRef.current.disabled = true;
+            groupeRef.current.disabled = true;
+            teacherRef.current.disabled = true;
+          }
+        }}
+      >
+        <option value="Виберіть навчальний рік">Виберіть навчальний рік</option>
+        {Object.keys(currentDep)
+          .slice(4)
+          .map((acyear, idx) => (
+            <option key={idx} value={`${acyear}`}>
+              {acyear}
+            </option>
+          ))}
+      </StyledBox>
+
+      <StyledBox
         defaultValue={publicPanel.semester}
         name="semester"
         ref={semesterRef}
-        disabled={false}
+        disabled={true}
         onChange={e => {
           const val = e.target.value;
 
@@ -65,9 +84,11 @@ const GuestPanel = () => {
           });
 
           if (val !== 'Виберіть семестр') {
+            academicYearRef.current.disabled = true;
             groupeRef.current.disabled = false;
             teacherRef.current.disabled = false;
           } else {
+            academicYearRef.current.disabled = false;
             groupeRef.current.disabled = true;
             teacherRef.current.disabled = true;
           }
@@ -135,23 +156,6 @@ const GuestPanel = () => {
           </option>
         ))}
       </StyledBox>
-
-      {/* <StyledBox */}
-      {/*  className={'active'} */}
-      {/*  defaultValue={['all',3]} */}
-      {/*  name="test" */}
-      {/*  onChange={e => { */}
-      {/*    console.log('TEST', e.target); */}
-      {/*  }} */}
-      {/*  multiple */}
-      {/* > */}
-      {/*  <option value="all">All</option> */}
-      {/*  <option value="1">1</option> */}
-      {/*  <option value="2">2</option> */}
-      {/*  <option value="3">3</option> */}
-      {/* </StyledBox> */}
-
-      {/* <StyledButton type="submit"> Show </StyledButton> */}
     </Panel>
   );
 };

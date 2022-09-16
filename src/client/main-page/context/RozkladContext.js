@@ -9,7 +9,7 @@ const { serverFunctions } = server;
 const RozkladContext = createContext();
 
 const rozkladChNU_API =
-  'https://script.google.com/macros/s/AKfycbzoA4QFY3CH5ah_HkTRPoIAydi7SPptYyq4PxMzxdg6i13_vGWjKnX39FPp0ILxB9c/exec';
+  'https://script.google.com/macros/s/AKfycbw1tjvCprGFoOFCzgEmaTg8YTjTy7X7yWpyBZT32uh0lOZSccFiZ_OR6MpQK7_9cTE/exec';
 
 export const RozkladProvider = ({ children }) => {
   const initState = {
@@ -38,14 +38,13 @@ export const RozkladProvider = ({ children }) => {
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [publicPanel, setPublicPanel] = useState({
+    academicYear: 'Виберіть навчальний рік',
     semester: 'Виберіть семестр',
     group: 'Виберіть групу',
     teacher: 'Виберіть викладача',
     groups: ['Виберіть групу'],
     teachers: [],
   });
-
-  const [departmentList, setDepartmentList] = useState([]);
 
   const [currentGroups, setCurrentGroups] = useState([]);
   const [currentTeachers, setCurrentTeachers] = useState([]);
@@ -54,44 +53,65 @@ export const RozkladProvider = ({ children }) => {
   const [state, dispatch] = useReducer(rozkladReducer, initState);
 
   const setShowModal = val => dispatch({ type: 'SET_SHOWMODAL', payload: val });
+  const setCurrentDep = id => dispatch({ type: 'SET_CURRENTDEP', payload: id})
   const setXlsId = id => dispatch({ type: 'SET_XLSID', payload: id });
   const setDataForModal = obj =>
     dispatch({ type: 'SET_DATAFORMODAL', payload: obj });
-  const setLoading = msg => dispatch({ type: 'SET_LOADING', payload: { msg } });
+  const setLoading = (msg, newtoast) =>
+    dispatch({ type: 'SET_LOADING', payload: { msg, newtoast } });
+
+  const getDepartments = () => {
+    setLoading('Завантажуємо підрозділи ...', 'deps');
+    getData(`${rozkladChNU_API}?action=GETLISTOFDEPARTMENTS`).then(data => {
+      dispatch({
+        type: 'GETLISTOFDEPARTMENTS',
+        payload: data,
+      });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'deps',
+        },
+      });
+    });
+  };
 
   const deleteRowAud = (sem, id, row) => {
-    setLoading('Робота з серевером ...');
+    setLoading('Видалення аудиторії з бази ...', 'delrow');
     getData(
-      `${rozkladChNU_API}?action=DELETEROWAUD&&sem=${sem}&xlsID=${id}&row=${row}`
+      `${rozkladChNU_API}?action=DELETEROWAUD&sem=${sem}&xlsID=${id}&row=${row}`
     ).then(data => {
       dispatch({
         type: 'UPDATE',
         payload: {
           loading: false,
           status: 'Аудиторію успішно видалено',
+          newtoast: 'delrow',
         },
       });
     });
   };
 
-  const addAudToServer = (sem, id,  arr) => {
-    setLoading('Робота з серевером ...');
+  const addAudToServer = (sem, id, arr) => {
+    setLoading('Запис аудиторії у базу ...', 'addaudtoserver');
     getData(
       `${rozkladChNU_API}?action=ADDAUD&&sem=${sem}&xlsID=${id}&data=${arr}`
     ).then(data => {
-
       dispatch({
         type: 'UPDATE',
         payload: {
           loading: false,
           status: 'Аудиторію успішно додано',
+          newtoast: 'addaudtoserver',
         },
       });
     });
   };
 
   const getAudsForStaff = (sem, id) => {
-    // setLoading('Завантажуємо аудиторний фонд ...');
+    setLoading(`${sem} Завантажуємо аудиторний фонд ...`, `audfond${sem}`);
     getData(`${rozkladChNU_API}?action=GETAUD&&sem=${sem}&xlsID=${id}`).then(
       data => {
         dispatch({
@@ -99,10 +119,11 @@ export const RozkladProvider = ({ children }) => {
           payload: { sem, data },
         });
         dispatch({
-          type: 'INFO',
+          type: 'UPDATE',
           payload: {
-            loading: false,
-            status: 'Аудиторний фонд оновлено ',
+            loading: true,
+            status: `${sem} аудиторний фонд завантажено ...`,
+            newtoast: `audfond${sem}`,
           },
         });
       }
@@ -115,24 +136,6 @@ export const RozkladProvider = ({ children }) => {
       return true;
     });
   }, [flagOfChanges]);
-
-  useEffect(() => {
-    setLoading('Завантажуємо інформацію про підрозділи...');
-    serverFunctions
-      .getListOfPidrozdilsJSON()
-      .then(res => {
-        setDepartmentList(JSON.parse(res));
-        setDataLoaded(true);
-        dispatch({
-          type: 'UPDATE',
-          payload: {
-            loading: false,
-            status: 'інформацію про підрозділи завантажено',
-          },
-        });
-      })
-      .catch(alert);
-  }, []);
 
   function getWeekFromData(localdata, sem, val, key, day, para, w) {
     let result = [];
@@ -184,7 +187,7 @@ export const RozkladProvider = ({ children }) => {
     return tmp.week;
   }
   const getUserData = obj => {
-    setLoading('Будь ласка, зачекайте...');
+    setLoading('Завантаження даних для користувача ...', 'getuserdata');
     setDataLoaded(false);
     serverFunctions
       .getUserData(obj)
@@ -196,10 +199,6 @@ export const RozkladProvider = ({ children }) => {
         getAudsForStaff('2 семестр', dataObj.xlsID);
         setDataLoaded(true);
         setUser(dataObj.user);
-        dispatch({
-          type: 'INFO',
-          payload: { loading: true, status: 'Дані про користувача' },
-        });
         setData(dataObj.data.staff);
         setGroupsWeek(() => {
           const tmp = { '1 семестр': {}, '2 семестр': {} };
@@ -245,7 +244,11 @@ export const RozkladProvider = ({ children }) => {
         setDataLoaded(true);
         dispatch({
           type: 'UPDATE',
-          payload: { loading: false, status: 'Усі дані завантажено' },
+          payload: {
+            loading: false,
+            status: 'Усі дані завантажено',
+            newtoast: 'getuserdata',
+          },
         });
       })
       .catch(alert);
@@ -461,8 +464,9 @@ export const RozkladProvider = ({ children }) => {
   return (
     <RozkladContext.Provider
       value={{
+        state,
         dataLoaded,
-        departmentList,
+        departments: state.departments,
         publicPanel,
         user,
         data,
@@ -493,7 +497,9 @@ export const RozkladProvider = ({ children }) => {
         getAudsForStaff,
         audfond: state.audfond,
         deleteRowAud,
-          addAudToServer,
+        addAudToServer,
+        getDepartments,
+          setCurrentDep,
       }}
     >
       {children}

@@ -17,18 +17,31 @@ const rozkladReducer = (state, action) => {
       return {
         ...state,
         loading: action.payload.loading,
-        toast: toast.update(state.loading_toast, {
-          render: action.payload.status,
-          type: 'success',
-          isLoading: false,
-          autoClose: 500,
-        }),
+        [action.payload.newtoast]: toast.update(
+          state[action.payload.newtoast],
+          {
+            render: action.payload.status,
+            type: 'success',
+            isLoading: false,
+            autoClose: 500,
+          }
+        ),
       };
     case 'SET_LOADING':
       return {
         ...state,
         loading: true,
-        loading_toast: toast.loading(action.payload.msg),
+        [action.payload.newtoast]: toast.loading(action.payload.msg),
+      };
+    case 'SET_CURRENTDEP':
+      return {
+        ...state,
+        currentDep: state.departments[action.payload],
+      };
+    case 'GETLISTOFDEPARTMENTS':
+      return {
+        ...state,
+        departments: action.payload.data,
       };
     case 'SET_SHOWMODAL':
       return {

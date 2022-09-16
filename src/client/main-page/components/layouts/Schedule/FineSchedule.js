@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import { FaEdit } from 'react-icons/fa';
-import { GiWindow, GiMagnifyingGlass } from 'react-icons/gi';
+import { GiWindow } from 'react-icons/gi';
 import {
   Day,
   Days,
@@ -86,7 +86,10 @@ const FineSchedule = ({ weekNumber }) => {
                         <ParaContent>
                           {gr.week[day][para][`${weekNumber}-й тиж.`].length ===
                           0 ? (
-                              <div> <GiWindow color='purple' /> </div>
+                            <div>
+                              {' '}
+                              <GiWindow color="purple" />{' '}
+                            </div>
                           ) : (
                             gr.week[day][para][`${weekNumber}-й тиж.`].map(
                               (o, ii) => {
@@ -115,18 +118,20 @@ const FineSchedule = ({ weekNumber }) => {
                                     : '';
                                 return (
                                   <p key={ii}>
-                                    {/*{val['Назва дисципліни']}, {val['тип']},{' '}*/}
-                                    {/*{currentgr}, {prpod}Ауд.:{' '}*/}
-                                    {/*{aud === 'ONLINE'*/}
-                                    {/*  ? aud*/}
-                                    {/*  : aud.split(' -- ')[0]}*/}
+                                    {/* {val['Назва дисципліни']}, {val['тип']},{' '} */}
+                                    {/* {currentgr}, {prpod}Ауд.:{' '} */}
+                                    {/* {aud === 'ONLINE' */}
+                                    {/*  ? aud */}
+                                    {/*  : aud.split(' -- ')[0]} */}
                                     <span>{val['Назва дисципліни']}</span>
                                     <span>{val['тип']}</span>
                                     <span>{currentgr}</span>
                                     <span>{prpod}</span>
-                                    <span>{aud === 'ONLINE'
+                                    <span>
+                                      {aud === 'ONLINE'
                                         ? aud
-                                        : aud.split(' -- ')[0]}</span>
+                                        : aud.split(' -- ')[0]}
+                                    </span>
                                   </p>
                                 );
                               }

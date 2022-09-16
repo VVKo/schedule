@@ -50,7 +50,7 @@ export const ScheduleContainer = styled.div`
 export const StyledMain = styled.main`
   //max-width: 768px;
   width: 100%;
-  margin-top: 70px;
+  margin-top: 90px;
   padding: 0;
   //height: auto;
   //border: black solid 1px;
