@@ -11,6 +11,7 @@ const GuestPanel = () => {
     currentTeachers,
     state,
     setCurrentAcademicYear,
+    setCurrentSemester,
     createNewAcademicYear,
   } = useContext(RozkladContext);
 
@@ -99,17 +100,19 @@ const GuestPanel = () => {
       </StyledBox>
 
       <StyledBox
-        defaultValue={publicPanel.semester}
+        defaultValue={publicPanel.semester.name}
         name="semester"
         ref={semesterRef}
         disabled={true}
         onChange={e => {
           const val = e.target.value;
-
+          setCurrentSemester({
+            name: val,
+          });
           setPublicPanel(prevState => {
             return {
               ...prevState,
-              semester: val,
+              semester: { ...prevState.semester, name: val },
             };
           });
 

@@ -43,6 +43,11 @@ const rozkladReducer = (state, action) => {
         ...state,
         currentAcademicYear: { ...action.payload },
       };
+    case 'SET_CURRENTSEMESTER':
+      return {
+        ...state,
+        currentSemester: { ...action.payload },
+      };
     case 'GETLISTOFDEPARTMENTS':
       return {
         ...state,

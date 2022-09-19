@@ -10,7 +10,7 @@ const Info = ({ info }) => {
   const { gr, day, para, w } = info;
   const { data, groupsWeek, publicPanel, removeAudFromLocalData } = useContext(RozkladContext);
   console.log('groupsWeek', groupsWeek);
-  const detalInfo = groupsWeek[publicPanel.semester][gr][day][para][w];
+  const detalInfo = groupsWeek[publicPanel.semester.name][gr][day][para][w];
 
   return (
     <div>
@@ -26,7 +26,7 @@ const Info = ({ info }) => {
               <div>
                 Група:{' '}
                 {
-                  data[publicPanel.semester].data.filter(r => r.id == o.id)[0][
+                  data[publicPanel.semester.name].data.filter(r => r.id == o.id)[0][
                     'групаНавантаження'
                   ]
                 }{' '}
@@ -34,7 +34,7 @@ const Info = ({ info }) => {
               <div>
                 Дисципліна:{' '}
                 {
-                  data[publicPanel.semester].data.filter(r => r.id == o.id)[0][
+                  data[publicPanel.semester.name].data.filter(r => r.id == o.id)[0][
                     'Назва дисципліни'
                   ]
                 }{' '}
@@ -42,7 +42,7 @@ const Info = ({ info }) => {
               <div>
                 Тип:{' '}
                 {
-                  data[publicPanel.semester].data.filter(r => r.id == o.id)[0][
+                  data[publicPanel.semester.name].data.filter(r => r.id == o.id)[0][
                     'тип'
                   ]
                 }
@@ -51,7 +51,7 @@ const Info = ({ info }) => {
               <div>
                 Викладач:{' '}
                 {
-                  data[publicPanel.semester].data.filter(r => r.id == o.id)[0][
+                  data[publicPanel.semester.name].data.filter(r => r.id == o.id)[0][
                     'викладач'
                   ]
                 }

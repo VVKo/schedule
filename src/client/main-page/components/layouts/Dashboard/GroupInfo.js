@@ -16,10 +16,10 @@ const GroupInfo = ({ gr, day, para, w }) => {
 
   let currentState = [];
 
-  groupsWeek[publicPanel.semester][gr][day][para][w]
+  groupsWeek[publicPanel.semester.name][gr][day][para][w]
     .map(
       o =>
-        data[publicPanel.semester].data.filter(d => d.id == o.id)[0][
+        data[publicPanel.semester.name].data.filter(d => d.id == o.id)[0][
           'групаНавантаження'
         ]
     )
@@ -28,10 +28,10 @@ const GroupInfo = ({ gr, day, para, w }) => {
   const busyGr = currentState.filter(g => g.includes(gr));
   // currentStateList.length === 0 ? [] : [`${gr}гр`, ...currentStateList];
 
-  console.log('============АУДИТОРІЇ======', data[publicPanel.semester]['Аудиторії']);
+  console.log('============АУДИТОРІЇ======', data[publicPanel.semester.name]['Аудиторії']);
   const [maybeAuds, setMaybeAuds] = useState([
     { audDetal: 'ONLINE' },
-    ...data[publicPanel.semester]['Аудиторії'].filter(
+    ...data[publicPanel.semester.name]['Аудиторії'].filter(
       aud => aud.week[day][para][w].length === 0
     ),
     { audDetal: 'Вільні аудиторії' },
@@ -39,10 +39,10 @@ const GroupInfo = ({ gr, day, para, w }) => {
 
   const [maybePrepods, setMaybePrepods] = useState([
     { викладач: 'Можливі викладачі' },
-    ...Object.keys(teachersWeek[publicPanel.semester])
+    ...Object.keys(teachersWeek[publicPanel.semester.name])
       .filter(
         prepod =>
-          teachersWeek[publicPanel.semester][prepod][day][para][w].length === 0
+          teachersWeek[publicPanel.semester.name][prepod][day][para][w].length === 0
       )
       .map(p => {
         return { викладач: `${p}` };
@@ -60,7 +60,7 @@ const GroupInfo = ({ gr, day, para, w }) => {
           ['дисципліни'].filter(
             dis =>
               +dis['К-ть год/тижд'] - +dis['виставлено'] > 0 &&
-              teachersWeek[publicPanel.semester][dis['викладач']][day][para][w]
+              teachersWeek[publicPanel.semester.name][dis['викладач']][day][para][w]
                 .length === 0 &&
               dis['групаНавантаження'] !== `${gr}гр` &&
               busyGr.indexOf(getGrFromGrNavant(dis['групаНавантаження'])) === -1
@@ -71,7 +71,7 @@ const GroupInfo = ({ gr, day, para, w }) => {
           ['дисципліни'].filter(
             dis =>
               +dis['К-ть год/тижд'] - +dis['виставлено'] > 0 &&
-              teachersWeek[publicPanel.semester][dis['викладач']][day][para][w]
+              teachersWeek[publicPanel.semester.name][dis['викладач']][day][para][w]
                 .length === 0 &&
               busyGr.indexOf(getGrFromGrNavant(dis['групаНавантаження'])) === -1
           )
@@ -115,7 +115,7 @@ const GroupInfo = ({ gr, day, para, w }) => {
     if (val === 'Можливі дисципліни') {
       setMaybeAuds([
         { audDetal: 'ONLINE' },
-        ...data[publicPanel.semester]['Аудиторії'].filter(
+        ...data[publicPanel.semester.name]['Аудиторії'].filter(
           aud => aud.week[day][para][w].length === 0
         ),
         { audDetal: 'Вільні аудиторії' },
@@ -125,13 +125,13 @@ const GroupInfo = ({ gr, day, para, w }) => {
     }
 
     const audType =
-      data[publicPanel.semester].data.filter(d => d.id == val)[0]['тип'] ===
+      data[publicPanel.semester.name].data.filter(d => d.id == val)[0]['тип'] ===
       'Лаб.'
         ? 'Лаб.'
         : 'інші.';
     setMaybeAuds([
       { audDetal: 'ONLINE' },
-      ...data[publicPanel.semester]['Аудиторії'].filter(
+      ...data[publicPanel.semester.name]['Аудиторії'].filter(
         aud => aud.week[day][para][w].length === 0 && aud['тип'] === audType
       ),
       { audDetal: 'Вільні аудиторії' },
@@ -140,10 +140,10 @@ const GroupInfo = ({ gr, day, para, w }) => {
     audRef.current.disabled = false;
 
     setMaybePrepods([
-      ...Object.keys(teachersWeek[publicPanel.semester])
+      ...Object.keys(teachersWeek[publicPanel.semester.name])
         .filter(
           prepod =>
-            teachersWeek[publicPanel.semester][prepod][day][para][w].length ===
+            teachersWeek[publicPanel.semester.name][prepod][day][para][w].length ===
             0
         )
         .map(p => {

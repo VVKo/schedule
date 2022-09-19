@@ -42,7 +42,7 @@ export const RozkladProvider = ({ children }) => {
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [publicPanel, setPublicPanel] = useState({
     academicYear: { name: 'Виберіть навчальний рік', id: '' },
-    semester: 'Виберіть семестр',
+    semester: { name: 'Виберіть семестр' },
     group: 'Виберіть групу',
     teacher: 'Виберіть викладача',
     groups: ['Виберіть групу'],
@@ -59,6 +59,8 @@ export const RozkladProvider = ({ children }) => {
   const setCurrentDep = id => dispatch({ type: 'SET_CURRENTDEP', payload: id });
   const setCurrentAcademicYear = obj =>
     dispatch({ type: 'SET_CURRENTACADEMICYEAR', payload: obj });
+  const setCurrentSemester = obj =>
+    dispatch({ type: 'SET_CURRENTSEMESTER', payload: obj });
   const setXlsId = id => dispatch({ type: 'SET_XLSID', payload: id });
   const setDataForModal = obj =>
     dispatch({ type: 'SET_DATAFORMODAL', payload: obj });
@@ -283,41 +285,41 @@ export const RozkladProvider = ({ children }) => {
   const handleChangePanel = () => {
     const { semester, group, teacher } = publicPanel;
 
-    if (semester !== 'Виберіть семестр') {
+    if (semester.name !== 'Виберіть семестр') {
       if (group !== 'Виберіть групу') {
         setScheduleKey('Розклад групи');
         setWorkData(prevState => {
           const tmp = { ...prevState };
 
-          const discs = data[semester].data.filter(o =>
+          const discs = data[semester.name].data.filter(o =>
             o['групаНавантаження'].includes(group)
           );
           tmp['Розклад групи'] = [
             {
               група: group,
               дисципліни: discs,
-              week: groupsWeek[semester][group],
+              week: groupsWeek[semester.name][group],
             },
           ];
 
           return { ...tmp };
         });
       } else {
-        setCurrentGroups(data[semester]['Групи']);
+        setCurrentGroups(data[semester.name]['Групи']);
 
         if (teacher !== 'Виберіть викладача') {
           setScheduleKey('Розклад викладача');
           setWorkData(prevState => {
             const tmp = { ...prevState };
 
-            const discs = data[semester].data.filter(
+            const discs = data[semester.name].data.filter(
               o => o['викладач'] === teacher
             );
             tmp['Розклад викладача'] = [
               {
                 викладач: teacher,
                 дисципліни: discs,
-                week: teachersWeek[semester][teacher],
+                week: teachersWeek[semester.name][teacher],
               },
             ];
 
@@ -325,19 +327,19 @@ export const RozkladProvider = ({ children }) => {
           });
         } else {
           setScheduleKey('Виберіть групу або викладача');
-          setCurrentTeachers(data[semester]['Викладачі']);
+          setCurrentTeachers(data[semester.name]['Викладачі']);
 
           setWorkData(() => {
             return {
-              'Розклад групи': data[semester]['Групи'].map(gr => {
-                const discs = data[semester].data.filter(o =>
+              'Розклад групи': data[semester.name]['Групи'].map(gr => {
+                const discs = data[semester.name].data.filter(o =>
                   o['групаНавантаження'].includes(gr)
                 );
 
                 return {
                   група: gr,
                   дисципліни: discs,
-                  week: groupsWeek[semester][gr],
+                  week: groupsWeek[semester.name][gr],
                 };
               }),
             };
@@ -527,6 +529,7 @@ export const RozkladProvider = ({ children }) => {
         getDepartments,
         setCurrentDep,
         setCurrentAcademicYear,
+        setCurrentSemester,
         createNewAcademicYear,
       }}
     >

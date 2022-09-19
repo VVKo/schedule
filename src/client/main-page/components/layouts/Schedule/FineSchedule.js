@@ -94,9 +94,9 @@ const FineSchedule = ({ weekNumber }) => {
                             gr.week[day][para][`${weekNumber}-й тиж.`].map(
                               (o, ii) => {
                                 const val = {
-                                  ...data[publicPanel.semester].data.filter(
-                                    sub => sub.id == o.id
-                                  )[0],
+                                  ...data[
+                                    publicPanel.semester.name
+                                  ].data.filter(sub => sub.id == o.id)[0],
                                 };
                                 const { aud } = {
                                   ...val.week[day][para][
