@@ -8,7 +8,6 @@ import { DepartmentItem, DepartmentList } from '../../Styled/StyledComponents';
 const Start = () => {
   const { state, getDepartments } = useContext(RozkladContext);
   const { departments } = state;
-
   useEffect(() => {
     getDepartments();
   }, []);

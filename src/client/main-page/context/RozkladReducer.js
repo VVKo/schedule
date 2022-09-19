@@ -38,10 +38,20 @@ const rozkladReducer = (state, action) => {
         ...state,
         currentDep: state.departments[action.payload],
       };
+    case 'SET_CURRENTACADEMICYEAR':
+      return {
+        ...state,
+        currentAcademicYear: { ...action.payload },
+      };
     case 'GETLISTOFDEPARTMENTS':
       return {
         ...state,
         departments: action.payload.data,
+      };
+    case 'SET_DEPARTMENTS':
+      return {
+        ...state,
+        departments: action.payload,
       };
     case 'SET_SHOWMODAL':
       return {

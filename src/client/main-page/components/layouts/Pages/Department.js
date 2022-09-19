@@ -6,6 +6,22 @@ import Spinner from '../../Spinner/Spinner';
 import FineSchedule from '../Schedule/FineSchedule';
 import FormAddAud from '../Forms/FormAddAud';
 
+const FineHeader = () => {
+  const { state } = useContext(RozkladContext);
+  const { currentDep, currentAcademicYear } = state;
+  if (!currentDep) return <Spinner />;
+  return (
+    currentDep && (
+      <div className="alert alert-light" role="alert">
+        {currentDep.Підрозділ}{' '}
+        {currentAcademicYear
+          ? currentAcademicYear.name
+          : 'Виберіть навчальний рік'}
+      </div>
+    )
+  );
+};
+
 const Department = () => {
   const params = useParams();
   const {
@@ -48,6 +64,7 @@ const Department = () => {
   if (!dataLoaded) return <Spinner />;
   return (
     <>
+      <FineHeader />
       {user.role === 'staff' && publicPanel.semester !== 'Виберіть семестр' && (
         <>
           <nav className="navbar navbar-expand-lg bg-light">
@@ -92,6 +109,7 @@ const Department = () => {
           </nav>
         </>
       )}
+
       <FineSchedule weekNumber="1" />
       <hr />
       <FineSchedule weekNumber="2" />

@@ -11,6 +11,9 @@ const RozkladContext = createContext();
 const rozkladChNU_API =
   'https://script.google.com/macros/s/AKfycbw1tjvCprGFoOFCzgEmaTg8YTjTy7X7yWpyBZT32uh0lOZSccFiZ_OR6MpQK7_9cTE/exec';
 
+const driver_API =
+  'https://script.google.com/macros/s/AKfycbzPGSRA_iPCjt5IwrgY4AxPuCoKuP5gofysbI79ovilw_vob9UeHMD1ZzZoVicUhoA1/exec';
+
 export const RozkladProvider = ({ children }) => {
   const initState = {
     showModal: false,
@@ -34,11 +37,11 @@ export const RozkladProvider = ({ children }) => {
   const [user, setUser] = useState({ role: 'public', email: '' });
   const [data, setData] = useState(null);
   const [workData, setWorkData] = useState(null);
-  const [isMounted, setIsMounted] = useState(false);
+
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [publicPanel, setPublicPanel] = useState({
-    academicYear: 'Виберіть навчальний рік',
+    academicYear: { name: 'Виберіть навчальний рік', id: '' },
     semester: 'Виберіть семестр',
     group: 'Виберіть групу',
     teacher: 'Виберіть викладача',
@@ -53,7 +56,9 @@ export const RozkladProvider = ({ children }) => {
   const [state, dispatch] = useReducer(rozkladReducer, initState);
 
   const setShowModal = val => dispatch({ type: 'SET_SHOWMODAL', payload: val });
-  const setCurrentDep = id => dispatch({ type: 'SET_CURRENTDEP', payload: id})
+  const setCurrentDep = id => dispatch({ type: 'SET_CURRENTDEP', payload: id });
+  const setCurrentAcademicYear = obj =>
+    dispatch({ type: 'SET_CURRENTACADEMICYEAR', payload: obj });
   const setXlsId = id => dispatch({ type: 'SET_XLSID', payload: id });
   const setDataForModal = obj =>
     dispatch({ type: 'SET_DATAFORMODAL', payload: obj });
@@ -73,6 +78,27 @@ export const RozkladProvider = ({ children }) => {
           loading: false,
           status: data.status,
           newtoast: 'deps',
+        },
+      });
+    });
+  };
+
+  const createNewAcademicYear = ({ dep, academicYear }) => {
+    setLoading('Створюємо новий навчальний рік ...', 'newAcademicYear');
+    getData(
+      `${driver_API}?action=INITROZKLADYEAR&dep=${dep}&academicYear=${academicYear}`
+    ).then(data => {
+      const depIdx = state.departments.findIndex(o => o.Підрозділ === dep);
+      const updatedata = [...state.departments];
+      updatedata[depIdx][academicYear] = data.id;
+      setCurrentAcademicYear({ name: academicYear, id: data.id });
+      dispatch({ type: 'SET_DEPARTMENTS', payload: [...updatedata] });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'newAcademicYear',
         },
       });
     });
@@ -499,7 +525,9 @@ export const RozkladProvider = ({ children }) => {
         deleteRowAud,
         addAudToServer,
         getDepartments,
-          setCurrentDep,
+        setCurrentDep,
+        setCurrentAcademicYear,
+        createNewAcademicYear,
       }}
     >
       {children}

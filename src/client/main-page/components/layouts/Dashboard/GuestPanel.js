@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Panel, StyledBox } from '../../Styled/StyledComponents';
 import RozkladContext from '../../../context/RozkladContext';
+import Spinner from '../../Spinner/Spinner';
 
 const GuestPanel = () => {
   const {
@@ -9,11 +10,24 @@ const GuestPanel = () => {
     currentGroups,
     currentTeachers,
     state,
+    setCurrentAcademicYear,
+    createNewAcademicYear,
   } = useContext(RozkladContext);
 
-  const { currentDep } = state;
+  const { currentDep, currentAcademicYear } = state;
 
-  console.log('currentGroups', currentGroups, publicPanel, currentDep);
+  if (!currentDep && !currentAcademicYear) return <Spinner />;
+
+  console.log(
+    'currentGroups',
+    currentGroups,
+    'publicPanel',
+    publicPanel,
+    'currentDep',
+    currentDep,
+    'currentAcademicYear',
+    currentAcademicYear
+  );
 
   const groupeRef = useRef();
   const teacherRef = useRef();
@@ -33,19 +47,35 @@ const GuestPanel = () => {
   return (
     <Panel onSubmit={handleSubmit}>
       <StyledBox
-        defaultValue={publicPanel.academicYear}
+        defaultValue={publicPanel.academicYear.name}
         name="academicYear"
         ref={academicYearRef}
         disabled={false}
         onChange={e => {
           const val = e.target.value;
 
+          setCurrentAcademicYear({
+            name: val,
+            id: currentDep[val] ? currentDep[val] : '',
+          });
+
           setPublicPanel(prevState => {
             return {
               ...prevState,
-              academicYear: val,
+              academicYear: {
+                ...prevState.academicYear,
+                name: val,
+                id: currentDep[val] ? currentDep[val] : '',
+              },
             };
           });
+
+          if (val !== 'Виберіть навчльний рік' && currentDep[val] === '') {
+            createNewAcademicYear({
+              dep: currentDep.Підрозділ,
+              academicYear: val,
+            });
+          }
 
           if (val !== 'Виберіть навчальний рік') {
             semesterRef.current.disabled = false;
