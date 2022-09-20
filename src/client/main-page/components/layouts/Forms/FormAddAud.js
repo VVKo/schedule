@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Form, Formik, useField } from 'formik';
 import * as Yup from 'yup';
 import { FaTrash } from 'react-icons/fa';
@@ -62,14 +62,14 @@ const MyTextInput = ({ label, ...props }) => {
   );
 };
 
-const FormAddAud = ({ semester }) => {
-  const {
-    audfond,
-    addAudToServer,
-    xlsID,
-    getAudsForStaff,
-    deleteRowAud,
-  } = useContext(RozkladContext);
+const FormAddAud = () => {
+  const { state, deleteFromAudFond, addToAudFond } = useContext(RozkladContext);
+
+  const { audfond, currentSemester, currentAcademicYear } = state;
+
+  useEffect(() => {
+    console.log('audFOND', audfond);
+  }, [audfond]);
 
   const MyTable = () => {
     return (
@@ -86,7 +86,7 @@ const FormAddAud = ({ semester }) => {
           </tr>
         </thead>
         <tbody>
-          {audfond[semester].data.map((r, idx) => {
+          {audfond[currentSemester.name].data.map((r, idx) => {
             return (
               <tr key={`row${idx}`}>
                 <th scope="row">{idx + 1}</th>
@@ -98,9 +98,11 @@ const FormAddAud = ({ semester }) => {
                     data-row={idx + 4}
                     onClick={event => {
                       const row = +event.currentTarget.getAttribute('data-row');
-                      deleteRowAud(semester, xlsID, row);
-                      console.log(row);
-                      getAudsForStaff(semester, xlsID);
+                      deleteFromAudFond(
+                        currentSemester.name,
+                        currentAcademicYear.id,
+                        row
+                      );
                     }}
                   />
                 </td>
@@ -128,10 +130,7 @@ const FormAddAud = ({ semester }) => {
           arr.push(
             `${values['Корпус']} ${values['аудиторія']} ауд. -- (${values['кільксть п/м']} п.м.)`
           );
-
-          addAudToServer(semester, xlsID, arr);
-          console.log(arr);
-          getAudsForStaff(semester, xlsID);
+          addToAudFond(currentSemester.name, currentAcademicYear.id, arr);
         }}
       >
         {({ handleSubmit, errors, touched, isSubmitting, isValidating }) => (

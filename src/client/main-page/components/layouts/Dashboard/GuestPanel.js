@@ -13,9 +13,10 @@ const GuestPanel = () => {
     setCurrentAcademicYear,
     setCurrentSemester,
     createNewAcademicYear,
+    getAudFond,
   } = useContext(RozkladContext);
 
-  const { currentDep, currentAcademicYear } = state;
+  const { currentDep, currentAcademicYear, audfond } = state;
 
   if (!currentDep && !currentAcademicYear) return <Spinner />;
 
@@ -45,10 +46,12 @@ const GuestPanel = () => {
     // showButton(fdata);
     console.log('handleSubmit', fdata);
   };
+
   return (
     <Panel onSubmit={handleSubmit}>
       <StyledBox
-        defaultValue={publicPanel.academicYear.name}
+        defaultValue={'Виберіть навчльний рік'}
+        // publicPanel.academicYear.name
         name="academicYear"
         ref={academicYearRef}
         disabled={false}
@@ -60,16 +63,16 @@ const GuestPanel = () => {
             id: currentDep[val] ? currentDep[val] : '',
           });
 
-          setPublicPanel(prevState => {
-            return {
-              ...prevState,
-              academicYear: {
-                ...prevState.academicYear,
-                name: val,
-                id: currentDep[val] ? currentDep[val] : '',
-              },
-            };
-          });
+          // setPublicPanel(prevState => {
+          //   return {
+          //     ...prevState,
+          //     academicYear: {
+          //       ...prevState.academicYear,
+          //       name: val,
+          //       id: currentDep[val] ? currentDep[val] : '',
+          //     },
+          //   };
+          // });
 
           if (val !== 'Виберіть навчльний рік' && currentDep[val] === '') {
             createNewAcademicYear({
@@ -120,6 +123,12 @@ const GuestPanel = () => {
             academicYearRef.current.disabled = true;
             groupeRef.current.disabled = false;
             teacherRef.current.disabled = false;
+
+            if (!audfond) {
+              getAudFond(val, currentAcademicYear.id);
+            } else if (!(val in audfond)) {
+              getAudFond(val, currentAcademicYear.id);
+            }
           } else {
             academicYearRef.current.disabled = false;
             groupeRef.current.disabled = true;

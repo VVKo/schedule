@@ -64,7 +64,7 @@ const Department = () => {
     setDataForModal({
       title: `Аудиторний фонд ${publicPanel.semester.name}`,
       size: 'xl',
-      body: { func: FormAddAud, data: { semester: publicPanel.semester.name } },
+      body: { func: FormAddAud, data: {} },
     });
   };
 
@@ -77,7 +77,7 @@ const Department = () => {
           <>
             <nav className="navbar navbar-expand-lg bg-light">
               <div className="container-fluid">
-                <a className="navbar-brand">Адмін</a>
+                <a className="navbar-brand">Робоча панель</a>
                 <button
                   className="navbar-toggler"
                   type="button"
@@ -112,7 +112,7 @@ const Department = () => {
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" onClick={handleAddAud} href="#">
-                        Аудиторний фонд {publicPanel.semester.name}
+                        Аудиторний фонд
                       </a>
                     </li>
                   </ul>

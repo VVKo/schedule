@@ -77,6 +77,36 @@ const rozkladReducer = (state, action) => {
         },
       };
 
+    case 'SET_AUDFOND':
+      return {
+        ...state,
+        audfond: {
+          ...state.audfond,
+          [action.payload.sem]: action.payload.data,
+        },
+      };
+    case 'DELETE_ROWFROMAUDFOND':
+      return {
+        ...state,
+        audfond: {
+          ...state.audfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data,
+          },
+        },
+      };
+    case 'ADD_AUDTOFOND':
+      return {
+        ...state,
+        audfond: {
+          ...state.audfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data,
+          },
+        },
+      };
     case 'SET_XLSID':
       return {
         ...state,

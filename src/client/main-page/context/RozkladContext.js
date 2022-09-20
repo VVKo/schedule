@@ -9,7 +9,7 @@ const { serverFunctions } = server;
 const RozkladContext = createContext();
 
 const rozkladChNU_API =
-  'https://script.google.com/macros/s/AKfycbw1tjvCprGFoOFCzgEmaTg8YTjTy7X7yWpyBZT32uh0lOZSccFiZ_OR6MpQK7_9cTE/exec';
+  'https://script.google.com/macros/s/AKfycbyo1kX3kYFMy0RjOd4UK-i4r1GYod2OBIqtnknvi0Hy_f7Q0-DSMEgKcg3Ue6I7HAc/exec';
 
 const driver_API =
   'https://script.google.com/macros/s/AKfycbzPGSRA_iPCjt5IwrgY4AxPuCoKuP5gofysbI79ovilw_vob9UeHMD1ZzZoVicUhoA1/exec';
@@ -18,7 +18,7 @@ export const RozkladProvider = ({ children }) => {
   const initState = {
     showModal: false,
     xlsID: '',
-    audfond: { '1 семестр': [], '2 семестр': [] },
+    // audfond: { '1 семестр': [], '2 семестр': [] },
     loading: false,
     dataForModal: {
       title: 'title',
@@ -122,6 +122,25 @@ export const RozkladProvider = ({ children }) => {
     });
   };
 
+  const deleteFromAudFond = (sem, folderID, row) => {
+    setLoading('Видалення аудиторії з фонду ...', 'delrowfromfond');
+    getData(
+      `${rozkladChNU_API}?action=DELETEROWFROMAUDFOND&sem=${sem}&folderID=${folderID}&row=${row}`
+    ).then(data => {
+      const tmp = state.audfond[sem].data.filter((r, idx) => idx !== row - 4);
+      // delete tmp[row - 4];
+      dispatch({ type: 'DELETE_ROWFROMAUDFOND', payload: { sem, data: tmp } });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'delrowfromfond',
+        },
+      });
+    });
+  };
+
   const addAudToServer = (sem, id, arr) => {
     setLoading('Запис аудиторії у базу ...', 'addaudtoserver');
     getData(
@@ -133,6 +152,50 @@ export const RozkladProvider = ({ children }) => {
           loading: false,
           status: 'Аудиторію успішно додано',
           newtoast: 'addaudtoserver',
+        },
+      });
+    });
+  };
+
+  const addToAudFond = (sem, folderID, arr) => {
+    setLoading('Запис аудиторії у базу ...', 'addaudtofond');
+    getData(
+      `${rozkladChNU_API}?action=ADDTOAUDFOND&&sem=${sem}&folderID=${folderID}&data=${arr}`
+    ).then(data => {
+      const tmp = state.audfond[sem].data;
+      const spaces = [];
+      for (let i = 0; i < 80; i++) {
+        spaces.push('');
+      }
+      tmp.push([...arr, ...spaces]);
+      dispatch({ type: 'ADD_AUDTOFOND', payload: { sem, data: tmp } });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'addaudtofond',
+        },
+      });
+    });
+  };
+
+  const getAudFond = (sem, folderID) => {
+    setLoading('Завантажуємо аудиторний фонд ...', 'audfondnew');
+    getData(
+      `${rozkladChNU_API}?action=GETAUDFOND&&sem=${sem}&folderID=${folderID}`
+    ).then(data => {
+      console.log('DATA', data);
+      dispatch({
+        type: 'SET_AUDFOND',
+        payload: { sem, data },
+      });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: true,
+          status: data.status,
+          newtoast: 'audfondnew',
         },
       });
     });
@@ -223,8 +286,8 @@ export const RozkladProvider = ({ children }) => {
         const dataObj = JSON.parse(res);
         console.log('dataObj', dataObj);
         setXlsId(dataObj.xlsID);
-        getAudsForStaff('1 семестр', dataObj.xlsID);
-        getAudsForStaff('2 семестр', dataObj.xlsID);
+        // getAudsForStaff('1 семестр', dataObj.xlsID);
+        // getAudsForStaff('2 семестр', dataObj.xlsID);
         setDataLoaded(true);
         setUser(dataObj.user);
         setData(dataObj.data.staff);
@@ -523,7 +586,6 @@ export const RozkladProvider = ({ children }) => {
         isDataLoaded,
 
         getAudsForStaff,
-        audfond: state.audfond,
         deleteRowAud,
         addAudToServer,
         getDepartments,
@@ -531,6 +593,9 @@ export const RozkladProvider = ({ children }) => {
         setCurrentAcademicYear,
         setCurrentSemester,
         createNewAcademicYear,
+        getAudFond,
+        deleteFromAudFond,
+        addToAudFond,
       }}
     >
       {children}
