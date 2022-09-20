@@ -85,6 +85,14 @@ const rozkladReducer = (state, action) => {
           [action.payload.sem]: action.payload.data,
         },
       };
+    case 'SET_TEACHERFOND':
+      return {
+        ...state,
+        teacherfond: {
+          ...state.teacherfond,
+          [action.payload.sem]: action.payload.data,
+        },
+      };
     case 'DELETE_ROWFROMAUDFOND':
       return {
         ...state,
@@ -96,11 +104,33 @@ const rozkladReducer = (state, action) => {
           },
         },
       };
+    case 'DELETE_ROWFROMTEACHERFOND':
+      return {
+        ...state,
+        teacherfond: {
+          ...state.teacherfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data,
+          },
+        },
+      };
     case 'ADD_AUDTOFOND':
       return {
         ...state,
         audfond: {
           ...state.audfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data,
+          },
+        },
+      };
+    case 'ADD_TEACHERTOFOND':
+      return {
+        ...state,
+        teacherfond: {
+          ...state.teacherfond,
           [action.payload.sem]: {
             ...state[action.payload.sem],
             data: action.payload.data,

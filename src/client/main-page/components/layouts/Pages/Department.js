@@ -5,6 +5,7 @@ import RozkladContext from '../../../context/RozkladContext';
 import Spinner from '../../Spinner/Spinner';
 import FineSchedule from '../Schedule/FineSchedule';
 import FormAddAud from '../Forms/FormAddAud';
+import FormAddTeacher from "../Forms/FormAddTeacher";
 
 const FineHeader = () => {
   const { state } = useContext(RozkladContext);
@@ -68,6 +69,16 @@ const Department = () => {
     });
   };
 
+  const handleAddTeacher = () => {
+    setShowModal(true);
+
+    setDataForModal({
+      title: `Викладацький фонд ${publicPanel.semester.name}`,
+      size: 'xl',
+      body: { func: FormAddTeacher, data: {} },
+    });
+  };
+
   if (!dataLoaded) return <Spinner />;
   return (
     <>
@@ -77,7 +88,7 @@ const Department = () => {
           <>
             <nav className="navbar navbar-expand-lg bg-light">
               <div className="container-fluid">
-                <a className="navbar-brand">Робоча панель</a>
+                <a className="navbar-brand">НАЛАШТУВАННЯ: </a>
                 <button
                   className="navbar-toggler"
                   type="button"
@@ -106,8 +117,8 @@ const Department = () => {
                       </a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="#">
-                        Pricing
+                      <a className="nav-link" onClick={handleAddTeacher} href="#">
+                        Викладацький фонд
                       </a>
                     </li>
                     <li className="nav-item">
