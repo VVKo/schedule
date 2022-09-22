@@ -9,7 +9,7 @@ const { serverFunctions } = server;
 const RozkladContext = createContext();
 
 const rozkladChNU_API =
-  'https://script.google.com/macros/s/AKfycbwLRPzvyn106swWtg-1hZYyzaSTXvozv3iVSMQrA1F__hIscERqX0ZgGIPrHsLcBBY/exec';
+  'https://script.google.com/macros/s/AKfycby7as-kx0XauE5fpqIrnjVRO0NfAy8t1snp88DjWiW11y5slseEXqq_TfFECSylcSU/exec';
 
 const driver_API =
   'https://script.google.com/macros/s/AKfycbzPGSRA_iPCjt5IwrgY4AxPuCoKuP5gofysbI79ovilw_vob9UeHMD1ZzZoVicUhoA1/exec';
@@ -186,6 +186,33 @@ export const RozkladProvider = ({ children }) => {
     });
   };
 
+  const deleteFromAcademicLoadFond = (sem, folderID, row) => {
+    setLoading(
+      'Видалення Дисципліни з Навантаження ...',
+      'delrowfromdiscfondload'
+    );
+    getData(
+      `${rozkladChNU_API}?action=DELETEROWFROMACADEMICLOADFOND&sem=${sem}&folderID=${folderID}&row=${row}`
+    ).then(data => {
+      const tmp = state.academicloadfond[sem].data.filter(
+        (r, idx) => idx !== row - 4
+      );
+
+      dispatch({
+        type: 'DELETE_ROWFROMACADEMICLOADFOND',
+        payload: { sem, data: tmp },
+      });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'delrowfromdiscfondload',
+        },
+      });
+    });
+  };
+
   const deleteFromTeacherFond = (sem, folderID, row) => {
     setLoading('Видалення викладача з фонду ...', 'delteacerrowfromfond');
     getData(
@@ -269,6 +296,31 @@ export const RozkladProvider = ({ children }) => {
           loading: false,
           status: data.status,
           newtoast: 'addgrouptofond',
+        },
+      });
+    });
+  };
+
+  const addToAcademicLoadFond = (sem, folderID, arr) => {
+    setLoading('Додаємо дисципліну до навантаження ...', 'addgrouptofondload');
+    getData(
+      `${rozkladChNU_API}?action=ADDTOACADEMICLOADFOND&sem=${sem}&folderID=${folderID}&data=${encodeURIComponent(
+        arr
+      )}`
+    ).then(data => {
+      const tmp = state.academicloadfond[sem].data;
+      const spaces = [];
+      for (let i = 0; i < 80; i++) {
+        spaces.push('');
+      }
+      tmp.push([...JSON.parse(arr), ...spaces]);
+      dispatch({ type: 'ADD_ACADEMICLOADTOFOND', payload: { sem, data: tmp } });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'addgrouptofondload',
         },
       });
     });
@@ -377,6 +429,27 @@ export const RozkladProvider = ({ children }) => {
           loading: true,
           status: data.status,
           newtoast: 'disciplinefondnew',
+        },
+      });
+    });
+  };
+
+  const getAcademicLoadFond = (sem, folderID) => {
+    setLoading('Завантажуємо навантаження ...', 'academikloadfondnew');
+    getData(
+      `${rozkladChNU_API}?action=GETACADEMICLOADFOND&sem=${sem}&folderID=${folderID}`
+    ).then(data => {
+      console.log('getAcademicLoadFond', data);
+      dispatch({
+        type: 'SET_ACADEMICLOADFOND',
+        payload: { sem, data },
+      });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: true,
+          status: data.status,
+          newtoast: 'academikloadfondnew',
         },
       });
     });
@@ -799,14 +872,17 @@ export const RozkladProvider = ({ children }) => {
         getGroupFond,
         getTeacherFond,
         getDisciplineFond,
+        getAcademicLoadFond,
         deleteFromAudFond,
         deleteFromTeacherFond,
         deleteFromGroupFond,
         deleteFromDisciplineFond,
+        deleteFromAcademicLoadFond,
         addToAudFond,
         addToTeacherFond,
         addToGroupFond,
         addToDisciplineFond,
+        addToAcademicLoadFond,
       }}
     >
       {children}

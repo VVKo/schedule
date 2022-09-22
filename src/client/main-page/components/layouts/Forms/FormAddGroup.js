@@ -126,7 +126,7 @@ const FormAddGroup = () => {
               ]);
             });
           }
-          console.log(JSON.stringify(arr));
+
           addToGroupFond(
             currentSemester.name,
             currentAcademicYear.id,
