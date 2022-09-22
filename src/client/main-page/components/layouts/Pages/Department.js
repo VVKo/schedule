@@ -5,7 +5,8 @@ import RozkladContext from '../../../context/RozkladContext';
 import Spinner from '../../Spinner/Spinner';
 import FineSchedule from '../Schedule/FineSchedule';
 import FormAddAud from '../Forms/FormAddAud';
-import FormAddTeacher from "../Forms/FormAddTeacher";
+import FormAddTeacher from '../Forms/FormAddTeacher';
+import FormAddGroup from '../Forms/FormAddGroup';
 
 const FineHeader = () => {
   const { state } = useContext(RozkladContext);
@@ -79,6 +80,15 @@ const Department = () => {
     });
   };
 
+  const handleAddGroup = () => {
+    setShowModal(true);
+    setDataForModal({
+      title: `Груповий фонд ${publicPanel.semester.name}`,
+      size: 'xl',
+      body: { func: FormAddGroup, data: {} },
+    });
+  };
+
   if (!dataLoaded) return <Spinner />;
   return (
     <>
@@ -103,21 +113,26 @@ const Department = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
                   <ul className="navbar-nav">
                     <li className="nav-item">
-                      <a
-                        className="nav-link active"
-                        aria-current="page"
-                        href="#"
-                      >
-                        Home
+                      <a className="nav-link" aria-current="page" href="#">
+                        Навантаження
                       </a>
                     </li>
                     <li className="nav-item">
                       <a className="nav-link" href="#">
-                        Features
+                        Дисципліни
                       </a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" onClick={handleAddTeacher} href="#">
+                      <a className="nav-link" onClick={handleAddGroup} href="#">
+                        Груповий фонд
+                      </a>
+                    </li>
+                    <li className="nav-item">
+                      <a
+                        className="nav-link"
+                        onClick={handleAddTeacher}
+                        href="#"
+                      >
                         Викладацький фонд
                       </a>
                     </li>

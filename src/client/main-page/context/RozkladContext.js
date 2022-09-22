@@ -9,7 +9,7 @@ const { serverFunctions } = server;
 const RozkladContext = createContext();
 
 const rozkladChNU_API =
-  'https://script.google.com/macros/s/AKfycbxUmeyLZsIhIIXP27kpGkRHOEPKP61LSrYNgOvHMYIkVhICQjGoboOvUVvEAaDgfME/exec';
+  'https://script.google.com/macros/s/AKfycbzfIIaoKrpKtOyuZUhNk-PnliiBlttKGX4GOZ9XozHozFjGw9G_3lRhvmLAbkB9Flk/exec';
 
 const driver_API =
   'https://script.google.com/macros/s/AKfycbzPGSRA_iPCjt5IwrgY4AxPuCoKuP5gofysbI79ovilw_vob9UeHMD1ZzZoVicUhoA1/exec';
@@ -140,14 +140,41 @@ export const RozkladProvider = ({ children }) => {
     });
   };
 
+  const deleteFromGroupFond = (sem, folderID, row) => {
+    setLoading('Видалення групи з фонду ...', 'delrowfromgrfond');
+    getData(
+      `${rozkladChNU_API}?action=DELETEROWFROMGROUPFOND&sem=${sem}&folderID=${folderID}&row=${row}`
+    ).then(data => {
+      const tmp = state.groupfond[sem].data.filter((r, idx) => idx !== row - 4);
+      // delete tmp[row - 4];
+      dispatch({
+        type: 'DELETE_ROWFROMGROUPFOND',
+        payload: { sem, data: tmp },
+      });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'delrowfromgrfond',
+        },
+      });
+    });
+  };
+
   const deleteFromTeacherFond = (sem, folderID, row) => {
     setLoading('Видалення викладача з фонду ...', 'delteacerrowfromfond');
     getData(
-        `${rozkladChNU_API}?action=DELETEROWFROMTEACHERFOND&sem=${sem}&folderID=${folderID}&row=${row}`
+      `${rozkladChNU_API}?action=DELETEROWFROMTEACHERFOND&sem=${sem}&folderID=${folderID}&row=${row}`
     ).then(data => {
-      const tmp = state.teacherfond[sem].data.filter((r, idx) => idx !== row - 4);
+      const tmp = state.teacherfond[sem].data.filter(
+        (r, idx) => idx !== row - 4
+      );
       // delete tmp[row - 4];
-      dispatch({ type: 'DELETE_ROWFROMTEACHERFOND', payload: { sem, data: tmp } });
+      dispatch({
+        type: 'DELETE_ROWFROMTEACHERFOND',
+        payload: { sem, data: tmp },
+      });
       dispatch({
         type: 'UPDATE',
         payload: {
@@ -198,10 +225,33 @@ export const RozkladProvider = ({ children }) => {
     });
   };
 
+  const addToGroupFond = (sem, folderID, arr) => {
+    setLoading('Запис групи у базу ...', 'addgrouptofond');
+    getData(
+      `${rozkladChNU_API}?action=ADDTOGROUPFOND&sem=${sem}&folderID=${folderID}&data=${encodeURIComponent(arr)}`
+    ).then(data => {
+      const tmp = state.groupfond[sem].data;
+      const spaces = [];
+      for (let i = 0; i < 80; i++) {
+        spaces.push('');
+      }
+      JSON.parse(arr).forEach(r => tmp.push([...r, ...spaces]));
+      dispatch({ type: 'ADD_GROUPTOFOND', payload: { sem, data: tmp } });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'addgrouptofond',
+        },
+      });
+    });
+  };
+
   const addToTeacherFond = (sem, folderID, arr) => {
     setLoading('Запис викладача у базу ...', 'addteachertofond');
     getData(
-        `${rozkladChNU_API}?action=ADDTOTEACHERFOND&sem=${sem}&folderID=${folderID}&data=${arr}`
+      `${rozkladChNU_API}?action=ADDTOTEACHERFOND&sem=${sem}&folderID=${folderID}&data=${arr}`
     ).then(data => {
       const tmp = state.teacherfond[sem].data;
       const spaces = [];
@@ -224,9 +274,9 @@ export const RozkladProvider = ({ children }) => {
   const getAudFond = (sem, folderID) => {
     setLoading('Завантажуємо аудиторний фонд ...', 'audfondnew');
     getData(
-      `${rozkladChNU_API}?action=GETAUDFOND&&sem=${sem}&folderID=${folderID}`
+      `${rozkladChNU_API}?action=GETAUDFOND&sem=${sem}&folderID=${folderID}`
     ).then(data => {
-      console.log('getAudFond',data)
+      console.log('getAudFond', data);
       dispatch({
         type: 'SET_AUDFOND',
         payload: { sem, data },
@@ -242,12 +292,33 @@ export const RozkladProvider = ({ children }) => {
     });
   };
 
+  const getGroupFond = (sem, folderID) => {
+    setLoading('Завантажуємо груповий фонд ...', 'groupfondnew');
+    getData(
+      `${rozkladChNU_API}?action=GETGROUPFOND&sem=${sem}&folderID=${folderID}`
+    ).then(data => {
+      console.log('getGroupFond', data);
+      dispatch({
+        type: 'SET_GROUPFOND',
+        payload: { sem, data },
+      });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: true,
+          status: data.status,
+          newtoast: 'groupfondnew',
+        },
+      });
+    });
+  };
+
   const getTeacherFond = (sem, folderID) => {
     setLoading('Завантажуємо викладацький фонд ...', 'toastteacherfondnew');
     getData(
       `${rozkladChNU_API}?action=GETTEACHERFOND&sem=${sem}&folderID=${folderID}`
     ).then(data => {
-      console.log('getTeacherFond', data)
+      console.log('getTeacherFond', data);
       dispatch({
         type: 'SET_TEACHERFOND',
         payload: { sem, data },
@@ -656,11 +727,14 @@ export const RozkladProvider = ({ children }) => {
         setCurrentSemester,
         createNewAcademicYear,
         getAudFond,
+        getGroupFond,
         getTeacherFond,
         deleteFromAudFond,
         deleteFromTeacherFond,
+        deleteFromGroupFond,
         addToAudFond,
         addToTeacherFond,
+        addToGroupFond,
       }}
     >
       {children}

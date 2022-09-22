@@ -14,10 +14,17 @@ const GuestPanel = () => {
     setCurrentSemester,
     createNewAcademicYear,
     getAudFond,
+    getGroupFond,
     getTeacherFond,
   } = useContext(RozkladContext);
 
-  const { currentDep, currentAcademicYear, audfond, teacherfond } = state;
+  const {
+    currentDep,
+    currentAcademicYear,
+    audfond,
+    teacherfond,
+    groupfond,
+  } = state;
 
   if (!currentDep && !currentAcademicYear) return <Spinner />;
 
@@ -134,6 +141,11 @@ const GuestPanel = () => {
               getTeacherFond(val, currentAcademicYear.id);
             } else if (!(val in teacherfond)) {
               getTeacherFond(val, currentAcademicYear.id);
+            }
+            if (!groupfond) {
+              getGroupFond(val, currentAcademicYear.id);
+            } else if (!(val in groupfond)) {
+              getGroupFond(val, currentAcademicYear.id);
             }
           } else {
             academicYearRef.current.disabled = false;
