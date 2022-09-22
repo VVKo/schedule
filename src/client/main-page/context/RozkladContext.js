@@ -9,7 +9,7 @@ const { serverFunctions } = server;
 const RozkladContext = createContext();
 
 const rozkladChNU_API =
-  'https://script.google.com/macros/s/AKfycbzfIIaoKrpKtOyuZUhNk-PnliiBlttKGX4GOZ9XozHozFjGw9G_3lRhvmLAbkB9Flk/exec';
+  'https://script.google.com/macros/s/AKfycbwLRPzvyn106swWtg-1hZYyzaSTXvozv3iVSMQrA1F__hIscERqX0ZgGIPrHsLcBBY/exec';
 
 const driver_API =
   'https://script.google.com/macros/s/AKfycbzPGSRA_iPCjt5IwrgY4AxPuCoKuP5gofysbI79ovilw_vob9UeHMD1ZzZoVicUhoA1/exec';
@@ -162,6 +162,30 @@ export const RozkladProvider = ({ children }) => {
     });
   };
 
+  const deleteFromDisciplineFond = (sem, folderID, row) => {
+    setLoading('Видалення Дисципліни з фонду ...', 'delrowfromdiscfond');
+    getData(
+      `${rozkladChNU_API}?action=DELETEROWFROMDISCIPLINEFOND&sem=${sem}&folderID=${folderID}&row=${row}`
+    ).then(data => {
+      const tmp = state.disciplinefond[sem].data.filter(
+        (r, idx) => idx !== row - 4
+      );
+      // delete tmp[row - 4];
+      dispatch({
+        type: 'DELETE_ROWFROMDISCIPLINEFOND',
+        payload: { sem, data: tmp },
+      });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'delrowfromdiscfond',
+        },
+      });
+    });
+  };
+
   const deleteFromTeacherFond = (sem, folderID, row) => {
     setLoading('Видалення викладача з фонду ...', 'delteacerrowfromfond');
     getData(
@@ -228,7 +252,9 @@ export const RozkladProvider = ({ children }) => {
   const addToGroupFond = (sem, folderID, arr) => {
     setLoading('Запис групи у базу ...', 'addgrouptofond');
     getData(
-      `${rozkladChNU_API}?action=ADDTOGROUPFOND&sem=${sem}&folderID=${folderID}&data=${encodeURIComponent(arr)}`
+      `${rozkladChNU_API}?action=ADDTOGROUPFOND&sem=${sem}&folderID=${folderID}&data=${encodeURIComponent(
+        arr
+      )}`
     ).then(data => {
       const tmp = state.groupfond[sem].data;
       const spaces = [];
@@ -243,6 +269,28 @@ export const RozkladProvider = ({ children }) => {
           loading: false,
           status: data.status,
           newtoast: 'addgrouptofond',
+        },
+      });
+    });
+  };
+
+  const addToDisciplineFond = (sem, folderID, arr) => {
+    setLoading('Запис групи у базу ...', 'adddisciplinetofond');
+    getData(
+      `${rozkladChNU_API}?action=ADDTODISCIPLINEFOND&sem=${sem}&folderID=${folderID}&data=${encodeURIComponent(
+        arr
+      )}`
+    ).then(data => {
+      const tmp = state.disciplinefond[sem].data;
+      const spaces = [''];
+      tmp.push([...JSON.parse(arr), ...spaces]);
+      dispatch({ type: 'ADD_DISCIPLINETOFOND', payload: { sem, data: tmp } });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'adddisciplinetofond',
         },
       });
     });
@@ -308,6 +356,27 @@ export const RozkladProvider = ({ children }) => {
           loading: true,
           status: data.status,
           newtoast: 'groupfondnew',
+        },
+      });
+    });
+  };
+
+  const getDisciplineFond = (sem, folderID) => {
+    setLoading('Завантажуємо дисципліни ...', 'disciplinefondnew');
+    getData(
+      `${rozkladChNU_API}?action=GETDISCIPLINEFOND&sem=${sem}&folderID=${folderID}`
+    ).then(data => {
+      console.log('getDisciplineFond', data);
+      dispatch({
+        type: 'SET_DISCIPLINEFOND',
+        payload: { sem, data },
+      });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: true,
+          status: data.status,
+          newtoast: 'disciplinefondnew',
         },
       });
     });
@@ -729,12 +798,15 @@ export const RozkladProvider = ({ children }) => {
         getAudFond,
         getGroupFond,
         getTeacherFond,
+        getDisciplineFond,
         deleteFromAudFond,
         deleteFromTeacherFond,
         deleteFromGroupFond,
+        deleteFromDisciplineFond,
         addToAudFond,
         addToTeacherFond,
         addToGroupFond,
+        addToDisciplineFond,
       }}
     >
       {children}

@@ -7,6 +7,8 @@ import FineSchedule from '../Schedule/FineSchedule';
 import FormAddAud from '../Forms/FormAddAud';
 import FormAddTeacher from '../Forms/FormAddTeacher';
 import FormAddGroup from '../Forms/FormAddGroup';
+import FormAddDiscipline from "../Forms/FormAddDiscipline";
+import FormAddAcademicLoad from "../Forms/FormAddAcademicLoad";
 
 const FineHeader = () => {
   const { state } = useContext(RozkladContext);
@@ -89,6 +91,24 @@ const Department = () => {
     });
   };
 
+  const handleAddDisciplie = () => {
+    setShowModal(true);
+    setDataForModal({
+      title: `Дисципліни ${publicPanel.semester.name}`,
+      size: 'xl',
+      body: { func: FormAddDiscipline, data: {} },
+    });
+  };
+
+  const handleAddAcademicLoad = () => {
+    setShowModal(true);
+    setDataForModal({
+      title: `Навантаження ${publicPanel.semester.name}`,
+      size: 'xl',
+      body: { func: FormAddAcademicLoad, data: {} },
+    });
+  };
+
   if (!dataLoaded) return <Spinner />;
   return (
     <>
@@ -113,12 +133,12 @@ const Department = () => {
                 <div className="collapse navbar-collapse" id="navbarNav">
                   <ul className="navbar-nav">
                     <li className="nav-item">
-                      <a className="nav-link" aria-current="page" href="#">
+                      <a className="nav-link" onClick={handleAddAcademicLoad} href="#">
                         Навантаження
                       </a>
                     </li>
                     <li className="nav-item">
-                      <a className="nav-link" href="#">
+                      <a className="nav-link" onClick={handleAddDisciplie} href="#">
                         Дисципліни
                       </a>
                     </li>

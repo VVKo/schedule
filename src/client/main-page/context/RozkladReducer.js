@@ -93,6 +93,14 @@ const rozkladReducer = (state, action) => {
           [action.payload.sem]: action.payload.data,
         },
       };
+    case 'SET_DISCIPLINEFOND':
+      return {
+        ...state,
+        disciplinefond: {
+          ...state.disciplinefond,
+          [action.payload.sem]: action.payload.data,
+        },
+      };
     case 'SET_TEACHERFOND':
       return {
         ...state,
@@ -134,6 +142,17 @@ const rozkladReducer = (state, action) => {
           },
         },
       };
+    case 'DELETE_ROWFROMDISCIPLINEFOND':
+      return {
+        ...state,
+        disciplinefond: {
+          ...state.disciplinefond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data,
+          },
+        },
+      };
     case 'ADD_AUDTOFOND':
       return {
         ...state,
@@ -150,6 +169,17 @@ const rozkladReducer = (state, action) => {
         ...state,
         groupfond: {
           ...state.groupfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data,
+          },
+        },
+      };
+    case 'ADD_DISCIPLINETOFOND':
+      return {
+        ...state,
+        disciplinefond: {
+          ...state.disciplinefond,
           [action.payload.sem]: {
             ...state[action.payload.sem],
             data: action.payload.data,

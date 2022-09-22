@@ -16,6 +16,7 @@ const GuestPanel = () => {
     getAudFond,
     getGroupFond,
     getTeacherFond,
+    getDisciplineFond,
   } = useContext(RozkladContext);
 
   const {
@@ -24,6 +25,7 @@ const GuestPanel = () => {
     audfond,
     teacherfond,
     groupfond,
+    disciplinefond,
   } = state;
 
   if (!currentDep && !currentAcademicYear) return <Spinner />;
@@ -38,6 +40,14 @@ const GuestPanel = () => {
     'currentAcademicYear',
     currentAcademicYear
   );
+
+  const fondInit = (val, fond, getFond) => {
+    if (!fond) {
+      getFond(val, currentAcademicYear.id);
+    } else if (!(val in fond)) {
+      getFond(val, currentAcademicYear.id);
+    }
+  };
 
   const groupeRef = useRef();
   const teacherRef = useRef();
@@ -70,17 +80,6 @@ const GuestPanel = () => {
             name: val,
             id: currentDep[val] ? currentDep[val] : '',
           });
-
-          // setPublicPanel(prevState => {
-          //   return {
-          //     ...prevState,
-          //     academicYear: {
-          //       ...prevState.academicYear,
-          //       name: val,
-          //       id: currentDep[val] ? currentDep[val] : '',
-          //     },
-          //   };
-          // });
 
           if (val !== 'Виберіть навчльний рік' && currentDep[val] === '') {
             createNewAcademicYear({
@@ -131,22 +130,10 @@ const GuestPanel = () => {
             academicYearRef.current.disabled = true;
             groupeRef.current.disabled = false;
             teacherRef.current.disabled = false;
-
-            if (!audfond) {
-              getAudFond(val, currentAcademicYear.id);
-            } else if (!(val in audfond)) {
-              getAudFond(val, currentAcademicYear.id);
-            }
-            if (!teacherfond) {
-              getTeacherFond(val, currentAcademicYear.id);
-            } else if (!(val in teacherfond)) {
-              getTeacherFond(val, currentAcademicYear.id);
-            }
-            if (!groupfond) {
-              getGroupFond(val, currentAcademicYear.id);
-            } else if (!(val in groupfond)) {
-              getGroupFond(val, currentAcademicYear.id);
-            }
+            fondInit(val, audfond, getAudFond);
+            fondInit(val, teacherfond, getTeacherFond);
+            fondInit(val, groupfond, getGroupFond);
+            fondInit(val, disciplinefond, getDisciplineFond);
           } else {
             academicYearRef.current.disabled = false;
             groupeRef.current.disabled = true;
