@@ -10,11 +10,7 @@ import CHeader from './layouts/Header/Header';
 import { StyledMain } from './Styled/StyledComponents';
 import ModalLayout from './layouts/Modal/ModalLayout';
 
-
-
-
 const Main = () => {
-
   return (
     <RozkladProvider>
       <Router>
