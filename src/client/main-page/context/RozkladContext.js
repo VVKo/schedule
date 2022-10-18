@@ -9,7 +9,7 @@ const { serverFunctions } = server;
 const RozkladContext = createContext();
 
 const rozkladChNU_API =
-  'https://script.google.com/macros/s/AKfycby7as-kx0XauE5fpqIrnjVRO0NfAy8t1snp88DjWiW11y5slseEXqq_TfFECSylcSU/exec';
+  'https://script.google.com/macros/s/AKfycbxhBg7xE-jbJVvxjxejW1zO-5V4Ts0CfaEtu2J1nb1W7qg3pfnz1TiWo0wFgEyS_iI/exec';
 
 const driver_API =
   'https://script.google.com/macros/s/AKfycbzPGSRA_iPCjt5IwrgY4AxPuCoKuP5gofysbI79ovilw_vob9UeHMD1ZzZoVicUhoA1/exec';
@@ -135,6 +135,35 @@ export const RozkladProvider = ({ children }) => {
           loading: false,
           status: data.status,
           newtoast: 'delrowfromfond',
+        },
+      });
+    });
+  };
+
+  const deleteFromSchedule = (sem, folderID, txt) => {
+    setLoading('Видалення дисципліни з розкладу ...', 'delfromschedule');
+    getData(
+      `${rozkladChNU_API}?action=DELETEDISCFROMSCHEDULE&sem=${sem}&folderID=${folderID}&txt=${txt}`
+    ).then(data => {
+      const obj = JSON.parse(txt)
+      const aud = state.audfond[sem].data;
+      if (obj.audRow) aud[+obj.audRow - 4][+obj.audCol - 1] = '';
+      const prep = state.teacherfond[sem].data;
+      prep[+obj.teacherRow - 4][+obj.teacherCol - 1] = '';
+      const academ = state.academicloadfond[sem].data;
+      academ[+obj.academicRow - 4][+obj.academicCol - 1] = '';
+      academ[+obj.academicRow - 4][7] -= 1;
+
+      dispatch({
+        type: 'DELETE_DISC_FROM_SCHEDULE',
+        payload: { sem, data: { aud, prep, academ } },
+      });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'delfromschedule',
         },
       });
     });
@@ -296,6 +325,48 @@ export const RozkladProvider = ({ children }) => {
           loading: false,
           status: data.status,
           newtoast: 'addgrouptofond',
+        },
+      });
+    });
+  };
+
+  const addToSchedule = (sem, folderID, arr) => {
+    setLoading('Збереження...', 'addtoschedule');
+    getData(
+      `${rozkladChNU_API}?action=ADDTOSCHEDULE&sem=${sem}&folderID=${folderID}&data=${encodeURIComponent(
+        arr
+      )}`
+    ).then(data => {
+      const {
+        rowload,
+        colload,
+        rowteacher,
+        colteacher,
+        rowaud,
+        colaud,
+        aud,
+      } = JSON.parse(arr);
+      const academicloadfonddata = state.academicloadfond[sem].data;
+      academicloadfonddata[+rowload - 4][+colload - 1] = aud;
+      academicloadfonddata[+rowload - 4][7] =
+        +academicloadfonddata[+rowload - 4][7] + 1;
+      const teacherfonddata = state.teacherfond[sem].data;
+      teacherfonddata[+rowteacher - 4][+colteacher - 1] = '+';
+      const audfonddata = state.audfond[sem].data;
+      if (rowaud) audfonddata[+rowaud - 4][+colaud - 1] = '+';
+      dispatch({
+        type: 'ADD_TO_SCHEDULE',
+        payload: {
+          sem,
+          data: { academicloadfonddata, teacherfonddata, audfonddata },
+        },
+      });
+      dispatch({
+        type: 'UPDATE',
+        payload: {
+          loading: false,
+          status: data.status,
+          newtoast: 'addtoschedule',
         },
       });
     });
@@ -878,11 +949,13 @@ export const RozkladProvider = ({ children }) => {
         deleteFromGroupFond,
         deleteFromDisciplineFond,
         deleteFromAcademicLoadFond,
+        deleteFromSchedule,
         addToAudFond,
         addToTeacherFond,
         addToGroupFond,
         addToDisciplineFond,
         addToAcademicLoadFond,
+        addToSchedule,
       }}
     >
       {children}

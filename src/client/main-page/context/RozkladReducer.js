@@ -128,6 +128,31 @@ const rozkladReducer = (state, action) => {
           },
         },
       };
+    case 'DELETE_DISC_FROM_SCHEDULE':
+      return {
+        ...state,
+        audfond: {
+          ...state.audfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data.aud,
+          },
+        },
+        academicloadfond: {
+          ...state.academicloadfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data.academ,
+          },
+        },
+        teacherfond: {
+          ...state.teacherfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data.prep,
+          },
+        },
+      };
     case 'DELETE_ROWFROMACADEMICLOADFOND':
       return {
         ...state,
@@ -169,6 +194,31 @@ const rozkladReducer = (state, action) => {
           [action.payload.sem]: {
             ...state[action.payload.sem],
             data: action.payload.data,
+          },
+        },
+      };
+    case 'ADD_TO_SCHEDULE':
+      return {
+        ...state,
+        audfond: {
+          ...state.audfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data.audfonddata,
+          },
+        },
+        academicloadfond: {
+          ...state.academicloadfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data.academicloadfonddata,
+          },
+        },
+        teacherfond: {
+          ...state.teacherfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data.teacherfonddata,
           },
         },
       };

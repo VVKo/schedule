@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
-import {FiMinusCircle, FiPlusCircle} from 'react-icons/fi';
+import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi';
 import { Collapse } from 'react-bootstrap';
+import { Link, Route, NavLink } from 'react-router-dom';
 import RozkladContext from '../../../../context/RozkladContext';
 import FormAddTeacher from '../../Forms/FormAddTeacher';
 import FormAddGroup from '../../Forms/FormAddGroup';
@@ -11,7 +12,7 @@ import {
   StaffHeader,
   StaffSidebar,
 } from '../../../Styled/StaffWorkShop/STYLED';
-import StaffMain from "./StaffMain";
+import StaffMain from './StaffMain';
 
 const StaffWorkShop = () => {
   const [setting, setSetting] = useState(false);
@@ -97,6 +98,8 @@ const StaffWorkShop = () => {
               <h6
                 className="sidebar-heading d-flex justify-content-between align-items-center px-3 my-1 text-muted text-uppercase"
                 onClick={() => setSetting(!setting)}
+                aria-controls="collapse-navbar"
+                aria-expanded={setting}
               >
                 <span>НАЛАШТУВАННЯ: </span>
                 {setting ? (
@@ -106,37 +109,77 @@ const StaffWorkShop = () => {
                 )}
               </h6>
               <Collapse in={setting}>
-                <ul className="nav flex-column">
+                <ul className="nav flex-column" id="collapse-navbar">
                   <li className="nav-item">
-                    <a className="nav-link" onClick={handleAddAcademicLoad}>
+                    <NavLink
+                      to="addload"
+                      className={({ isActive }) =>
+                        isActive ? 'nav-link active' : 'nav-link'
+                      }
+                    >
                       Навантаження
-                    </a>
+                    </NavLink>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" onClick={handleAddDisciplie}>
+                    <NavLink
+                      to="adddisc"
+                      className={({ isActive }) =>
+                        isActive ? 'nav-link active' : 'nav-link'
+                      }
+                    >
                       Дисципліни
-                    </a>
+                    </NavLink>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" onClick={handleAddGroup}>
+                    <NavLink
+                      to="addgroup"
+                      className={({ isActive }) =>
+                        isActive ? 'nav-link active' : 'nav-link'
+                      }
+                    >
                       Груповий фонд
-                    </a>
+                    </NavLink>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" onClick={handleAddTeacher}>
+                    <NavLink
+                      to="addteacher"
+                      className={({ isActive }) =>
+                        isActive ? 'nav-link active' : 'nav-link'
+                      }
+                    >
                       Викладацький фонд
-                    </a>
+                    </NavLink>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" onClick={handleAddAud}>
+                    <NavLink
+                      to="addaud"
+                      className={({ isActive }) =>
+                        isActive ? 'nav-link active' : 'nav-link'
+                      }
+                    >
                       Аудиторний фонд
-                    </a>
+                    </NavLink>
                   </li>
                 </ul>
               </Collapse>
+              <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 my-1 text-muted text-uppercase">
+                <span>РОЗКЛАД: </span>
+              </h6>
+              <ul className="nav flex-column">
+                <li className="nav-item">
+                  <NavLink
+                    to="totalschedule"
+                    className={({ isActive }) =>
+                      isActive ? 'nav-link active' : 'nav-link'
+                    }
+                  >
+                    Весь розклад
+                  </NavLink>
+                </li>
+              </ul>
             </div>
           </StaffSidebar>
-          <StaffMain />
+          <Route path="/department/:func" component={StaffMain} />
         </div>
       </div>
     </>
