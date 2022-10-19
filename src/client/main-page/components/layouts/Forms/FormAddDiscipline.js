@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Form, Formik, useField } from 'formik';
 import * as Yup from 'yup';
 import { FaTrash } from 'react-icons/fa';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import RozkladContext from '../../../context/RozkladContext';
 
 const DisciplineSchema = Yup.object().shape({
@@ -43,11 +44,21 @@ const FormAddDiscipline = () => {
     RozkladContext
   );
 
-  const { disciplinefond, currentSemester, currentAcademicYear } = state;
+  const {
+    disciplinefond,
+    currentSemester,
+    currentAcademicYear,
+    academicloadfond,
+  } = state;
 
-  useEffect(() => {
-    console.log('audFOND', disciplinefond);
-  }, [disciplinefond]);
+  useEffect(() => {}, [disciplinefond]);
+
+  const isDiscInAcademicLoad = disc => {
+    return (
+      academicloadfond[currentSemester.name].data.filter(r => r[0] === disc)
+        .length === 0
+    );
+  };
 
   const MyTable = () => {
     return (
@@ -70,19 +81,42 @@ const FormAddDiscipline = () => {
                 {r.slice(0, 4).map((val, indx) => (
                   <td key={`val${idx}${indx}`}>{val}</td>
                 ))}
-                <td>
-                  <FaTrash
-                    data-row={idx + 4}
-                    onClick={event => {
-                      const row = +event.currentTarget.getAttribute('data-row');
-                      deleteFromDisciplineFond(
-                        currentSemester.name,
-                        currentAcademicYear.id,
-                        row
-                      );
-                    }}
-                  />
-                </td>
+
+                <OverlayTrigger
+                  placement="left"
+                  delay={{ show: 250, hide: 400 }}
+                  overlay={
+                    <Tooltip id="button-tooltip-2">
+                      {!isDiscInAcademicLoad(r[0])
+                        ? 'Наразі видалити не можливо'
+                        : 'Видалити з фонду'}
+                    </Tooltip>
+                  }
+                >
+                  <td>
+                    <Button
+                      variant={
+                        isDiscInAcademicLoad(r[0])
+                          ? 'outline-danger'
+                          : 'outline-dark'
+                      }
+                      disabled={!isDiscInAcademicLoad(r[0])}
+                      data-row={idx + 4}
+                      onClick={event => {
+                        const row = +event.currentTarget.getAttribute(
+                          'data-row'
+                        );
+                        deleteFromDisciplineFond(
+                          currentSemester.name,
+                          currentAcademicYear.id,
+                          row
+                        );
+                      }}
+                    >
+                      <FaTrash />
+                    </Button>
+                  </td>
+                </OverlayTrigger>
               </tr>
             );
           })}

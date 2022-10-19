@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
-import { Button, Nav, OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
+import { Button, Nav, OverlayTrigger, Popover } from 'react-bootstrap';
 import { FiEdit3, FiEye, FiTrash2 } from 'react-icons/fi';
 import { Week } from '../../../Styled/StaffWorkShop/STYLED';
 import RozkladContext from '../../../../context/RozkladContext';
-import FormAddAud from '../../Forms/FormAddAud';
 import FormAddDisciplineToSchedule from '../../Forms/FormAddDisciplineToSchedule';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
@@ -143,7 +142,7 @@ const SheduleWeek = ({ wn, group }) => {
             r[col + 1] !== 'ONLINE'
               ? auds.filter(ro => r[col + 1] === ro[5])[0][0]
               : null,
-          audCol: col - 6,
+          audCol: col - 2,
         };
       });
     return (

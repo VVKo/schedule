@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Form, Formik, useField } from 'formik';
 import * as Yup from 'yup';
 import { FaTrash } from 'react-icons/fa';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import RozkladContext from '../../../context/RozkladContext';
 
 const GroupSchema = Yup.object().shape({
@@ -40,10 +41,22 @@ const FormAddGroup = () => {
   const { state, addToGroupFond, deleteFromGroupFond } = useContext(
     RozkladContext
   );
-  const { groupfond, currentSemester, currentAcademicYear } = state;
+  const {
+    groupfond,
+    currentSemester,
+    currentAcademicYear,
+    academicloadfond,
+  } = state;
   useEffect(() => {
     console.log('groupFOND', groupfond);
   }, [groupfond]);
+
+  const isGroupInAcademicLoad = gr => {
+    return (
+      academicloadfond[currentSemester.name].data.filter(r => r[1] === gr)
+        .length === 0
+    );
+  };
 
   const MyTable = () => {
     return (
@@ -66,19 +79,42 @@ const FormAddGroup = () => {
                 {r.slice(0, 4).map((val, indx) => (
                   <td key={`val${idx}${indx}`}>{val}</td>
                 ))}
-                <td>
-                  <FaTrash
-                    data-row={idx + 4}
-                    onClick={event => {
-                      const row = +event.currentTarget.getAttribute('data-row');
-                      deleteFromGroupFond(
-                        currentSemester.name,
-                        currentAcademicYear.id,
-                        row
-                      );
-                    }}
-                  />
-                </td>
+
+                <OverlayTrigger
+                  placement="left"
+                  delay={{ show: 250, hide: 400 }}
+                  overlay={
+                    <Tooltip id="button-tooltip-2">
+                      {!isGroupInAcademicLoad(r[3].split(' -- ')[0])
+                        ? 'Наразі видалити не можливо'
+                        : 'Видалити з фонду'}
+                    </Tooltip>
+                  }
+                >
+                  <td>
+                    <Button
+                      variant={
+                        isGroupInAcademicLoad(r[3].split(' -- ')[0])
+                          ? 'outline-danger'
+                          : 'outline-dark'
+                      }
+                      disabled={!isGroupInAcademicLoad(r[3].split(' -- ')[0])}
+                      data-row={idx + 4}
+                      onClick={event => {
+                        const row = +event.currentTarget.getAttribute(
+                          'data-row'
+                        );
+                        deleteFromGroupFond(
+                          currentSemester.name,
+                          currentAcademicYear.id,
+                          row
+                        );
+                      }}
+                    >
+                      <FaTrash />
+                    </Button>
+                  </td>
+                </OverlayTrigger>
               </tr>
             );
           })}
@@ -102,7 +138,8 @@ const FormAddGroup = () => {
             const workGrName = values.Група
               .split(',')
               .map(r => `${r.trim()}гр`)
-              .join('+').toString();
+              .join('+')
+              .toString();
             arr.push([
               workGrName,
               '',

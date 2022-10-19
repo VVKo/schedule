@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Form, Formik, useField } from 'formik';
 import * as Yup from 'yup';
 import { FaTrash } from 'react-icons/fa';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import RozkladContext from '../../../context/RozkladContext';
 
 const MySelect = ({ label, ...props }) => {
@@ -85,19 +86,41 @@ const FormAddAcademicLoad = () => {
                 {r.slice(0, 8).map((val, indx) => (
                   <td key={`val${idx}${indx}`}>{val}</td>
                 ))}
-                <td>
-                  <FaTrash
-                    data-row={idx + 4}
-                    onClick={event => {
-                      const row = +event.currentTarget.getAttribute('data-row');
-                      deleteFromAcademicLoadFond(
-                        currentSemester.name,
-                        currentAcademicYear.id,
-                        row
-                      );
-                    }}
-                  />
-                </td>
+                <OverlayTrigger
+                  placement="left"
+                  delay={{ show: 250, hide: 400 }}
+                  overlay={
+                    <Tooltip id="button-tooltip-2">
+                      {!(r[7] === 0 || r[7] === '')
+                        ? 'Наразі видалити не можливо'
+                        : 'Видалити з фонду'}
+                    </Tooltip>
+                  }
+                >
+                  <td>
+                    <Button
+                      variant={
+                        !(r[7] === 0 || r[7] === '')
+                          ? 'outline-dark'
+                          : 'outline-danger'
+                      }
+                      disabled={!(r[7] === 0 || r[7] === '')}
+                      data-row={idx + 4}
+                      onClick={event => {
+                        const row = +event.currentTarget.getAttribute(
+                          'data-row'
+                        );
+                        deleteFromAcademicLoadFond(
+                          currentSemester.name,
+                          currentAcademicYear.id,
+                          row
+                        );
+                      }}
+                    >
+                      <FaTrash />
+                    </Button>
+                  </td>
+                </OverlayTrigger>
               </tr>
             );
           })}

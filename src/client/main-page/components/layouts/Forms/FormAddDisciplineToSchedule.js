@@ -15,7 +15,7 @@ const getCol = (shift, day, week, para) => {
   return shift + 16 * d + 2 * p + w;
 };
 const FormAddDisciplineToSchedule = ({ para, week, day, group }) => {
-  const { state, deleteFromAudFond, addToSchedule } = useContext(
+  const { state, addToSchedule } = useContext(
     RozkladContext
   );
 
@@ -26,7 +26,7 @@ const FormAddDisciplineToSchedule = ({ para, week, day, group }) => {
     currentSemester,
     currentAcademicYear,
   } = state;
-  console.log('FormAddDisciplineToSchedule', { para, week, day, group });
+  // console.log('FormAddDisciplineToSchedule', { para, week, day, group });
 
   const rowAcademicLoadFond = academicloadfond[
     currentSemester.name

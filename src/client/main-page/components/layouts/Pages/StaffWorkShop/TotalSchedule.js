@@ -11,12 +11,6 @@ const TotalSchedule = () => {
 
   if (!academicloadfond) return null;
 
-  console.log(
-    'academicloadfond',
-    academicloadfond,
-    currentSemester,
-    currentAcademicYear
-  );
 
   const groups = [
     ...new Set([
@@ -27,10 +21,10 @@ const TotalSchedule = () => {
         .map(r => r.split('гр')[0]),
     ]),
   ].sort();
-  console.log(groups);
+  // console.log(groups);
 
   return (
-    <Accordion defaultActiveKey={'0'}>
+    <Accordion>
       {groups.map((gr, idx) => {
         return (
           <Accordion.Item key={idx} eventKey={`${idx}`}>

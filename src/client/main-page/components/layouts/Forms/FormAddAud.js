@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { Form, Formik, useField } from 'formik';
 import * as Yup from 'yup';
 import { FaTrash } from 'react-icons/fa';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import RozkladContext from '../../../context/RozkladContext';
 
 const SignupSchema = Yup.object().shape({
@@ -65,11 +66,24 @@ const MyTextInput = ({ label, ...props }) => {
 const FormAddAud = () => {
   const { state, deleteFromAudFond, addToAudFond } = useContext(RozkladContext);
 
-  const { audfond, currentSemester, currentAcademicYear } = state;
+  const {
+    audfond,
+    currentSemester,
+    currentAcademicYear,
+    academicloadfond,
+  } = state;
 
   useEffect(() => {
-    console.log('audFOND', audfond);
+    // console.log('audFOND', audfond);
   }, [audfond]);
+
+  const isAudInAcademicLoad = aud => {
+    return (
+      academicloadfond[currentSemester.name].data.filter(
+        r => r.indexOf(aud) !== -1
+      ).length === 0
+    );
+  };
 
   const MyTable = () => {
     return (
@@ -93,19 +107,42 @@ const FormAddAud = () => {
                 {r.slice(0, 5).map((val, indx) => (
                   <td key={`val${idx}${indx}`}>{val}</td>
                 ))}
-                <td>
-                  <FaTrash
-                    data-row={idx + 4}
-                    onClick={event => {
-                      const row = +event.currentTarget.getAttribute('data-row');
-                      deleteFromAudFond(
-                        currentSemester.name,
-                        currentAcademicYear.id,
-                        row
-                      );
-                    }}
-                  />
-                </td>
+
+                <OverlayTrigger
+                  placement="left"
+                  delay={{ show: 250, hide: 400 }}
+                  overlay={
+                    <Tooltip id="button-tooltip-2">
+                      {!isAudInAcademicLoad(r[4])
+                        ? 'Наразі видалити не можливо'
+                        : 'Видалити з фонду'}
+                    </Tooltip>
+                  }
+                >
+                  <td>
+                    <Button
+                      variant={
+                        isAudInAcademicLoad(r[4])
+                          ? 'outline-danger'
+                          : 'outline-dark'
+                      }
+                      disabled={!isAudInAcademicLoad(r[4])}
+                      data-row={idx + 4}
+                      onClick={event => {
+                        const row = +event.currentTarget.getAttribute(
+                          'data-row'
+                        );
+                        deleteFromAudFond(
+                          currentSemester.name,
+                          currentAcademicYear.id,
+                          row
+                        );
+                      }}
+                    >
+                      <FaTrash />
+                    </Button>
+                  </td>
+                </OverlayTrigger>
               </tr>
             );
           })}

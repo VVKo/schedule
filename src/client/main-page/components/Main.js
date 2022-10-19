@@ -9,7 +9,7 @@ import { RozkladProvider } from '../context/RozkladContext';
 import CHeader from './layouts/Header/Header';
 import { StyledMain } from './Styled/StyledComponents';
 import ModalLayout from './layouts/Modal/ModalLayout';
-import StaffMain from './layouts/Pages/StaffWorkShop/StaffMain';
+
 
 const Main = () => {
   return (
