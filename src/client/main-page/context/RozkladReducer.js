@@ -48,6 +48,11 @@ const rozkladReducer = (state, action) => {
         ...state,
         currentSemester: { ...action.payload },
       };
+    case 'SET_CURRENTGROUP':
+      return {
+        ...state,
+        currentGroup: action.payload,
+      };
     case 'GETLISTOFDEPARTMENTS':
       return {
         ...state,

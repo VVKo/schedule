@@ -6,6 +6,8 @@ import Spinner from '../../Spinner/Spinner';
 import FineSchedule from '../Schedule/FineSchedule';
 
 import StaffWorkShop from './StaffWorkShop/StaffWorkShop';
+import SheduleWeek from "./StaffWorkShop/SheduleWeek";
+import FineScheduleNew from "../Schedule/FineScheduleNew";
 
 const FineHeader = () => {
   const { state } = useContext(RozkladContext);
@@ -61,9 +63,11 @@ const Department = () => {
     <>
       <FineHeader />
       <StaffWorkShop />
-      <FineSchedule weekNumber="1" />
+
+      <FineScheduleNew weekNumber="1" />
+
       <hr />
-      <FineSchedule weekNumber="2" />
+      <FineScheduleNew weekNumber="2" />
     </>
   );
 };

@@ -60,6 +60,8 @@ export const RozkladProvider = ({ children }) => {
     dispatch({ type: 'SET_CURRENTACADEMICYEAR', payload: obj });
   const setCurrentSemester = obj =>
     dispatch({ type: 'SET_CURRENTSEMESTER', payload: obj });
+  const setCurrentGroup = gr =>
+      dispatch({ type: 'SET_CURRENTGROUP', payload: gr });
   const setXlsId = id => dispatch({ type: 'SET_XLSID', payload: id });
   const setDataForModal = obj =>
     dispatch({ type: 'SET_DATAFORMODAL', payload: obj });
@@ -938,6 +940,7 @@ export const RozkladProvider = ({ children }) => {
         setCurrentDep,
         setCurrentAcademicYear,
         setCurrentSemester,
+        setCurrentGroup,
         createNewAcademicYear,
         getAudFond,
         getGroupFond,

@@ -6,6 +6,13 @@ import RozkladContext from '../../../../context/RozkladContext';
 import FormAddDisciplineToSchedule from '../../Forms/FormAddDisciplineToSchedule';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+const FullDay = {
+  Mon: { day: 'Понеділок', backgr: '#ffc', cn: 'monday' },
+  Tue: { day: 'Вівторок', backgr: '#cfc', cn: 'tuesday' },
+  Wed: { day: 'Середа', backgr: '#ccf', cn: 'wednesday' },
+  Thu: { day: 'Четвер', backgr: '#faa', cn: 'thursday' },
+  Fri: { day: "П'ятниця", backgr: '#fff', cn: 'friday' },
+};
 
 const SheduleWeek = ({ wn, group }) => {
   const {
@@ -145,6 +152,7 @@ const SheduleWeek = ({ wn, group }) => {
           audCol: col - 2,
         };
       });
+
     return (
       <>
         <FiEdit3
@@ -160,6 +168,7 @@ const SheduleWeek = ({ wn, group }) => {
       </>
     );
   };
+
   return (
     <>
       <Week>
@@ -179,118 +188,30 @@ const SheduleWeek = ({ wn, group }) => {
           <div>5п</div>
           <div>6п</div>
         </div>
-        <div className={'monday'}>
-          <div
-            className={`dayname text-light ${
-              wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
-            }`}
-          >
-            Понеділок
-          </div>
-          <div>
-            <Para
-              para={'1'}
-              week={`${wn === 'НТ' ? '1т.' : '2т.'}`}
-              day={`${DAYS[0]}`}
-            />
-          </div>
-          <div>
-            <Para
-              para={'2'}
-              week={`${wn === 'НТ' ? '1т.' : '2т.'}`}
-              day={`${DAYS[0]}`}
-            />
-          </div>
-          <div>
-            <Para
-              para={'3'}
-              week={`${wn === 'НТ' ? '1т.' : '2т.'}`}
-              day={`${DAYS[0]}`}
-            />
-          </div>
-          <div>
-            <Para
-              para={'4'}
-              week={`${wn === 'НТ' ? '1т.' : '2т.'}`}
-              day={`${DAYS[0]}`}
-            />
-          </div>
-          <div>
-            <Para
-              para={'5'}
-              week={`${wn === 'НТ' ? '1т.' : '2т.'}`}
-              day={`${DAYS[0]}`}
-            />
-          </div>
-          <div>
-            <Para
-              para={'6'}
-              week={`${wn === 'НТ' ? '1т.' : '2т.'}`}
-              day={`${DAYS[0]}`}
-            />
-          </div>
-        </div>
-        <div className={'tuesday'}>
-          <div
-            className={`dayname text-light ${
-              wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
-            }`}
-          >
-            Вівторок
-          </div>
-          <div>1п</div>
-          <div>2п</div>
-          <div>3п</div>
-          <div>4п</div>
-          <div>5п</div>
-          <div>6п</div>
-        </div>
-        <div className={'wednesday'}>
-          <div
-            className={`dayname text-light ${
-              wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
-            }`}
-          >
-            Середа
-          </div>
-          <div>1п</div>
-          <div>2п</div>
-          <div>3п</div>
-          <div>4п</div>
-          <div>5п</div>
-          <div>6п</div>
-        </div>
-
-        <div className={'thursday'}>
-          <div
-            className={`dayname text-light ${
-              wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
-            }`}
-          >
-            Четвер
-          </div>
-          <div>1п</div>
-          <div>2п</div>
-          <div>3п</div>
-          <div>4п</div>
-          <div>5п</div>
-          <div>6п</div>
-        </div>
-        <div className={'friday'}>
-          <div
-            className={`dayname text-light ${
-              wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
-            }`}
-          >
-            П`ятниця
-          </div>
-          <div>1п</div>
-          <div>2п</div>
-          <div>3п</div>
-          <div>4п</div>
-          <div>5п</div>
-          <div>6п</div>
-        </div>
+        {[0, 1, 2, 3, 4].map(daynumber => {
+          return (
+            <div key={`${daynumber}day`} className={FullDay[DAYS[daynumber]].cn}>
+              <div
+                className={`dayname text-light ${
+                  wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
+                }`}
+              >
+                {FullDay[DAYS[daynumber]].day}
+              </div>
+              {['1', '2', '3', '4', '5', '6'].map(p => {
+                return (
+                  <div key={`${p}para`}>
+                    <Para
+                      para={p}
+                      week={`${wn === 'НТ' ? '1т.' : '2т.'}`}
+                      day={`${DAYS[daynumber]}`}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
       </Week>
     </>
   );

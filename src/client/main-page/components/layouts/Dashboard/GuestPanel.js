@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Panel, StyledBox } from '../../Styled/StyledComponents';
 import RozkladContext from '../../../context/RozkladContext';
 import Spinner from '../../Spinner/Spinner';
+import OptionsForGroups from '../Pages/StaffWorkShop/utils/OptionsForGroups';
 
 const GuestPanel = () => {
   const {
@@ -12,6 +13,7 @@ const GuestPanel = () => {
     state,
     setCurrentAcademicYear,
     setCurrentSemester,
+      setCurrentGroup,
     createNewAcademicYear,
     getAudFond,
     getGroupFond,
@@ -66,6 +68,16 @@ const GuestPanel = () => {
     // showButton(fdata);
     console.log('handleSubmit', fdata);
   };
+
+  // const groups = [
+  //       ...new Set([
+  //         ...academicloadfond[currentSemester.name].data
+  //           .map(r => r[1])
+  //           .join('+')
+  //           .split('+')
+  //           .map(r => r.split('гр')[0]),
+  //       ]),
+  //     ].sort();
 
   return (
     <Panel onSubmit={handleSubmit}>
@@ -156,6 +168,7 @@ const GuestPanel = () => {
         disabled={true}
         onChange={e => {
           const val = e.target.value;
+            setCurrentGroup(val)
           setPublicPanel(prevState => {
             return { ...prevState, group: val, groups: [val] };
           });
@@ -170,12 +183,7 @@ const GuestPanel = () => {
           }
         }}
       >
-        <option value="Виберіть групу">Виберіть групу</option>
-        {currentGroups.map((gr, idx) => (
-          <option key={idx} value={`${gr}`}>
-            {gr}
-          </option>
-        ))}
+        <OptionsForGroups />
       </StyledBox>
 
       <StyledBox

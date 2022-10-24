@@ -159,8 +159,11 @@ export const Day = styled.li`
   a:focus {
     ${Para} {
       & > span {
+        display: flex;
         border: black solid 1px;
         border-radius: 0.2rem;
+        flex-direction: column;
+        justify-content: center;
       }
     }
     ${ParaContent} {
