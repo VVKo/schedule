@@ -449,7 +449,7 @@ export const RozkladProvider = ({ children }) => {
     getData(
       `${rozkladChNU_API}?action=GETAUDFOND&sem=${sem}&folderID=${folderID}`
     ).then(data => {
-      console.log('getAudFond', data);
+      // console.log('getAudFond', data);
       dispatch({
         type: 'SET_AUDFOND',
         payload: { sem, data },
@@ -470,7 +470,7 @@ export const RozkladProvider = ({ children }) => {
     getData(
       `${rozkladChNU_API}?action=GETGROUPFOND&sem=${sem}&folderID=${folderID}`
     ).then(data => {
-      console.log('getGroupFond', data);
+      // console.log('getGroupFond', data);
       dispatch({
         type: 'SET_GROUPFOND',
         payload: { sem, data },
@@ -491,7 +491,7 @@ export const RozkladProvider = ({ children }) => {
     getData(
       `${rozkladChNU_API}?action=GETDISCIPLINEFOND&sem=${sem}&folderID=${folderID}`
     ).then(data => {
-      console.log('getDisciplineFond', data);
+      // console.log('getDisciplineFond', data);
       dispatch({
         type: 'SET_DISCIPLINEFOND',
         payload: { sem, data },
@@ -512,7 +512,7 @@ export const RozkladProvider = ({ children }) => {
     getData(
       `${rozkladChNU_API}?action=GETACADEMICLOADFOND&sem=${sem}&folderID=${folderID}`
     ).then(data => {
-      console.log('getAcademicLoadFond', data);
+      // console.log('getAcademicLoadFond', data);
       dispatch({
         type: 'SET_ACADEMICLOADFOND',
         payload: { sem, data },
@@ -533,7 +533,7 @@ export const RozkladProvider = ({ children }) => {
     getData(
       `${rozkladChNU_API}?action=GETTEACHERFOND&sem=${sem}&folderID=${folderID}`
     ).then(data => {
-      console.log('getTeacherFond', data);
+      // console.log('getTeacherFond', data);
       dispatch({
         type: 'SET_TEACHERFOND',
         payload: { sem, data },
@@ -632,7 +632,7 @@ export const RozkladProvider = ({ children }) => {
       .getUserData(obj)
       .then(res => {
         const dataObj = JSON.parse(res);
-        console.log('dataObj', dataObj);
+        // console.log('dataObj', dataObj);
         setXlsId(dataObj.xlsID);
         // getAudsForStaff('1 семестр', dataObj.xlsID);
         // getAudsForStaff('2 семестр', dataObj.xlsID);
@@ -769,7 +769,7 @@ export const RozkladProvider = ({ children }) => {
   const removeAudFromLocalData = obj => {
     const { semester } = publicPanel;
     const { id, day, para, w, aud, gr } = obj;
-    console.log('removeAudFromLocalData', { id, day, para, w, aud, gr });
+    // console.log('removeAudFromLocalData', { id, day, para, w, aud, gr });
     setFlagOfChanges(prevState => prevState + 1);
     setData(prev => {
       const tmp = { ...prev };
@@ -838,7 +838,7 @@ export const RozkladProvider = ({ children }) => {
 
     setData(prev => {
       const tmp = { ...prev };
-      console.log(tmp[semester]);
+      // console.log(tmp[semester]);
       const indexData = tmp[semester].data.findIndex(o => o.id === +id);
       const teacher = tmp[semester].data[indexData]['викладач'];
       const fulGroup = tmp[semester].data[indexData]['групаНавантаження'];
@@ -892,7 +892,7 @@ export const RozkladProvider = ({ children }) => {
       .saveToServer(JSON.stringify(obj))
       .then(res => {
         const dataObj = JSON.parse(res);
-        console.log(dataObj);
+        // console.log(dataObj);
 
         setDataLoaded(true);
         setFlagOfChanges(0);
