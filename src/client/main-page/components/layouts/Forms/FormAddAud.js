@@ -1,8 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { Form, Formik, useField } from 'formik';
 import * as Yup from 'yup';
-import { FaTrash } from 'react-icons/fa';
-import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+
 import RozkladContext from '../../../context/RozkladContext';
 
 const SignupSchema = Yup.object().shape({
@@ -77,80 +76,6 @@ const FormAddAud = () => {
     // console.log('audFOND', audfond);
   }, [audfond]);
 
-  const isAudInAcademicLoad = aud => {
-    return (
-      academicloadfond[currentSemester.name].data.filter(
-        r => r.indexOf(aud) !== -1
-      ).length === 0
-    );
-  };
-
-  const MyTable = () => {
-    return (
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Корпус</th>
-            <th scope="col">Аудиторія</th>
-            <th scope="col">Кількість п/м</th>
-            <th scope="col">Тип аудиторії</th>
-            <th scope="col">Шифр</th>
-            <th scope="col">Дії</th>
-          </tr>
-        </thead>
-        <tbody>
-          {audfond[currentSemester.name].data.map((r, idx) => {
-            return (
-              <tr key={`row${idx}`}>
-                <th scope="row">{idx + 1}</th>
-                {r.slice(0, 5).map((val, indx) => (
-                  <td key={`val${idx}${indx}`}>{val}</td>
-                ))}
-
-                <OverlayTrigger
-                  placement="left"
-                  delay={{ show: 250, hide: 400 }}
-                  overlay={
-                    <Tooltip id="button-tooltip-2">
-                      {!isAudInAcademicLoad(r[4])
-                        ? 'Наразі видалити не можливо'
-                        : 'Видалити з фонду'}
-                    </Tooltip>
-                  }
-                >
-                  <td>
-                    <Button
-                      variant={
-                        isAudInAcademicLoad(r[4])
-                          ? 'outline-danger'
-                          : 'outline-dark'
-                      }
-                      disabled={!isAudInAcademicLoad(r[4])}
-                      data-row={idx + 4}
-                      onClick={event => {
-                        const row = +event.currentTarget.getAttribute(
-                          'data-row'
-                        );
-                        deleteFromAudFond(
-                          currentSemester.name,
-                          currentAcademicYear.id,
-                          row
-                        );
-                      }}
-                    >
-                      <FaTrash />
-                    </Button>
-                  </td>
-                </OverlayTrigger>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    );
-  };
-
   const MyForm = () => {
     return (
       <Formik
@@ -212,7 +137,6 @@ const FormAddAud = () => {
 
   return (
     <>
-      <MyTable />
       <MyForm />
     </>
   );

@@ -9,15 +9,17 @@ const OptionsForGroups = () => {
   if (!academicloadfond || !currentSemester)
     return <option value="Виберіть групу">Виберіть групу</option>;
 
-  const groups = [
-    ...new Set([
-      ...academicloadfond[currentSemester.name].data
-        .map(r => r[1])
-        .join('+')
-        .split('+')
-        .map(r => r.split('гр')[0]),
-    ]),
-  ].sort();
+  const groups = academicloadfond[currentSemester.name]
+    ? [
+        ...new Set([
+          ...academicloadfond[currentSemester.name].data
+            .map(r => r[1])
+            .join('+')
+            .split('+')
+            .map(r => r.split('гр')[0]),
+        ]),
+      ].sort()
+    : [];
   return (
     <>
       <option value="Виберіть групу">Виберіть групу</option>

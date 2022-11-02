@@ -8,12 +8,11 @@ const GuestPanel = () => {
   const {
     publicPanel,
     setPublicPanel,
-    currentGroups,
     currentTeachers,
     state,
     setCurrentAcademicYear,
     setCurrentSemester,
-      setCurrentGroup,
+    setCurrentGroup,
     createNewAcademicYear,
     getAudFond,
     getGroupFond,
@@ -34,16 +33,6 @@ const GuestPanel = () => {
 
   if (!currentDep && !currentAcademicYear) return <Spinner />;
 
-  console.log(
-    'currentGroups',
-    currentGroups,
-    'publicPanel',
-    publicPanel,
-    'currentDep',
-    currentDep,
-    'currentAcademicYear',
-    currentAcademicYear
-  );
 
   const fondInit = (val, fond, getFond) => {
     if (!fond) {
@@ -168,7 +157,7 @@ const GuestPanel = () => {
         disabled={true}
         onChange={e => {
           const val = e.target.value;
-            setCurrentGroup(val)
+          setCurrentGroup(val);
           setPublicPanel(prevState => {
             return { ...prevState, group: val, groups: [val] };
           });
