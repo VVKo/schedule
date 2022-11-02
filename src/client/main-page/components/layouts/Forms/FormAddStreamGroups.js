@@ -82,16 +82,16 @@ const FormAddStreamGroups = () => {
           const arr = [];
           const maybe = values.checked.map(v => {
             const tmp = {};
-            if (v.includes('гр')) {
+            if (v.toString().includes('гр')) {
               tmp.gr = v;
               const [g, sg] = v.split('гр');
               tmp.population = groupfond[currentSemester.name].data.filter(
-                r => r[0] === g && r[1] === sg
+                r => r[0].toString() === g && r[1].toString() === sg
               )[0][2];
             } else {
               tmp.gr = `${v}гр`;
               tmp.population = groupfond[currentSemester.name].data.filter(
-                r => r[0] === v && r[1] === ''
+                r => r[0].toString() === v && r[1] === ''
               )[0][2];
             }
             return tmp;
@@ -114,11 +114,13 @@ const FormAddStreamGroups = () => {
           ]);
 
           // console.log(arr);
-          addToGroupFond(
-            currentSemester.name,
-            currentAcademicYear.id,
-            JSON.stringify(arr)
-          );
+          if (values.checked.length !== 1) {
+            addToGroupFond(
+              currentSemester.name,
+              currentAcademicYear.id,
+              JSON.stringify(arr)
+            );
+          }
         }}
       >
         {({ handleSubmit, isSubmitting }) => (
@@ -128,7 +130,7 @@ const FormAddStreamGroups = () => {
                 <Col>
                   <div id="checkbox-group">Групи</div>
                   {groupfond[currentSemester.name].data
-                    .filter(r => !r[0].includes('+') && r[1] === '')
+                    .filter(r => !r[0].toString().includes('+') && r[1] === '')
                     .map(r => r[0])
                     .map(v => (
                       <MyCheckBox
@@ -143,7 +145,7 @@ const FormAddStreamGroups = () => {
                 <Col>
                   <div id="checkbox-group">Підгрупи</div>
                   {groupfond[currentSemester.name].data
-                    .filter(r => !r[0].includes('+') && r[1] !== '')
+                    .filter(r => !r[0].toString().includes('+') && r[1] !== '')
                     .map(r => r[3].split(' -- ')[0])
                     .map(v => (
                       <MyCheckBox

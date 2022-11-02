@@ -13,6 +13,7 @@ const rozkladReducer = (state, action) => {
           pauseOnHover: true,
         }),
       };
+
     case 'UPDATE':
       return {
         ...state,
@@ -32,6 +33,11 @@ const rozkladReducer = (state, action) => {
         ...state,
         loading: true,
         [action.payload.newtoast]: toast.loading(action.payload.msg),
+      };
+    case 'SET_ACTIVEID':
+      return {
+        ...state,
+        activeId: action.payload,
       };
     case 'SET_CURRENTDEP':
       return {

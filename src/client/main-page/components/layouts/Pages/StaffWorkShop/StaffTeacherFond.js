@@ -23,6 +23,10 @@ const StaffTeacherFond = () => {
     currentAcademicYear,
     academicloadfond,
   } = state;
+
+  if (!teacherfond || !teacherfond[currentSemester.name]) return null;
+
+
   useEffect(() => {}, [teacherfond]);
 
   const handleAddTeacher = () => {

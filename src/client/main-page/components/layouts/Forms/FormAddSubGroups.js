@@ -64,7 +64,7 @@ const FormAddSubGroups = ({ curgroup }) => {
   useEffect(() => {}, [groupfond]);
 
   const subgroups = groupfond[currentSemester.name].data
-    .filter(r => !r[0].includes('+') && r[0] === curgroup)
+    .filter(r => !r[0].toString().includes('+') && r[0].toString() === curgroup)
     .map(r => {
       const tmp = {};
       tmp.name = r[1] === '' ? curgroup : r[1];

@@ -65,15 +65,15 @@ const FormAddDisciplineToSchedule = ({ para, week, day, group }) => {
     const rowaud =
       a !== 'ONLINE' ? `${rowAudFond.filter(ra => ra[5] === a)[0][0]}` : null;
 
-    console.log({
-      rowload,
-      colload: `${loadCol}`,
-      rowteacher,
-      colteacher: `${teacherCol}`,
-      rowaud,
-      colaud: `${audCol}`,
-      aud: a,
-    });
+    // console.log({
+    //   rowload,
+    //   colload: `${loadCol}`,
+    //   rowteacher,
+    //   colteacher: `${teacherCol}`,
+    //   rowaud,
+    //   colaud: `${audCol}`,
+    //   aud: a,
+    // });
 
     addToSchedule(
       currentSemester.name,
@@ -138,6 +138,7 @@ const FormAddDisciplineToSchedule = ({ para, week, day, group }) => {
                     <Col>
                       <FiPlusCircle
                         onClick={handleAdd}
+                        size={'24'}
                         data-rowload={r[0]}
                         data-rowteacher={
                           rowTeacherFond.filter(rt => rt[1] === r[4])[0][0]

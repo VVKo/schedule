@@ -28,6 +28,9 @@ const StaffGroupFond = () => {
     currentAcademicYear,
     academicloadfond,
   } = state;
+
+  if (!groupfond || !groupfond[currentSemester.name]) return null;
+
   useEffect(() => {}, [groupfond]);
 
   const groups = [
@@ -104,8 +107,8 @@ const StaffGroupFond = () => {
         <tbody>
           {groupfond[currentSemester.name].data
             .map((r, index) => [index, ...r])
-            .filter(r => !r[1].includes('+'))
-            .filter(r => r[1] === gr)
+            .filter(r => !r[1].toString().includes('+'))
+            .filter(r => r[1].toString() === gr)
             .map((r, idx) => {
               return (
                 <tr key={`row${idx}`}>
@@ -173,7 +176,7 @@ const StaffGroupFond = () => {
         <tbody>
           {groupfond[currentSemester.name].data
             .map((r, index) => [index, ...r])
-            .filter(r => r[1].includes('+'))
+            .filter(r => r[1].toString().includes('+'))
             .map((r, idx) => {
               return (
                 <tr key={`row${idx}`}>

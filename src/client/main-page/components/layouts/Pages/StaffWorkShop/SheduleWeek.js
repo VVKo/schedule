@@ -56,14 +56,14 @@ const SheduleWeek = ({ wn, group }) => {
         audRow,
         audCol,
       } = e.currentTarget.dataset;
-      console.log('asdasdasdasdasdasdasd', {
-        academicRow,
-        academicCol,
-        teacherRow,
-        teacherCol,
-        audRow,
-        audCol,
-      });
+      // console.log('asdasdasdasdasdasdasd', {
+      //   academicRow,
+      //   academicCol,
+      //   teacherRow,
+      //   teacherCol,
+      //   audRow,
+      //   audCol,
+      // });
 
       deleteFromSchedule(
         currentSemester.name,

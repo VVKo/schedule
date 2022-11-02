@@ -16,6 +16,7 @@ const driver_API =
 
 export const RozkladProvider = ({ children }) => {
   const initState = {
+    activeId: null,
     showModal: false,
     xlsID: '',
     loading: false,
@@ -54,6 +55,7 @@ export const RozkladProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(rozkladReducer, initState);
 
+  const setActiveId = val => dispatch({ type: 'SET_ACTIVEID', payload: val });
   const setShowModal = val => dispatch({ type: 'SET_SHOWMODAL', payload: val });
   const setCurrentDep = id => dispatch({ type: 'SET_CURRENTDEP', payload: id });
   const setCurrentAcademicYear = obj =>
@@ -941,6 +943,7 @@ export const RozkladProvider = ({ children }) => {
         setCurrentAcademicYear,
         setCurrentSemester,
         setCurrentGroup,
+        setActiveId,
         createNewAcademicYear,
         getAudFond,
         getGroupFond,

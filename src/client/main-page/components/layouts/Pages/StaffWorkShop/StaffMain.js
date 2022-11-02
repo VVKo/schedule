@@ -1,11 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import TotalSchedule from './TotalSchedule';
 import StaffAudFond from './StaffAudFond';
 import StaffGroupFond from './StaffGroupFond';
 import StaffTeacherFond from './StaffTeacherFond';
 import StaffDisciplineFond from './StaffDisciplineFond';
 import StaffLoadFond from './StaffLoadFond';
+import StaffSchedule from './StaffSchedule';
+import StaffPreviewGroup from "./StaffPreviewGroup";
 
 const StaffMain = () => {
   const params = useParams();
@@ -16,12 +17,8 @@ const StaffMain = () => {
       {params.func === 'addteacher' && <StaffTeacherFond />}
       {params.func === 'adddisc' && <StaffDisciplineFond />}
       {params.func === 'addload' && <StaffLoadFond />}
-      <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">
-          {params.func === 'totalschedule' && <>Усі групи</>}
-        </h1>
-      </div>
-      {params.func === 'totalschedule' && <TotalSchedule />}
+      {params.func === 'totalschedule' && <StaffSchedule />}
+      {params.func === 'preview' && <StaffPreviewGroup />}
     </main>
   );
 };
