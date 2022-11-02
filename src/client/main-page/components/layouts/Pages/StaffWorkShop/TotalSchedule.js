@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import {Accordion, Col, Container, Row} from 'react-bootstrap';
+import { Accordion, Col, Container, Row } from 'react-bootstrap';
 import RozkladContext from '../../../../context/RozkladContext';
 import SheduleWeek from './SheduleWeek';
-import ScheduleInfoByGroup from "./ScheduleInfoByGroup";
+import ScheduleInfoByGroup from './ScheduleInfoByGroup';
 
 const TotalSchedule = () => {
   const { state } = useContext(RozkladContext);
@@ -10,7 +10,6 @@ const TotalSchedule = () => {
   const { academicloadfond, currentSemester, currentAcademicYear } = state;
 
   if (!academicloadfond) return null;
-
 
   const groups = [
     ...new Set([
@@ -28,11 +27,15 @@ const TotalSchedule = () => {
       {groups.map((gr, idx) => {
         return (
           <Accordion.Item key={idx} eventKey={`${idx}`}>
-            <Accordion.Header><Container><h3 className="h3">{gr}</h3></Container></Accordion.Header>
+            <Accordion.Header>
+              <Container>
+                <h3 className="h3">{gr}</h3>
+              </Container>
+            </Accordion.Header>
             <Accordion.Body>
               <SheduleWeek wn={'НТ'} group={gr} />
               <SheduleWeek wn={'ПТ'} group={gr} />
-              <ScheduleInfoByGroup group={gr}/>
+              <ScheduleInfoByGroup group={gr} />
             </Accordion.Body>
           </Accordion.Item>
         );

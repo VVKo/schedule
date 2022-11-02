@@ -46,88 +46,15 @@ const MyTextInput = ({ label, ...props }) => {
 };
 
 const FormAddAcademicLoad = () => {
-  const {
-    state,
-    deleteFromAcademicLoadFond,
-    addToAcademicLoadFond,
-  } = useContext(RozkladContext);
+  const { state, addToAcademicLoadFond } = useContext(RozkladContext);
 
   const {
     teacherfond,
     groupfond,
     currentSemester,
     currentAcademicYear,
-    academicloadfond,
     disciplinefond,
   } = state;
-
-  const MyTable = () => {
-    return (
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Дисципліна</th>
-            <th scope="col">Група</th>
-            <th scope="col">Тип заняття</th>
-            <th scope="col">К-ть годин</th>
-            <th scope="col">Викладач</th>
-            <th scope="col">К-ть тижнів</th>
-            <th scope="col">год/тиждень</th>
-            <th scope="col">Виставлено</th>
-            <th scope="col">Дії</th>
-          </tr>
-        </thead>
-        <tbody>
-          {academicloadfond[currentSemester.name].data.map((r, idx) => {
-            return (
-              <tr key={`row${idx}`}>
-                <th scope="row">{idx + 1}</th>
-                {r.slice(0, 8).map((val, indx) => (
-                  <td key={`val${idx}${indx}`}>{val}</td>
-                ))}
-                <OverlayTrigger
-                  placement="left"
-                  delay={{ show: 250, hide: 400 }}
-                  overlay={
-                    <Tooltip id="button-tooltip-2">
-                      {!(r[7] === 0 || r[7] === '')
-                        ? 'Наразі видалити не можливо'
-                        : 'Видалити з фонду'}
-                    </Tooltip>
-                  }
-                >
-                  <td>
-                    <Button
-                      variant={
-                        !(r[7] === 0 || r[7] === '')
-                          ? 'outline-dark'
-                          : 'outline-danger'
-                      }
-                      disabled={!(r[7] === 0 || r[7] === '')}
-                      data-row={idx + 4}
-                      onClick={event => {
-                        const row = +event.currentTarget.getAttribute(
-                          'data-row'
-                        );
-                        deleteFromAcademicLoadFond(
-                          currentSemester.name,
-                          currentAcademicYear.id,
-                          row
-                        );
-                      }}
-                    >
-                      <FaTrash />
-                    </Button>
-                  </td>
-                </OverlayTrigger>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    );
-  };
 
   const MyForm = () => {
     return (
@@ -169,10 +96,6 @@ const FormAddAcademicLoad = () => {
         })}
         onSubmit={values => {
           const arr = [...Object.values(values)];
-          // same shape as initial values
-          // arr.push(
-          //     `${values['Дисципліна']} ${values['Коротка назва']} ауд. -- (${values['кільксть п/м']} п.м.)`
-          // );
           arr.push(values.години / values['к-ть тижнів']);
           arr.push('');
           // console.log(arr);
@@ -245,7 +168,6 @@ const FormAddAcademicLoad = () => {
   };
   return (
     <>
-      <MyTable />
       <MyForm />
     </>
   );
