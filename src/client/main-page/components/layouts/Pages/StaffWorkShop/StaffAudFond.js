@@ -7,9 +7,11 @@ import {
   Table,
   Tooltip,
 } from 'react-bootstrap';
-import { FaTrash } from 'react-icons/fa';
+import { FaFileExport, FaQuestion, FaTrash } from 'react-icons/fa';
 import RozkladContext from '../../../../context/RozkladContext';
 import FormAddAud from '../../Forms/FormAddAud';
+import HowToAddAuds from '../../Instructions/HowToAddAuds';
+import UploadCSV from '../../Forms/UploadCSV';
 
 const StaffAudFond = () => {
   const {
@@ -37,6 +39,36 @@ const StaffAudFond = () => {
       body: {
         func: FormAddAud,
         data: {},
+      },
+    });
+  };
+
+  const handleInstruction = () => {
+    setShowModal(true);
+
+    setDataForModal({
+      title: `Інстукція`,
+      size: 'xl',
+      body: {
+        func: HowToAddAuds,
+        data: {
+          headers: ['Корпус', 'Аудиторія', 'Кількість п/м', 'Тип аудиторії'],
+        },
+      },
+    });
+  };
+
+  const handleUploadFile = () => {
+    setShowModal(true);
+
+    setDataForModal({
+      title: `Завантажити`,
+      size: 'xl',
+      body: {
+        func: UploadCSV,
+        data: {
+          headers: ['Корпус', 'Аудиторія', 'Кількість п/м', 'Тип аудиторії'],
+        },
       },
     });
   };
@@ -122,6 +154,22 @@ const StaffAudFond = () => {
           aria-label="Toolbar with button groups"
           className="mb-2 mb-md-0"
         >
+          <ButtonGroup className="me-2">
+            <Button
+              variant="outline-secondary"
+              className="btn-sm"
+              onClick={handleInstruction}
+            >
+              <FaQuestion /> Інструкція
+            </Button>
+            <Button
+              variant="outline-secondary"
+              className="btn-sm"
+              onClick={handleUploadFile}
+            >
+              <FaFileExport /> Export
+            </Button>
+          </ButtonGroup>
           <ButtonGroup className="me-2">
             <Button
               variant="outline-secondary"

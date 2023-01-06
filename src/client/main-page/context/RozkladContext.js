@@ -9,7 +9,7 @@ const { serverFunctions } = server;
 const RozkladContext = createContext();
 
 const rozkladChNU_API =
-  'https://script.google.com/macros/s/AKfycbxhBg7xE-jbJVvxjxejW1zO-5V4Ts0CfaEtu2J1nb1W7qg3pfnz1TiWo0wFgEyS_iI/exec';
+  'https://script.google.com/macros/s/AKfycbwmAwxsO40m_6nKim_uXImCLASA7Jai-0MtUQTH0NI-eVpRCC5ziJCt5mToBMfVeaY/exec';
 
 const driver_API =
   'https://script.google.com/macros/s/AKfycbzPGSRA_iPCjt5IwrgY4AxPuCoKuP5gofysbI79ovilw_vob9UeHMD1ZzZoVicUhoA1/exec';
@@ -63,7 +63,7 @@ export const RozkladProvider = ({ children }) => {
   const setCurrentSemester = obj =>
     dispatch({ type: 'SET_CURRENTSEMESTER', payload: obj });
   const setCurrentGroup = gr =>
-      dispatch({ type: 'SET_CURRENTGROUP', payload: gr });
+    dispatch({ type: 'SET_CURRENTGROUP', payload: gr });
   const setXlsId = id => dispatch({ type: 'SET_XLSID', payload: id });
   const setDataForModal = obj =>
     dispatch({ type: 'SET_DATAFORMODAL', payload: obj });
@@ -149,7 +149,7 @@ export const RozkladProvider = ({ children }) => {
     getData(
       `${rozkladChNU_API}?action=DELETEDISCFROMSCHEDULE&sem=${sem}&folderID=${folderID}&txt=${txt}`
     ).then(data => {
-      const obj = JSON.parse(txt)
+      const obj = JSON.parse(txt);
       const aud = state.audfond[sem].data;
       if (obj.audRow) aud[+obj.audRow - 4][+obj.audCol - 1] = '';
       const prep = state.teacherfond[sem].data;
@@ -286,6 +286,30 @@ export const RozkladProvider = ({ children }) => {
     });
   };
 
+  const uploadToAudFond = (sem, folderID, arr) => {
+    setLoading('Оновлення аудиторної бази ...', 'uploadtoaudfond');
+    const txt = JSON.stringify({ sem, folderID, arr });
+    getData(`${rozkladChNU_API}?action=UPLOADTOAUDFOND&data=${txt}`).then(
+      data => {
+        const tmp = state.audfond[sem].data;
+        const spaces = [];
+        for (let i = 0; i < 80; i++) {
+          spaces.push('');
+        }
+        arr.forEach(a => tmp.push([...a, ...spaces]));
+
+        dispatch({ type: 'UPLOAD_AUDTOFOND', payload: { sem, data: tmp } });
+        dispatch({
+          type: 'UPDATE',
+          payload: {
+            loading: false,
+            status: data.status,
+            newtoast: 'uploadtoaudfond',
+          },
+        });
+      }
+    );
+  };
   const addToAudFond = (sem, folderID, arr) => {
     setLoading('Запис аудиторії у базу ...', 'addaudtofond');
     getData(
@@ -962,6 +986,7 @@ export const RozkladProvider = ({ children }) => {
         addToDisciplineFond,
         addToAcademicLoadFond,
         addToSchedule,
+        uploadToAudFond,
       }}
     >
       {children}

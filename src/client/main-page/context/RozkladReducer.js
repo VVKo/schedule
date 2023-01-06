@@ -244,6 +244,17 @@ const rozkladReducer = (state, action) => {
           },
         },
       };
+    case 'UPLOAD_AUDTOFOND':
+      return {
+        ...state,
+        audfond: {
+          ...state.audfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data,
+          },
+        },
+      };
     case 'ADD_GROUPTOFOND':
       return {
         ...state,
