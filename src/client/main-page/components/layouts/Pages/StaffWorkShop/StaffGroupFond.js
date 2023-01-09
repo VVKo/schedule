@@ -45,7 +45,7 @@ const StaffGroupFond = () => {
 
   const isGroupInAcademicLoad = gr => {
     return (
-      academicloadfond[currentSemester.name].data.filter(r => r[1] === gr)
+      academicloadfond[currentSemester.name].data.filter(r => r[1].includes(gr))
         .length === 0
     );
   };

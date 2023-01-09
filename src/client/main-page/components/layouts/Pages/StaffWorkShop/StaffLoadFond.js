@@ -29,6 +29,13 @@ const StaffLoadFond = () => {
     disciplinefond,
   } = state;
 
+
+  const fonds = {
+    0: disciplinefond[currentSemester.name].data.map(o => o[0]),
+    1: groupfond[currentSemester.name].data.map(o => o[3].split(' -- ')[0]),
+    4: teacherfond[currentSemester.name].data.map(o => o[0]),
+  };
+
   const groups = [
     ...new Set([
       ...academicloadfond[currentSemester.name].data
@@ -49,6 +56,40 @@ const StaffLoadFond = () => {
         data: {},
       },
     });
+  };
+
+  const highlight = (idx, indx, val) => {
+    switch (indx) {
+      case 0:
+        return (
+          <td
+            key={`val${idx}${indx}`}
+            className={fonds[0].indexOf(val) === -1 ? 'bg-warning' : ''}
+          >
+            {val}
+          </td>
+        );
+      case 4:
+        return (
+          <td
+            key={`val${idx}${indx}`}
+            className={fonds[4].indexOf(val) === -1 ? 'bg-warning' : ''}
+          >
+            {val}
+          </td>
+        );
+      case 1:
+        return (
+          <td
+            key={`val${idx}${indx}`}
+            className={fonds[1].indexOf(val) === -1 ? 'bg-warning' : ''}
+          >
+            {val}
+          </td>
+        );
+      default:
+        return <td key={`val${idx}${indx}`}>{val}</td>;
+    }
   };
 
   const AcademivLoadByGroup = ({ gr }) => {
@@ -76,9 +117,7 @@ const StaffLoadFond = () => {
               return (
                 <tr key={`row${idx}`}>
                   <th scope="row">{idx + 1}</th>
-                  {r.slice(1, 9).map((val, indx) => (
-                    <td key={`val${idx}${indx}`}>{val}</td>
-                  ))}
+                  {r.slice(1, 9).map((val, indx) => highlight(idx, indx, val))}
 
                   <OverlayTrigger
                     placement="left"
@@ -148,9 +187,7 @@ const StaffLoadFond = () => {
               return (
                 <tr key={`row${idx}`}>
                   <th scope="row">{idx + 1}</th>
-                  {r.slice(1, 9).map((val, indx) => (
-                    <td key={`val${idx}${indx}`}>{val}</td>
-                  ))}
+                  {r.slice(1, 9).map((val, indx) => highlight(idx, indx, val))}
 
                   <OverlayTrigger
                     placement="left"
