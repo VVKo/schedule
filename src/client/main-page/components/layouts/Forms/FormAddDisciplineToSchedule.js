@@ -49,7 +49,7 @@ const FormAddDisciplineToSchedule = ({ para, week, day, group }) => {
     .filter(r => r[audCol] === '')
     .map(r => [r[0], r[4], r[5]]);
   const freeDisc = rowAcademicLoadFond
-    .filter(r => r[2].includes(group))
+    .filter(r => r[2].includes(`${group}гр`))
     .filter(
       r =>
         r[loadCol] === '' &&

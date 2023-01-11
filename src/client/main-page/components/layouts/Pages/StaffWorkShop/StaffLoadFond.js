@@ -8,9 +8,13 @@ import {
   OverlayTrigger,
   Tooltip,
 } from 'react-bootstrap';
-import { FaTrash } from 'react-icons/fa';
+import { FaFileExport, FaQuestion, FaTrash } from 'react-icons/fa';
 import RozkladContext from '../../../../context/RozkladContext';
 import FormAddAcademicLoad from '../../Forms/FormAddAcademicLoad';
+import HowToAddAuds from '../../Instructions/HowToAddAuds';
+import UploadCSV from '../../Forms/UploadCSV';
+import HowToAddLoads from '../../Instructions/HowToAddLoads';
+import UploadCSVLoadFond from "../../Forms/UploadCSVLoadFond";
 
 const StaffLoadFond = () => {
   const {
@@ -28,7 +32,6 @@ const StaffLoadFond = () => {
     academicloadfond,
     disciplinefond,
   } = state;
-
 
   const fonds = {
     0: disciplinefond[currentSemester.name].data.map(o => o[0]),
@@ -92,6 +95,52 @@ const StaffLoadFond = () => {
     }
   };
 
+  const handleInstruction = () => {
+    setShowModal(true);
+
+    setDataForModal({
+      title: `Інстукція`,
+      size: 'xl',
+      body: {
+        func: HowToAddLoads,
+        data: {
+          headers: [
+            'Назва дисципліни',
+            'група',
+            'тип',
+            'год',
+            'викладач РОЗКЛАД',
+            'К-ть тижнів',
+            'К-ть год/тижд',
+          ],
+        },
+      },
+    });
+  };
+
+  const handleUploadFile = () => {
+    setShowModal(true);
+
+    setDataForModal({
+      title: `Завантажити`,
+      size: 'xl',
+      body: {
+        func: UploadCSVLoadFond,
+        data: {
+          headers: [
+            'Назва дисципліни',
+            'група',
+            'тип',
+            'год',
+            'викладач РОЗКЛАД',
+            'К-ть тижнів',
+            'К-ть год/тижд',
+          ],
+        },
+      },
+    });
+  };
+
   const AcademivLoadByGroup = ({ gr }) => {
     return (
       <table className="table">
@@ -112,7 +161,7 @@ const StaffLoadFond = () => {
         <tbody>
           {academicloadfond[currentSemester.name].data
             .map((r, index) => [index, ...r])
-            .filter(r => !r[2].includes('+') && r[2].includes(gr))
+            .filter(r => !r[2].includes('+') && r[2].includes(`${gr}гр`))
             .map((r, idx) => {
               return (
                 <tr key={`row${idx}`}>
@@ -274,6 +323,22 @@ const StaffLoadFond = () => {
           aria-label="Toolbar with button groups"
           className="mb-2 mb-md-0"
         >
+          <ButtonGroup className="me-2">
+            <Button
+              variant="outline-secondary"
+              className="btn-sm"
+              onClick={handleInstruction}
+            >
+              <FaQuestion /> Інструкція
+            </Button>
+            <Button
+              variant="outline-secondary"
+              className="btn-sm"
+              onClick={handleUploadFile}
+            >
+              <FaFileExport /> Export
+            </Button>
+          </ButtonGroup>
           <ButtonGroup className="me-2">
             <Button
               variant="outline-secondary"

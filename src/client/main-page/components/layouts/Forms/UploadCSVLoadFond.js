@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {useContext, useState} from 'react';
 import { Alert } from 'react-bootstrap';
-import { UploadCSVForm } from '../../Styled/UploadCSV/STYLED';
 import RozkladContext from '../../../context/RozkladContext';
+import { UploadCSVForm } from '../../Styled/UploadCSV/STYLED';
 
-const UploadCSV = ({ headers }) => {
-  const { state, uploadToAudFond, setShowModal } = useContext(RozkladContext);
+const UploadCSVLoadFond = ({ headers }) => {
+  const { state, uploadToLoadFond, setShowModal } = useContext(RozkladContext);
 
   const {
     audfond,
@@ -67,15 +67,13 @@ const UploadCSV = ({ headers }) => {
           rows.slice(1).forEach(r => {
             if (r !== '') {
               const ar = r.split(';');
-              ar[3] = ar[3] === '' ? 'інші.' : 'Лаб.';
-              ar.push(`${ar[0]} ${ar[1]} ауд. -- (${ar[2]} п.м.)`);
-
+              ar.push('');
               arr.push(ar);
             }
           });
 
           // TODO Зробити нормальний валідатор
-          uploadToAudFond(currentSemester.name, currentAcademicYear.id, arr);
+          uploadToLoadFond(currentSemester.name, currentAcademicYear.id, arr);
           setShowModal(false);
         }
       };
@@ -108,4 +106,4 @@ const UploadCSV = ({ headers }) => {
   );
 };
 
-export default UploadCSV;
+export default UploadCSVLoadFond;

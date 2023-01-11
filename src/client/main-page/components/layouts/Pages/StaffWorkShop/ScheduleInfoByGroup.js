@@ -16,7 +16,7 @@ const ScheduleInfoByGroup = ({ group }) => {
 
   const infoLoadByGroup = academicloadfond[
     currentSemester.name
-  ].data.filter(r => r[1].includes(group));
+  ].data.filter(r => r[1].includes(`${group}гр`));
 
   return (
     <InfoAboutDisciplines>

@@ -9,7 +9,7 @@ const { serverFunctions } = server;
 const RozkladContext = createContext();
 
 const rozkladChNU_API =
-  'https://script.google.com/macros/s/AKfycbwmAwxsO40m_6nKim_uXImCLASA7Jai-0MtUQTH0NI-eVpRCC5ziJCt5mToBMfVeaY/exec';
+  'https://script.google.com/macros/s/AKfycbz9TGybKSdfNecmU7-8_nWFn5sPSwNX6Ly2D9tSdIxy8WwrusVvLYR0B3c9oUfMoRo/exec';
 
 const driver_API =
   'https://script.google.com/macros/s/AKfycbzPGSRA_iPCjt5IwrgY4AxPuCoKuP5gofysbI79ovilw_vob9UeHMD1ZzZoVicUhoA1/exec';
@@ -69,6 +69,15 @@ export const RozkladProvider = ({ children }) => {
     dispatch({ type: 'SET_DATAFORMODAL', payload: obj });
   const setLoading = (msg, newtoast) =>
     dispatch({ type: 'SET_LOADING', payload: { msg, newtoast } });
+  const updateToast = (status, newtoast) =>
+    dispatch({
+      type: 'UPDATE',
+      payload: {
+        loading: false,
+        status,
+        newtoast,
+      },
+    });
 
   const getDepartments = () => {
     setLoading('Завантажуємо підрозділи ...', 'deps');
@@ -77,14 +86,7 @@ export const RozkladProvider = ({ children }) => {
         type: 'GETLISTOFDEPARTMENTS',
         payload: data,
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'deps',
-        },
-      });
+      updateToast(data.status, 'deps');
     });
   };
 
@@ -98,14 +100,7 @@ export const RozkladProvider = ({ children }) => {
       updatedata[depIdx][academicYear] = data.id;
       setCurrentAcademicYear({ name: academicYear, id: data.id });
       dispatch({ type: 'SET_DEPARTMENTS', payload: [...updatedata] });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'newAcademicYear',
-        },
-      });
+      updateToast(data.status, 'newAcademicYear');
     });
   };
 
@@ -114,14 +109,7 @@ export const RozkladProvider = ({ children }) => {
     getData(
       `${rozkladChNU_API}?action=DELETEROWAUD&sem=${sem}&xlsID=${id}&row=${row}`
     ).then(data => {
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: 'Аудиторію успішно видалено',
-          newtoast: 'delrow',
-        },
-      });
+      updateToast('Аудиторію успішно видалено', 'delrow');
     });
   };
 
@@ -133,14 +121,7 @@ export const RozkladProvider = ({ children }) => {
       const tmp = state.audfond[sem].data.filter((r, idx) => idx !== row - 4);
       // delete tmp[row - 4];
       dispatch({ type: 'DELETE_ROWFROMAUDFOND', payload: { sem, data: tmp } });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'delrowfromfond',
-        },
-      });
+      updateToast(data.status, 'delrowfromfond');
     });
   };
 
@@ -162,14 +143,7 @@ export const RozkladProvider = ({ children }) => {
         type: 'DELETE_DISC_FROM_SCHEDULE',
         payload: { sem, data: { aud, prep, academ } },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'delfromschedule',
-        },
-      });
+      updateToast(data.status, 'delfromschedule');
     });
   };
 
@@ -184,14 +158,7 @@ export const RozkladProvider = ({ children }) => {
         type: 'DELETE_ROWFROMGROUPFOND',
         payload: { sem, data: tmp },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'delrowfromgrfond',
-        },
-      });
+      updateToast(data.status, 'delrowfromgrfond');
     });
   };
 
@@ -208,14 +175,7 @@ export const RozkladProvider = ({ children }) => {
         type: 'DELETE_ROWFROMDISCIPLINEFOND',
         payload: { sem, data: tmp },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'delrowfromdiscfond',
-        },
-      });
+      updateToast(data.status, 'delrowfromdiscfond');
     });
   };
 
@@ -235,14 +195,7 @@ export const RozkladProvider = ({ children }) => {
         type: 'DELETE_ROWFROMACADEMICLOADFOND',
         payload: { sem, data: tmp },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'delrowfromdiscfondload',
-        },
-      });
+      updateToast(data.status, 'delrowfromdiscfondload');
     });
   };
 
@@ -259,14 +212,7 @@ export const RozkladProvider = ({ children }) => {
         type: 'DELETE_ROWFROMTEACHERFOND',
         payload: { sem, data: tmp },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'delteacerrowfromfond',
-        },
-      });
+      updateToast(data.status, 'delteacerrowfromfond');
     });
   };
 
@@ -275,17 +221,27 @@ export const RozkladProvider = ({ children }) => {
     getData(
       `${rozkladChNU_API}?action=ADDAUD&&sem=${sem}&xlsID=${id}&data=${arr}`
     ).then(data => {
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: 'Аудиторію успішно додано',
-          newtoast: 'addaudtoserver',
-        },
-      });
+      updateToast('Аудиторію успішно додано', 'addaudtoserver');
     });
   };
 
+  const uploadToLoadFond = (sem, folderID, arr) => {
+    setLoading('Оновлення навантаження ...', 'uploadtoloadfond');
+    const txt = JSON.stringify({ sem, folderID, arr });
+    getData(`${rozkladChNU_API}?action=UPLOADTOLOADFOND&data=${txt}`).then(
+      data => {
+        const tmp = state.academicloadfond[sem].data;
+        const spaces = [];
+        for (let i = 0; i < 80; i++) {
+          spaces.push('');
+        }
+        arr.forEach(a => tmp.push([...a, ...spaces]));
+
+        dispatch({ type: 'UPLOAD_LOADTOFOND', payload: { sem, data: tmp } });
+        updateToast(data.status, 'uploadtoloadfond');
+      }
+    );
+  };
   const uploadToAudFond = (sem, folderID, arr) => {
     setLoading('Оновлення аудиторної бази ...', 'uploadtoaudfond');
     const txt = JSON.stringify({ sem, folderID, arr });
@@ -299,14 +255,7 @@ export const RozkladProvider = ({ children }) => {
         arr.forEach(a => tmp.push([...a, ...spaces]));
 
         dispatch({ type: 'UPLOAD_AUDTOFOND', payload: { sem, data: tmp } });
-        dispatch({
-          type: 'UPDATE',
-          payload: {
-            loading: false,
-            status: data.status,
-            newtoast: 'uploadtoaudfond',
-          },
-        });
+        updateToast(data.status, 'uploadtoaudfond');
       }
     );
   };
@@ -322,14 +271,7 @@ export const RozkladProvider = ({ children }) => {
       }
       tmp.push([...arr, ...spaces]);
       dispatch({ type: 'ADD_AUDTOFOND', payload: { sem, data: tmp } });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'addaudtofond',
-        },
-      });
+      updateToast(data.status, 'addaudtofond');
     });
   };
 
@@ -347,14 +289,7 @@ export const RozkladProvider = ({ children }) => {
       }
       JSON.parse(arr).forEach(r => tmp.push([...r, ...spaces]));
       dispatch({ type: 'ADD_GROUPTOFOND', payload: { sem, data: tmp } });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'addgrouptofond',
-        },
-      });
+      updateToast(data.status, 'addgrouptofond');
     });
   };
 
@@ -389,14 +324,7 @@ export const RozkladProvider = ({ children }) => {
           data: { academicloadfonddata, teacherfonddata, audfonddata },
         },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'addtoschedule',
-        },
-      });
+      updateToast(data.status, 'addtoschedule');
     });
   };
 
@@ -414,14 +342,7 @@ export const RozkladProvider = ({ children }) => {
       }
       tmp.push([...JSON.parse(arr), ...spaces]);
       dispatch({ type: 'ADD_ACADEMICLOADTOFOND', payload: { sem, data: tmp } });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'addgrouptofondload',
-        },
-      });
+      updateToast(data.status, 'addgrouptofondload');
     });
   };
 
@@ -436,14 +357,7 @@ export const RozkladProvider = ({ children }) => {
       const spaces = [''];
       tmp.push([...JSON.parse(arr), ...spaces]);
       dispatch({ type: 'ADD_DISCIPLINETOFOND', payload: { sem, data: tmp } });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'adddisciplinetofond',
-        },
-      });
+      updateToast(data.status, 'adddisciplinetofond');
     });
   };
 
@@ -459,14 +373,7 @@ export const RozkladProvider = ({ children }) => {
       }
       tmp.push([...arr, ...spaces]);
       dispatch({ type: 'ADD_TEACHERTOFOND', payload: { sem, data: tmp } });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: false,
-          status: data.status,
-          newtoast: 'addteachertofond',
-        },
-      });
+      updateToast(data.status, 'addteachertofond');
     });
   };
 
@@ -480,14 +387,7 @@ export const RozkladProvider = ({ children }) => {
         type: 'SET_AUDFOND',
         payload: { sem, data },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: true,
-          status: data.status,
-          newtoast: 'audfondnew',
-        },
-      });
+      updateToast(data.status, 'audfondnew')
     });
   };
 
@@ -501,14 +401,7 @@ export const RozkladProvider = ({ children }) => {
         type: 'SET_GROUPFOND',
         payload: { sem, data },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: true,
-          status: data.status,
-          newtoast: 'groupfondnew',
-        },
-      });
+      updateToast(data.status, 'groupfondnew')
     });
   };
 
@@ -522,14 +415,7 @@ export const RozkladProvider = ({ children }) => {
         type: 'SET_DISCIPLINEFOND',
         payload: { sem, data },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: true,
-          status: data.status,
-          newtoast: 'disciplinefondnew',
-        },
-      });
+      updateToast(data.status, 'disciplinefondnew')
     });
   };
 
@@ -543,14 +429,8 @@ export const RozkladProvider = ({ children }) => {
         type: 'SET_ACADEMICLOADFOND',
         payload: { sem, data },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: true,
-          status: data.status,
-          newtoast: 'academikloadfondnew',
-        },
-      });
+      updateToast(data.status, 'academikloadfondnew')
+
     });
   };
 
@@ -564,14 +444,8 @@ export const RozkladProvider = ({ children }) => {
         type: 'SET_TEACHERFOND',
         payload: { sem, data },
       });
-      dispatch({
-        type: 'UPDATE',
-        payload: {
-          loading: true,
-          status: data.status,
-          newtoast: 'toastteacherfondnew',
-        },
-      });
+      updateToast(data.status, 'toastteacherfondnew')
+
     });
   };
 
@@ -987,6 +861,7 @@ export const RozkladProvider = ({ children }) => {
         addToAcademicLoadFond,
         addToSchedule,
         uploadToAudFond,
+        uploadToLoadFond,
       }}
     >
       {children}

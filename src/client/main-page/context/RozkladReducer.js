@@ -255,6 +255,17 @@ const rozkladReducer = (state, action) => {
           },
         },
       };
+    case 'UPLOAD_LOADTOFOND':
+      return {
+        ...state,
+        academicloadfond: {
+          ...state.academicloadfond,
+          [action.payload.sem]: {
+            ...state[action.payload.sem],
+            data: action.payload.data,
+          },
+        },
+      };
     case 'ADD_GROUPTOFOND':
       return {
         ...state,
