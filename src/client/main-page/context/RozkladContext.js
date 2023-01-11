@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useReducer } from 'react';
 
 import server from '../../utils/server';
 import rozkladReducer from './RozkladReducer';
-import getData from '../data/Utils';
+import getData, { getDataNEW } from '../data/Utils';
 
 const { serverFunctions } = server;
 
@@ -55,6 +55,12 @@ export const RozkladProvider = ({ children }) => {
 
   const [state, dispatch] = useReducer(rozkladReducer, initState);
 
+  const updateContext = (type, payload) =>
+    dispatch({
+      type,
+      payload,
+    });
+
   const setActiveId = val => dispatch({ type: 'SET_ACTIVEID', payload: val });
   const setShowModal = val => dispatch({ type: 'SET_SHOWMODAL', payload: val });
   const setCurrentDep = id => dispatch({ type: 'SET_CURRENTDEP', payload: id });
@@ -80,13 +86,13 @@ export const RozkladProvider = ({ children }) => {
     });
 
   const getDepartments = () => {
-    setLoading('Завантажуємо підрозділи ...', 'deps');
-    getData(`${rozkladChNU_API}?action=GETLISTOFDEPARTMENTS`).then(data => {
-      dispatch({
-        type: 'GETLISTOFDEPARTMENTS',
-        payload: data,
-      });
-      updateToast(data.status, 'deps');
+    const toastName = 'deps';
+    const API = 'rozkladChNU_API';
+    const action = 'GETLISTOFDEPARTMENTS';
+    setLoading('Завантажуємо підрозділи ...', toastName);
+    getDataNEW(API, action, '').then(resp => {
+      updateContext(action, resp.data);
+      updateToast(resp.status, toastName);
     });
   };
 
@@ -378,74 +384,62 @@ export const RozkladProvider = ({ children }) => {
   };
 
   const getAudFond = (sem, folderID) => {
-    setLoading('Завантажуємо аудиторний фонд ...', 'audfondnew');
-    getData(
-      `${rozkladChNU_API}?action=GETAUDFOND&sem=${sem}&folderID=${folderID}`
-    ).then(data => {
-      // console.log('getAudFond', data);
-      dispatch({
-        type: 'SET_AUDFOND',
-        payload: { sem, data },
-      });
-      updateToast(data.status, 'audfondnew')
+    const toastName = 'audfondnew';
+    const API = 'rozkladChNU_API';
+    const action = 'GETAUDFOND';
+    const txt = JSON.stringify({ sem, folderID });
+    setLoading('Завантажуємо аудиторний фонд ...', toastName);
+    getDataNEW(API, action, txt).then(resp => {
+      updateContext('SET_AUDFOND', { sem, data: resp });
+      updateToast(resp.status, toastName);
     });
   };
 
   const getGroupFond = (sem, folderID) => {
-    setLoading('Завантажуємо груповий фонд ...', 'groupfondnew');
-    getData(
-      `${rozkladChNU_API}?action=GETGROUPFOND&sem=${sem}&folderID=${folderID}`
-    ).then(data => {
-      // console.log('getGroupFond', data);
-      dispatch({
-        type: 'SET_GROUPFOND',
-        payload: { sem, data },
-      });
-      updateToast(data.status, 'groupfondnew')
+    const toastName = 'groupfondnew';
+    const API = 'rozkladChNU_API';
+    const action = 'GETGROUPFOND';
+    const txt = JSON.stringify({ sem, folderID });
+    setLoading('Завантажуємо груповий фонд ...', toastName);
+    getDataNEW(API, action, txt).then(resp => {
+      updateContext('SET_GROUPFOND', { sem, data: resp });
+      updateToast(resp.status, toastName);
     });
   };
 
   const getDisciplineFond = (sem, folderID) => {
+    const toastName = 'disciplinefondnew';
+    const API = 'rozkladChNU_API';
+    const action = 'GETDISCIPLINEFOND';
+    const txt = JSON.stringify({ sem, folderID });
     setLoading('Завантажуємо дисципліни ...', 'disciplinefondnew');
-    getData(
-      `${rozkladChNU_API}?action=GETDISCIPLINEFOND&sem=${sem}&folderID=${folderID}`
-    ).then(data => {
-      // console.log('getDisciplineFond', data);
-      dispatch({
-        type: 'SET_DISCIPLINEFOND',
-        payload: { sem, data },
-      });
-      updateToast(data.status, 'disciplinefondnew')
+    getDataNEW(API, action, txt).then(resp => {
+      updateContext('SET_DISCIPLINEFOND', { sem, data: resp });
+      updateToast(resp.status, toastName);
     });
   };
 
   const getAcademicLoadFond = (sem, folderID) => {
-    setLoading('Завантажуємо навантаження ...', 'academikloadfondnew');
-    getData(
-      `${rozkladChNU_API}?action=GETACADEMICLOADFOND&sem=${sem}&folderID=${folderID}`
-    ).then(data => {
-      // console.log('getAcademicLoadFond', data);
-      dispatch({
-        type: 'SET_ACADEMICLOADFOND',
-        payload: { sem, data },
-      });
-      updateToast(data.status, 'academikloadfondnew')
-
+    const toastName = 'academikloadfondnew';
+    const API = 'rozkladChNU_API';
+    const action = 'GETACADEMICLOADFOND';
+    const txt = JSON.stringify({ sem, folderID });
+    setLoading('Завантажуємо навантаження ...', toastName);
+    getDataNEW(API, action, txt).then(resp => {
+      updateContext('SET_ACADEMICLOADFOND', { sem, data: resp });
+      updateToast(resp.status, toastName);
     });
   };
 
   const getTeacherFond = (sem, folderID) => {
-    setLoading('Завантажуємо викладацький фонд ...', 'toastteacherfondnew');
-    getData(
-      `${rozkladChNU_API}?action=GETTEACHERFOND&sem=${sem}&folderID=${folderID}`
-    ).then(data => {
-      // console.log('getTeacherFond', data);
-      dispatch({
-        type: 'SET_TEACHERFOND',
-        payload: { sem, data },
-      });
-      updateToast(data.status, 'toastteacherfondnew')
-
+    const toastName = 'toastteacherfondnew';
+    const API = 'rozkladChNU_API';
+    const action = 'GETTEACHERFOND';
+    const txt = JSON.stringify({ sem, folderID });
+    setLoading('Завантажуємо викладацький фонд ...', toastName);
+    getDataNEW(API, action, txt).then(resp => {
+      updateContext('SET_TEACHERFOND', { sem, data: resp });
+      updateToast(resp.status, toastName);
     });
   };
 

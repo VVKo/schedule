@@ -62,7 +62,7 @@ const rozkladReducer = (state, action) => {
     case 'GETLISTOFDEPARTMENTS':
       return {
         ...state,
-        departments: action.payload.data,
+        departments: action.payload,
       };
     case 'SET_DEPARTMENTS':
       return {

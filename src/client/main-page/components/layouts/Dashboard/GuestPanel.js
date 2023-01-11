@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Panel, StyledBox } from '../../Styled/StyledComponents';
 import RozkladContext from '../../../context/RozkladContext';
 import Spinner from '../../Spinner/Spinner';
 import OptionsForGroups from '../Pages/StaffWorkShop/utils/OptionsForGroups';
-import {Redirect} from "react-router-dom";
+import OptionsForTeachers from '../Pages/StaffWorkShop/utils/OptionsForTeachers';
 
 const GuestPanel = () => {
   const {
     publicPanel,
     setPublicPanel,
-    currentTeachers,
     state,
     setCurrentAcademicYear,
     setCurrentSemester,
@@ -33,7 +33,6 @@ const GuestPanel = () => {
   } = state;
 
   if (!currentDep && !currentAcademicYear) return <Spinner />;
-
 
   const fondInit = (val, fond, getFond) => {
     if (!fond) {
@@ -166,7 +165,6 @@ const GuestPanel = () => {
           if (val !== 'Виберіть групу') {
             teacherRef.current.disabled = true;
             semesterRef.current.disabled = true;
-
           } else {
             groupeRef.current.disabled = false;
             teacherRef.current.disabled = false;
@@ -198,12 +196,7 @@ const GuestPanel = () => {
           }
         }}
       >
-        <option value="Виберіть викладача">Виберіть викладача</option>
-        {currentTeachers.map((gr, idx) => (
-          <option key={idx} value={`${gr}`}>
-            {gr}
-          </option>
-        ))}
+        <OptionsForTeachers />
       </StyledBox>
     </Panel>
   );
