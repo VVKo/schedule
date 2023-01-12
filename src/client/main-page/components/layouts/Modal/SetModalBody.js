@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import RozkladContext from '../../../context/RozkladContext';
 
 const SetModalBody = () => {
-  const { dataForModal } = useContext(RozkladContext);
+  const { state } = useContext(RozkladContext);
+  const { dataForModal } = state;
   return (
     dataForModal.body.func !== '' &&
     dataForModal.body.func({

@@ -2,6 +2,11 @@ import { toast } from 'react-toastify';
 
 const rozkladReducer = (state, action) => {
   switch (action.type) {
+    case 'GET_USER':
+      return {
+        ...state,
+        user: action.payload,
+      };
     case 'INFO':
       return {
         ...state,
@@ -43,6 +48,13 @@ const rozkladReducer = (state, action) => {
       return {
         ...state,
         currentDep: state.departments[action.payload],
+        user: {
+          ...state.user,
+          role:
+            state.departments[action.payload].users.includes(
+              state.user.email
+            ) && 'staff',
+        },
       };
     case 'SET_CURRENTACADEMICYEAR':
       return {

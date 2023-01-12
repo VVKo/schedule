@@ -3,16 +3,15 @@ import { useParams } from 'react-router-dom';
 
 import RozkladContext from '../../../context/RozkladContext';
 import Spinner from '../../Spinner/Spinner';
-import FineSchedule from '../Schedule/FineSchedule';
 
 import StaffWorkShop from './StaffWorkShop/StaffWorkShop';
-import SheduleWeek from './StaffWorkShop/SheduleWeek';
 import FineScheduleNew from '../Schedule/FineScheduleNew';
 
 const FineHeader = () => {
   const { state } = useContext(RozkladContext);
   const { currentDep, currentAcademicYear, currentSemester } = state;
   if (!currentDep) return <Spinner />;
+
   return (
     currentDep && (
       <nav aria-label="breadcrumb">
@@ -34,31 +33,12 @@ const FineHeader = () => {
 
 const Department = () => {
   const params = useParams();
-  const {
-    state,
-    dataLoaded,
-    user,
-    getUserData,
-    setJsonID,
-    setCurrentDep,
-  } = useContext(RozkladContext);
-
-  const { departments } = state;
-
-  const pidrozdil = departments[params.id];
+  const { setCurrentDep } = useContext(RozkladContext);
 
   useEffect(() => {
     setCurrentDep(+params.id);
-    getUserData({
-      user,
-      users: pidrozdil.users,
-      jsonID: pidrozdil.JSON,
-      xlsID: pidrozdil['ІД'],
-    });
-    setJsonID(pidrozdil.JSON);
   }, []);
 
-  if (!dataLoaded) return <Spinner />;
   return (
     <>
       <FineHeader />

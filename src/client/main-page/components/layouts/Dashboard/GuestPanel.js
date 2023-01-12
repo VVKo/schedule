@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useContext, useRef } from 'react';
 import { Panel, StyledBox } from '../../Styled/StyledComponents';
 import RozkladContext from '../../../context/RozkladContext';
 import Spinner from '../../Spinner/Spinner';
@@ -7,9 +6,12 @@ import OptionsForGroups from '../Pages/StaffWorkShop/utils/OptionsForGroups';
 import OptionsForTeachers from '../Pages/StaffWorkShop/utils/OptionsForTeachers';
 
 const GuestPanel = () => {
+  const groupeRef = useRef();
+  const teacherRef = useRef();
+  const semesterRef = useRef();
+  const academicYearRef = useRef();
+
   const {
-    publicPanel,
-    setPublicPanel,
     state,
     setCurrentAcademicYear,
     setCurrentSemester,
@@ -42,37 +44,10 @@ const GuestPanel = () => {
     }
   };
 
-  const groupeRef = useRef();
-  const teacherRef = useRef();
-  const semesterRef = useRef();
-  const academicYearRef = useRef();
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    const fdata = {};
-    for (const [name, value] of data) {
-      fdata[name] = value;
-    }
-    // showButton(fdata);
-    console.log('handleSubmit', fdata);
-  };
-
-  // const groups = [
-  //       ...new Set([
-  //         ...academicloadfond[currentSemester.name].data
-  //           .map(r => r[1])
-  //           .join('+')
-  //           .split('+')
-  //           .map(r => r.split('гр')[0]),
-  //       ]),
-  //     ].sort();
-
   return (
-    <Panel onSubmit={handleSubmit}>
+    <Panel>
       <StyledBox
-        defaultValue={'Виберіть навчльний рік'}
-        // publicPanel.academicYear.name
+        defaultValue={'Виберіть навчальний рік'}
         name="academicYear"
         ref={academicYearRef}
         disabled={false}
@@ -84,7 +59,7 @@ const GuestPanel = () => {
             id: currentDep[val] ? currentDep[val] : '',
           });
 
-          if (val !== 'Виберіть навчльний рік' && currentDep[val] === '') {
+          if (val !== 'Виберіть навчальний рік' && currentDep[val] === '') {
             createNewAcademicYear({
               dep: currentDep.Підрозділ,
               academicYear: val,
@@ -113,7 +88,7 @@ const GuestPanel = () => {
       </StyledBox>
 
       <StyledBox
-        defaultValue={publicPanel.semester.name}
+        defaultValue={'Виберіть семестр'}
         name="semester"
         ref={semesterRef}
         disabled={true}
@@ -121,12 +96,6 @@ const GuestPanel = () => {
           const val = e.target.value;
           setCurrentSemester({
             name: val,
-          });
-          setPublicPanel(prevState => {
-            return {
-              ...prevState,
-              semester: { ...prevState.semester, name: val },
-            };
           });
 
           if (val !== 'Виберіть семестр') {
@@ -151,16 +120,13 @@ const GuestPanel = () => {
       </StyledBox>
 
       <StyledBox
-        defaultValue={publicPanel.groups[0]}
+        defaultValue={'Виберіть групу'}
         name="group"
         ref={groupeRef}
         disabled={true}
         onChange={e => {
           const val = e.target.value;
           setCurrentGroup(val);
-          setPublicPanel(prevState => {
-            return { ...prevState, group: val, groups: [val] };
-          });
 
           if (val !== 'Виберіть групу') {
             teacherRef.current.disabled = true;
@@ -176,15 +142,12 @@ const GuestPanel = () => {
       </StyledBox>
 
       <StyledBox
-        defaultValue={publicPanel.teacher}
+        defaultValue={'Виберіть викладача'}
         name="teacher"
         ref={teacherRef}
         disabled={true}
         onChange={e => {
           const val = e.target.value;
-          setPublicPanel(prevState => {
-            return { ...prevState, teacher: val };
-          });
 
           if (val !== 'Виберіть викладача') {
             groupeRef.current.disabled = true;

@@ -4,8 +4,9 @@ import RozkladContext from '../../../context/RozkladContext';
 import SetModalBody from './SetModalBody';
 
 const ModalLayout = () => {
-  const { showModal, setShowModal, dataForModal } = useContext(RozkladContext);
+  const { state, setShowModal } = useContext(RozkladContext);
 
+  const { dataForModal, showModal } = state;
   const handleCloseModal = () => setShowModal(false);
 
   return (

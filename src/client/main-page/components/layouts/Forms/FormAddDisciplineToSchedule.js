@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { FaTrash } from 'react-icons/fa';
 import { FiPlusCircle } from 'react-icons/fi';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Button } from 'react-bootstrap';
+import { MdOutlineAddTask } from 'react-icons/md';
 import RozkladContext from '../../../context/RozkladContext';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
@@ -15,9 +16,7 @@ const getCol = (shift, day, week, para) => {
   return shift + 16 * d + 2 * p + w;
 };
 const FormAddDisciplineToSchedule = ({ para, week, day, group }) => {
-  const { state, addToSchedule } = useContext(
-    RozkladContext
-  );
+  const { state, addToSchedule, setShowModal } = useContext(RozkladContext);
 
   const {
     audfond,
@@ -26,7 +25,6 @@ const FormAddDisciplineToSchedule = ({ para, week, day, group }) => {
     currentSemester,
     currentAcademicYear,
   } = state;
-  // console.log('FormAddDisciplineToSchedule', { para, week, day, group });
 
   const rowAcademicLoadFond = academicloadfond[
     currentSemester.name
@@ -65,16 +63,7 @@ const FormAddDisciplineToSchedule = ({ para, week, day, group }) => {
     const rowaud =
       a !== 'ONLINE' ? `${rowAudFond.filter(ra => ra[5] === a)[0][0]}` : null;
 
-    // console.log({
-    //   rowload,
-    //   colload: `${loadCol}`,
-    //   rowteacher,
-    //   colteacher: `${teacherCol}`,
-    //   rowaud,
-    //   colaud: `${audCol}`,
-    //   aud: a,
-    // });
-
+    setShowModal(false);
     addToSchedule(
       currentSemester.name,
       currentAcademicYear.id,
@@ -136,14 +125,16 @@ const FormAddDisciplineToSchedule = ({ para, week, day, group }) => {
                       </select>
                     </Col>
                     <Col>
-                      <FiPlusCircle
+                      <Button
+                        variant="outline-success"
                         onClick={handleAdd}
-                        size={'24'}
                         data-rowload={r[0]}
                         data-rowteacher={
                           rowTeacherFond.filter(rt => rt[1] === r[4])[0][0]
                         }
-                      />
+                      >
+                        <MdOutlineAddTask size={'24'} />
+                      </Button>
                     </Col>
                   </Row>
                 </td>

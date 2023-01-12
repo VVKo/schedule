@@ -355,3 +355,8 @@ export const saveToServer = text => {
 
   return JSON.stringify({ status: 'Error' });
 };
+
+export const getUser = () => {
+  const user = Session.getActiveUser();
+  return { role: 'public', email: user.getEmail() };
+};

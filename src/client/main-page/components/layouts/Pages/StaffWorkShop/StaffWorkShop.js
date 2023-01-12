@@ -11,13 +11,16 @@ import StaffMain from './StaffMain';
 
 const StaffWorkShop = () => {
   const [setting, setSetting] = useState(false);
-  const { user, publicPanel} = useContext(
-    RozkladContext
-  );
+  const { state } = useContext(RozkladContext);
 
-  if (user.role !== 'staff' || publicPanel.semester.name === 'Виберіть семестр')
+  const { currentSemester, user } = state;
+
+  if (
+    user.role !== 'staff' ||
+    typeof currentSemester === 'undefined' ||
+    currentSemester.name === 'Виберіть семестр'
+  )
     return null;
-
 
   return (
     <>

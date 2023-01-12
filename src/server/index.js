@@ -8,6 +8,7 @@ global.getSheetsData = publicSheetFunctions.getSheetsData;
 global.getListOfPidrozdils = utils.getListOfPidrozdils;
 global.getListOfPidrozdilsJSON = utils.getListOfPidrozdilsJSON;
 global.getUserData = utils.getUserData;
+global.getUser = utils.getUser;
 global.addSheet = publicSheetFunctions.addSheet;
 global.deleteSheet = publicSheetFunctions.deleteSheet;
 global.setActiveSheet = publicSheetFunctions.setActiveSheet;
