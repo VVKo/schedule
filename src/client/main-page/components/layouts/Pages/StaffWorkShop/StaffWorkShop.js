@@ -128,6 +128,16 @@ const StaffWorkShop = () => {
                     Весь розклад
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink
+                    to="printer"
+                    className={({ isActive }) =>
+                      isActive ? 'nav-link active' : 'nav-link'
+                    }
+                  >
+                    ПДФ
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </StaffSidebar>

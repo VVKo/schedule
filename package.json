@@ -33,6 +33,7 @@
     "npm": ">=6.0.0"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^3.0.2",
     "@types/react-router-dom": "^5.1.6",
     "bootstrap": "^5.2.1",
     "formik": "^2.2.9",

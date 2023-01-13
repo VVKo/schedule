@@ -7,6 +7,7 @@ import StaffDisciplineFond from './StaffDisciplineFond';
 import StaffLoadFond from './StaffLoadFond';
 import StaffSchedule from './StaffSchedule';
 import StaffPreviewGroup from "./StaffPreviewGroup";
+import StaffPrinter from "./StaffPrinter";
 
 const StaffMain = () => {
   const params = useParams();
@@ -19,6 +20,7 @@ const StaffMain = () => {
       {params.func === 'addload' && <StaffLoadFond />}
       {params.func === 'totalschedule' && <StaffSchedule />}
       {params.func === 'preview' && <StaffPreviewGroup />}
+      {params.func === 'printer' && <StaffPrinter />}
     </main>
   );
 };
