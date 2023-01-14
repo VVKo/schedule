@@ -3,7 +3,7 @@ import { Document, Page, StyleSheet, Font } from '@react-pdf/renderer';
 import ScheduleTitle from './ScheduleTitle';
 import ScheduleHeader from './ScheduleHeader';
 import ScheduleWeekPdf from './ScheduleWeekPDF';
-import ScheduleClassicPdf from "./ScheduleClassicPDF";
+import ScheduleClassicPdf from './ScheduleClassicPDF';
 
 const FullDay = {
   Mon: { day: 'Понеділок', backgr: '#ffc' },
@@ -46,22 +46,41 @@ const styles = StyleSheet.create({
   },
 });
 const ForPrint = ({ fond }) => {
+  const groups = [
+    ...new Set([
+      ...fond
+        .map(r => r[1])
+        .join('+')
+        .split('+')
+        .map(r => r.split('гр')[0]),
+    ]),
+  ].sort();
+
+  const chunkArr = groups.reduce(
+    (r, e, i) => (r[Math.trunc(i / 5)].push(e), r),
+    [...Array(Math.trunc(groups.length / 5) + 1)].map(_ => [])
+  );
+
+  console.log('groups', chunkArr);
+
   return (
     <Document>
-      {DAYS.map(day => {
-        return (
-          <Page
-            key={day}
-            size={'A2'}
-            orientation={'landscape'}
-            style={styles.page}
-          >
-            {/* <ScheduleTitle /> */}
-            {/* <ScheduleHeader /> */}
-            {/*<ScheduleWeekPdf fond={fond} />*/}
-            <ScheduleClassicPdf fond={fond} groups={['11-ПМ','11-КІ','12-КІ','11-КН','12-КН']} day={day}/>
-          </Page>
-        );
+      {chunkArr.map(grps => {
+        return DAYS.map(day => {
+          return (
+            <Page
+              key={`${grps[0]}${day}`}
+              size={'A2'}
+              orientation={'landscape'}
+              style={styles.page}
+            >
+              {/* <ScheduleTitle /> */}
+              {/* <ScheduleHeader /> */}
+              {/* <ScheduleWeekPdf fond={fond} /> */}
+              <ScheduleClassicPdf fond={fond} groups={grps} day={day} />
+            </Page>
+          );
+        });
       })}
     </Document>
   );

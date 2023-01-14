@@ -1,7 +1,7 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import ForPrint from './PDFWorkShop/ForPrint';
-import RozkladContext from "../../../../context/RozkladContext";
+import RozkladContext from '../../../../context/RozkladContext';
 // Create styles
 
 const StaffPrinter = () => {
@@ -10,7 +10,10 @@ const StaffPrinter = () => {
   const { academicloadfond, currentSemester } = state;
   if (!academicloadfond) return null;
   return (
-    <PDFDownloadLink document={<ForPrint fond={academicloadfond} />} fileName="somename.pdf">
+    <PDFDownloadLink
+      document={<ForPrint fond={academicloadfond[currentSemester.name].data} />}
+      fileName="somename.pdf"
+    >
       {({ blob, url, loading, error }) =>
         loading ? 'Генерується документ ...' : 'Завантажити!'
       }

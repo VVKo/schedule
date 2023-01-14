@@ -99,7 +99,7 @@ const ScheduleClassicPdf = ({ fond, groups, day }) => {
     const w = week === '1т.' ? 0 : 1;
     const p = +para - 1;
     const col = 8 + 16 * d + 2 * p + w;
-    const arr = fond['2 семестр'].data
+    const arr = fond
       .map((r, idx) => [idx + 4, ...r])
       .filter(r => r[2].includes(`${group}гр`))
       .filter(r => r[col + 1] !== '')
