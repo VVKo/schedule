@@ -132,7 +132,7 @@ const SheduleWeek = ({ wn, group }) => {
     ]);
     const arr = academicloadfond[currentSemester.name].data
       .map((r, idx) => [idx + 4, ...r])
-      .filter(r => r[2].includes(group))
+      .filter(r => r[2].includes(`${group}гр`))
       .filter(r => r[col + 1] !== '')
       .map(r => {
         return {

@@ -78,7 +78,7 @@ const StaffSchedule = () => {
                   <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h3 className="h3">{gr}</h3>
                     {academicloadfond[currentSemester.name].data
-                      .filter(r => r[1].includes(gr))
+                      .filter(r => r[1].includes(`${gr}гр`))
                       .filter(r => +r[6] - +r[7] !== 0).length > 0 && (
                       <Alert variant="warning">
                         <FaInfo /> Є не виставлені заняття
