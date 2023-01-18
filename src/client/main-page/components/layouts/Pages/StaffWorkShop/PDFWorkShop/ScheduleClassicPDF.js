@@ -75,9 +75,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '10cm',
     minHeight: '2cm',
+    flexGrow: 1,
   },
 });
-const ScheduleClassicPdf = ({ fond, groups, day }) => {
+const ScheduleClassicPdf = ({ fond, groups, day, forPRINT }) => {
   const RowDay = () => {
     return (
       <View style={{ display: 'flex', flexDirection: 'row' }}>
@@ -87,7 +88,7 @@ const ScheduleClassicPdf = ({ fond, groups, day }) => {
         {groups.map(gr => {
           return (
             <View key={gr} style={styles.dayWidth}>
-              <Text>{gr}</Text>
+              <Text style={{fontSize:16, fontWeight: 'bold', fontStyle: 'italic'}}>{gr}</Text>
             </View>
           );
         })}
@@ -105,24 +106,35 @@ const ScheduleClassicPdf = ({ fond, groups, day }) => {
       .filter(r => r[col + 1] !== '')
       .map(r => {
         return {
-          disc: r[1],
-          група: r[2],
+          disc: forPRINT[r[1]],
+          група: r[2].split('+').filter(g => g.includes(`${group}гр`)),
           тип: r[3],
           викладач: r[5],
           'місце проведення': r[col + 1],
         };
       });
     return (
-      <View style={{ display: 'flex', flexDirection: 'row', fontSize: '10pt' }}>
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'stretch',
+          fontSize: '10pt',
+          alignContent: 'stretch',
+        }}
+      >
         {/* {arr.length === 0 && <Text>Вікно</Text>} */}
         {arr.map((o, idx) => (
           <View
             key={idx}
             style={{
-              borderWidth: 1,
               padding: 0,
               width: `${10 / arr.length}cm`,
               alignItems: 'center',
+              borderLeftWidth: 1,
+              borderRightWidth: 1,
+              // alignContent: 'stretch',
+              alignSelf: 'stretch',
             }}
           >
             <Text style={{ fontWeight: 'bold' }}>{o.disc}</Text>
@@ -164,10 +176,30 @@ const ScheduleClassicPdf = ({ fond, groups, day }) => {
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'center',
-          transform: 'rotate(-90deg)',
+          width: '2cm',
         }}
       >
-        <Text style={{fontWeight: "bold", fontSize: '20pt'}}>{FullDay[day].day}</Text>
+        <View
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            borderWidth: 3,
+            height: '100%',
+            width: '100%',
+            alignContent: 'center',
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: 'bold',
+              fontSize: '60pt',
+              transform: 'rotate(-90deg)',
+              padding: 0,
+            }}
+          >
+            {FullDay[day].day}
+          </Text>
+        </View>
       </View>
 
       <View style={{ flexDirection: 'column' }}>

@@ -26,6 +26,10 @@ Font.register({
         'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Bold.ttf',
       fontWeight: 'bold',
     },
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Italic.ttf',
+      fontStyle: 'italic',
+    }
   ],
 });
 
@@ -45,16 +49,16 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
 });
-const ForPrint = ({ fond }) => {
-  const groups = [
-    ...new Set([
-      ...fond
-        .map(r => r[1])
-        .join('+')
-        .split('+')
-        .map(r => r.split('гр')[0]),
-    ]),
-  ].sort();
+const ForPrint = ({ fond, forPRINT, groups, days }) => {
+  // const groups = [
+  //   ...new Set([
+  //     ...fond
+  //       .map(r => r[1])
+  //       .join('+')
+  //       .split('+')
+  //       .map(r => r.split('гр')[0]),
+  //   ]),
+  // ].sort();
 
   const chunkArr = groups.reduce(
     (r, e, i) => (r[Math.trunc(i / 5)].push(e), r),
@@ -66,7 +70,7 @@ const ForPrint = ({ fond }) => {
   return (
     <Document>
       {chunkArr.map(grps => {
-        return DAYS.map(day => {
+        return days.map(day => {
           return (
             <Page
               key={`${grps[0]}${day}`}
@@ -77,7 +81,12 @@ const ForPrint = ({ fond }) => {
               {/* <ScheduleTitle /> */}
               {/* <ScheduleHeader /> */}
               {/* <ScheduleWeekPdf fond={fond} /> */}
-              <ScheduleClassicPdf fond={fond} groups={grps} day={day} />
+              <ScheduleClassicPdf
+                fond={fond}
+                groups={grps}
+                day={day}
+                forPRINT={forPRINT}
+              />
             </Page>
           );
         });
