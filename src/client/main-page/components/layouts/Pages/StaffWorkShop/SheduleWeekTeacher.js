@@ -4,6 +4,7 @@ import { FiEdit3, FiEye, FiTrash2 } from 'react-icons/fi';
 import { Week } from '../../../Styled/StaffWorkShop/STYLED';
 import RozkladContext from '../../../../context/RozkladContext';
 import FormAddDisciplineToSchedule from '../../Forms/FormAddDisciplineToSchedule';
+import FormAddDisciplineToScheduleTeacher from '../../Forms/FormAddDisciplineToScheduleTeacher';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const FullDay = {
@@ -14,7 +15,14 @@ const FullDay = {
   Fri: { day: "П'ятниця", backgr: '#fff', cn: 'friday' },
 };
 
-const SheduleWeek = ({ wn, group }) => {
+const checkArrInArr = (arr1, arr2) => {
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr2.indexOf(arr1[i]) > -1) return false;
+  }
+
+  return true;
+};
+const SheduleWeekTeacher = ({ wn, teacher }) => {
   const {
     state,
     setShowModal,
@@ -40,8 +48,8 @@ const SheduleWeek = ({ wn, group }) => {
       title: `Доступні дисципліни`,
       size: 'xl',
       body: {
-        func: FormAddDisciplineToSchedule,
-        data: { ...{ para, week, day, group } },
+        func: FormAddDisciplineToScheduleTeacher,
+        data: { ...{ para, week, day, teacher } },
       },
     });
   };
@@ -56,14 +64,6 @@ const SheduleWeek = ({ wn, group }) => {
         audRow,
         audCol,
       } = e.currentTarget.dataset;
-      // console.log('asdasdasdasdasdasdasd', {
-      //   academicRow,
-      //   academicCol,
-      //   teacherRow,
-      //   teacherCol,
-      //   audRow,
-      //   audCol,
-      // });
 
       deleteFromSchedule(
         currentSemester.name,
@@ -117,6 +117,33 @@ const SheduleWeek = ({ wn, group }) => {
     );
   };
 
+  const TriggerExampleMaybe = ({ obj }) => {
+    const popover = (
+      <Popover id="popover-basic">
+        <Popover.Header as="h3"></Popover.Header>
+        <Popover.Body>
+          <div>{obj.disc}</div>
+          <div>{obj.група}</div>
+          <div>{obj.тип}</div>
+          <div>{obj.викладач}</div>
+          <div>{obj['місце проведення']}</div>
+        </Popover.Body>
+      </Popover>
+    );
+
+    return (
+      <OverlayTrigger
+        placement="top"
+        delay={{ show: 250, hide: 1500 }}
+        overlay={popover}
+      >
+        <Button variant="warning">
+          <FiEye />
+        </Button>
+      </OverlayTrigger>
+    );
+  };
+
   const Para = ({ para, week, day }) => {
     const d = DAYS.indexOf(day);
     const w = week === '1т.' ? 0 : 1;
@@ -132,7 +159,7 @@ const SheduleWeek = ({ wn, group }) => {
     ]);
     const arr = academicloadfond[currentSemester.name].data
       .map((r, idx) => [idx + 4, ...r])
-      .filter(r => r[2].includes(`${group}гр`))
+      .filter(r => r[5] === teacher)
       .filter(r => r[col + 1] !== '')
       .map(r => {
         return {
@@ -153,6 +180,42 @@ const SheduleWeek = ({ wn, group }) => {
         };
       });
 
+    const listOfBusySubGroups = [
+      ...new Set([
+        ...academicloadfond[currentSemester.name].data
+          .filter(r => r[col] !== '')
+          .map(r => r[1])
+          .join('+')
+          .split('+'),
+      ]),
+    ].sort();
+
+    const maybeArr = academicloadfond[currentSemester.name].data
+      .map((r, idx) => [idx + 4, ...r])
+      .filter(r => r[5] === teacher)
+      .filter(r => {
+        return (
+          r[col + 1] === '' &&
+          +r[7] - +r[8] > 0 &&
+          checkArrInArr(r[2].split('+'), listOfBusySubGroups)
+        );
+      })
+      .map(r => {
+        return {
+          disc: r[1],
+          група: r[2],
+          тип: r[3],
+          викладач: r[5],
+          'місце проведення': r[col + 1],
+          academicRow: r[0],
+          academicCol: col + 1,
+          teacherRow: teachers.filter(ro => r[5] === ro[1])[0][0],
+          teacherCol: col - 4,
+          audRow: null,
+          audCol: col - 2,
+        };
+      });
+
     return (
       <>
         <FiEdit3
@@ -164,6 +227,9 @@ const SheduleWeek = ({ wn, group }) => {
         ></FiEdit3>
         {arr.map((o, idx) => (
           <TriggerExample key={idx} obj={o} />
+        ))}
+        {maybeArr.map((o, idx) => (
+          <TriggerExampleMaybe key={idx} obj={o} />
         ))}
       </>
     );
@@ -179,7 +245,7 @@ const SheduleWeek = ({ wn, group }) => {
               wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
             }`}
           >
-            {group}
+            X
           </div>
           <div>1п</div>
           <div>2п</div>
@@ -220,4 +286,4 @@ const SheduleWeek = ({ wn, group }) => {
   );
 };
 
-export default SheduleWeek;
+export default SheduleWeekTeacher;

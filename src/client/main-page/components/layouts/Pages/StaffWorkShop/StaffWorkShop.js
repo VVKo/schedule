@@ -1,7 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { FiMinusCircle, FiPlusCircle } from 'react-icons/fi';
 import { Collapse } from 'react-bootstrap';
-import { Route, NavLink } from 'react-router-dom';
+import {
+  Route,
+  NavLink,
+  useParams,
+  Switch,
+  useRouteMatch,
+} from 'react-router-dom';
 import RozkladContext from '../../../../context/RozkladContext';
 import {
   StaffHeader,
@@ -10,10 +16,13 @@ import {
 import StaffMain from './StaffMain';
 
 const StaffWorkShop = () => {
+  const match = useRouteMatch();
+  const params = useParams();
   const [setting, setSetting] = useState(false);
   const { state } = useContext(RozkladContext);
 
   const { currentSemester, user } = state;
+
 
   if (
     user.role !== 'staff' ||
@@ -64,7 +73,7 @@ const StaffWorkShop = () => {
                 <ul className="nav flex-column" id="collapse-navbar">
                   <li className="nav-item">
                     <NavLink
-                      to="addload"
+                      to={`${match.url}/addload`}
                       className={({ isActive }) =>
                         isActive ? 'nav-link active' : 'nav-link'
                       }
@@ -74,7 +83,7 @@ const StaffWorkShop = () => {
                   </li>
                   <li className="nav-item">
                     <NavLink
-                      to="adddisc"
+                      to={`${match.url}/adddisc`}
                       className={({ isActive }) =>
                         isActive ? 'nav-link active' : 'nav-link'
                       }
@@ -84,7 +93,7 @@ const StaffWorkShop = () => {
                   </li>
                   <li className="nav-item">
                     <NavLink
-                      to="addgroup"
+                      to={`${match.url}/addgroup`}
                       className={({ isActive }) =>
                         isActive ? 'nav-link active' : 'nav-link'
                       }
@@ -94,7 +103,7 @@ const StaffWorkShop = () => {
                   </li>
                   <li className="nav-item">
                     <NavLink
-                      to="addteacher"
+                      to={`${match.url}/addteacher`}
                       className={({ isActive }) =>
                         isActive ? 'nav-link active' : 'nav-link'
                       }
@@ -104,7 +113,7 @@ const StaffWorkShop = () => {
                   </li>
                   <li className="nav-item">
                     <NavLink
-                      to="addaud"
+                      to={`${match.url}/addaud`}
                       className={({ isActive }) =>
                         isActive ? 'nav-link active' : 'nav-link'
                       }
@@ -120,7 +129,7 @@ const StaffWorkShop = () => {
               <ul className="nav flex-column">
                 <li className="nav-item">
                   <NavLink
-                    to="totalschedule"
+                    to={`${match.url}/totalschedule`}
                     className={({ isActive }) =>
                       isActive ? 'nav-link active' : 'nav-link'
                     }
@@ -130,7 +139,27 @@ const StaffWorkShop = () => {
                 </li>
                 <li className="nav-item">
                   <NavLink
-                    to="printer"
+                    to={`${match.url}/teacherschedule`}
+                    className={({ isActive }) =>
+                      isActive ? 'nav-link active' : 'nav-link'
+                    }
+                  >
+                    Викладачі
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                      to={`${match.url}/busyauds`}
+                      className={({ isActive }) =>
+                          isActive ? 'nav-link active' : 'nav-link'
+                      }
+                  >
+                    Зайнятість аудиторій
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                    to={`${match.url}/printer`}
                     className={({ isActive }) =>
                       isActive ? 'nav-link active' : 'nav-link'
                     }
@@ -138,10 +167,22 @@ const StaffWorkShop = () => {
                     ПДФ
                   </NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink
+                    to={`${match.url}/dropdown`}
+                    className={({ isActive }) =>
+                      isActive ? 'nav-link active' : 'nav-link'
+                    }
+                  >
+                    dropdown
+                  </NavLink>
+                </li>
               </ul>
             </div>
           </StaffSidebar>
-          <Route path="/department/:func" component={StaffMain} />
+          <Switch>
+            <Route path={`${match.path}/:func`} component={StaffMain} />
+          </Switch>
         </div>
       </div>
     </>

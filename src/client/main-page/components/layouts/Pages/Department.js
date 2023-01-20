@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Route, Switch, useParams, useRouteMatch } from 'react-router-dom';
 
 import RozkladContext from '../../../context/RozkladContext';
 import Spinner from '../../Spinner/Spinner';
@@ -32,6 +32,7 @@ const FineHeader = () => {
 };
 
 const Department = () => {
+  const match = useRouteMatch();
   const params = useParams();
   const { setCurrentDep } = useContext(RozkladContext);
 
@@ -41,12 +42,18 @@ const Department = () => {
 
   return (
     <>
-      <FineHeader />
-      <StaffWorkShop />
-      <FineScheduleNew weekNumber="1" />
+      <Switch>
+        <Route path={`${match.path}`}>
+          <>
+            <FineHeader />
+            <StaffWorkShop />
+            <FineScheduleNew weekNumber="1" />
 
-      <hr />
-      <FineScheduleNew weekNumber="2" />
+            <hr />
+            <FineScheduleNew weekNumber="2" />
+          </>
+        </Route>
+      </Switch>
     </>
   );
 };

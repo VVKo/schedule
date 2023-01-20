@@ -19,7 +19,8 @@ const Main = () => {
 
         <StyledMain>
           <Switch>
-            <Route exact path="/department/:id" component={Department} />
+            <Route exact path="/department" component={Department} />
+
             <Route path="/">
               <Start />
             </Route>
