@@ -1,5 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { Alert, ButtonToolbar, Container, Dropdown } from 'react-bootstrap';
+import {
+  Alert,
+  ButtonToolbar,
+  Container,
+  Dropdown,
+  Button,
+} from 'react-bootstrap';
 import { FaInfo } from 'react-icons/fa';
 import {
   NavLink,
@@ -18,8 +24,8 @@ import {
 import RozkladContext from '../../../../context/RozkladContext';
 import SheduleWeek from './SheduleWeek';
 import ScheduleInfoByGroup from './ScheduleInfoByGroup';
-import ScheduleSingle from './PDFWorkShop/ScheduleSingle';
 import ScheduleSingleGroup from './PDFWorkShop/ScheduleSingleGroup';
+import FormClearGroup from '../../Forms/FormClearGroup';
 
 Font.register({
   family: 'Roboto',
@@ -58,7 +64,7 @@ const styles = StyleSheet.create({
 });
 const StaffSchedule = () => {
   const match = useRouteMatch();
-  const { state } = useContext(RozkladContext);
+  const { state, setShowModal, setDataForModal } = useContext(RozkladContext);
   const [btnName, setBtnName] = useState('Оберіть групу');
 
   const changeButtonName = e => {
@@ -83,6 +89,25 @@ const StaffSchedule = () => {
   disciplinefond[currentSemester.name].data.forEach(r => {
     forPRINT[r[0]] = r[1] === '' ? r[0] : r[1];
   });
+
+  const clearSchedule = e => {
+    const { group } = e.currentTarget.dataset;
+
+    setShowModal(true);
+
+    setDataForModal({
+      title: `Очищення розкладу`,
+      size: 'xl',
+      body: {
+        func: FormClearGroup,
+        data: {
+          ...{
+            group,
+          },
+        },
+      },
+    });
+  };
 
   const Group = () => {
     const params = useParams();
@@ -122,6 +147,13 @@ const StaffSchedule = () => {
                 <FaInfo /> Є не виставлені заняття
               </Alert>
             )}
+            <Button
+              variant={'outline-danger'}
+              onClick={clearSchedule}
+              data-group={gr}
+            >
+              Очистити
+            </Button>
           </div>
         </Container>
         <SheduleWeek wn={'НТ'} group={gr} />
@@ -143,7 +175,7 @@ const StaffSchedule = () => {
               {btnName}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu style={{ maxHeight: '120px', overflowY: 'scroll' }}>
+            <Dropdown.Menu style={{ maxHeight: '250px', overflowY: 'scroll' }}>
               {groups.map((group, idx) => {
                 return (
                   <Dropdown.Item as="button" key={`${group}`}>

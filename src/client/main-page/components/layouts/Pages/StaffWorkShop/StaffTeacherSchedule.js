@@ -165,7 +165,7 @@ const StaffTeacherSchedule = () => {
               {btnName}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu style={{ maxHeight: '120px', overflowY: 'scroll' }}>
+            <Dropdown.Menu style={{ maxHeight: '250px', overflowY: 'scroll' }}>
               {teachers.map((teacher, idx) => {
                 return (
                   <Dropdown.Item as="button" key={`${teacher}`}>

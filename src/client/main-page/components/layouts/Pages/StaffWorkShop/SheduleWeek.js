@@ -33,6 +33,8 @@ const SheduleWeek = ({ wn, group }) => {
 
   if (!academicloadfond) return null;
 
+  const totalTasks = [];
+
   const handleClick = e => {
     const { para, week, day } = e.currentTarget.dataset;
     setShowModal(true);
@@ -168,6 +170,17 @@ const SheduleWeek = ({ wn, group }) => {
       .filter(r => r[2].includes(`${group}гр`))
       .filter(r => r[col + 1] !== '')
       .map(r => {
+        totalTasks.push({
+          academicRow: r[0],
+          academicCol: col + 1,
+          teacherRow: teachers.filter(ro => r[5] === ro[1])[0][0],
+          teacherCol: col - 4,
+          audRow:
+            r[col + 1] !== 'ONLINE'
+              ? auds.filter(ro => r[col + 1] === ro[5])[0][0]
+              : null,
+          audCol: col - 2,
+        });
         return {
           disc: r[1],
           група: r[2],

@@ -4,7 +4,7 @@ import { Button, ButtonGroup, ButtonToolbar, Col, Row } from 'react-bootstrap';
 import { Form, Formik, useField } from 'formik';
 import ForPrint from './PDFWorkShop/ForPrint';
 import RozkladContext from '../../../../context/RozkladContext';
-// Create styles
+
 
 const MyCheckBox = ({ label, ...props }) => {
   const [field, meta] = useField(props);

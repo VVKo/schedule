@@ -54,7 +54,7 @@ const StaffBusyAuds = () => {
               {btnName}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu style={{ maxHeight: '120px', overflowY: 'scroll' }}>
+            <Dropdown.Menu style={{ maxHeight: '250px', overflowY: 'scroll' }}>
               {auds.map((aud, idx) => {
                 return (
                   <Dropdown.Item as="button" key={`${aud}`}>
