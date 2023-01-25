@@ -150,7 +150,7 @@ export const Week = styled.div`
       grid-row-start: 1;
       grid-row-end: 2;
       grid-column-start: 1;
-      grid-column-end: 2;
+      grid-column-end: 3;
     }
   }
 
@@ -170,9 +170,13 @@ export const Week = styled.div`
       font-size: 1.2rem;
       justify-content: center;
       align-items: center;
+      &.monday {
+        display: none;
+      }
     }
+    
     @media (max-width: 900px) {
-      display: none;
+      //display: none;
       grid-row-start: 2;
       grid-row-end: 3;
       grid-column-start: 1;
@@ -180,6 +184,118 @@ export const Week = styled.div`
     }
   }
 
+  .paralist.tuesday {
+    grid-row-start: 1;
+    grid-row-end: 10;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    display: grid;
+    grid-gap: 1px 1px;
+    grid-template-rows: 40px repeat(6, 1fr);
+    > div {
+      display: none;
+      border: #000 solid 1px;
+      border-radius: 3px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      justify-content: center;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      > div {
+        display: flex;
+      }
+      grid-row-start: 3;
+      grid-row-end: 4;
+      grid-column-start: 1;
+      grid-column-end: 2;
+    }
+  }
+
+  .paralist.wednesday {
+    grid-row-start: 1;
+    grid-row-end: 10;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    display: grid;
+    grid-gap: 1px 1px;
+    grid-template-rows: 40px repeat(6, 1fr);
+    > div {
+      display: none;
+      border: #000 solid 1px;
+      border-radius: 3px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      justify-content: center;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      > div {
+        display: flex;
+      }
+      grid-row-start: 4;
+      grid-row-end: 5;
+      grid-column-start: 1;
+      grid-column-end: 2;
+    }
+  }
+
+  .paralist.thursday {
+    grid-row-start: 1;
+    grid-row-end: 10;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    display: grid;
+    grid-gap: 1px 1px;
+    grid-template-rows: 40px repeat(6, 1fr);
+    > div {
+      display: none;
+      border: #000 solid 1px;
+      border-radius: 3px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      justify-content: center;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      > div {
+        display: flex;
+      }
+      grid-row-start: 5;
+      grid-row-end: 6;
+      grid-column-start: 1;
+      grid-column-end: 2;
+    }
+  }
+
+  .paralist.friday {
+    grid-row-start: 1;
+    grid-row-end: 10;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    display: grid;
+    grid-gap: 1px 1px;
+    grid-template-rows: 40px repeat(6, 1fr);
+    > div {
+      display: none;
+      border: #000 solid 1px;
+      border-radius: 3px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      justify-content: center;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      > div {
+        display: flex;
+      }
+      grid-row-start: 6;
+      grid-row-end: 7;
+      grid-column-start: 1;
+      grid-column-end: 2;
+    }
+  }
+  
   .monday {
     grid-row-start: 1;
     grid-row-end: 10;
@@ -202,10 +318,10 @@ export const Week = styled.div`
       text-transform: uppercase;
     }
     @media (max-width: 900px) {
-      grid-row-start: 3;
-      grid-row-end: 4;
-      grid-column-start: 1;
-      grid-column-end: 2;
+      grid-row-start: 2;
+      grid-row-end: 3;
+      grid-column-start: 2;
+      grid-column-end: 3;
     }
   }
 
@@ -231,10 +347,10 @@ export const Week = styled.div`
       text-transform: uppercase;
     }
     @media (max-width: 900px) {
-      grid-row-start: 4;
-      grid-row-end: 5;
-      grid-column-start: 1;
-      grid-column-end: 2;
+      grid-row-start: 3;
+      grid-row-end: 4;
+      grid-column-start: 2;
+      grid-column-end: 3;
     }
   }
 
@@ -260,10 +376,10 @@ export const Week = styled.div`
       text-transform: uppercase;
     }
     @media (max-width: 900px) {
-      grid-row-start: 5;
-      grid-row-end: 6;
-      grid-column-start: 1;
-      grid-column-end: 2;
+      grid-row-start: 4;
+      grid-row-end: 5;
+      grid-column-start: 2;
+      grid-column-end: 3;
     }
   }
 
@@ -289,10 +405,10 @@ export const Week = styled.div`
       text-transform: uppercase;
     }
     @media (max-width: 900px) {
-      grid-row-start: 6;
-      grid-row-end: 7;
-      grid-column-start: 1;
-      grid-column-end: 2;
+      grid-row-start: 5;
+      grid-row-end: 6;
+      grid-column-start: 2;
+      grid-column-end: 3;
     }
   }
 
@@ -318,16 +434,16 @@ export const Week = styled.div`
       text-transform: uppercase;
     }
     @media (max-width: 900px) {
-      grid-row-start: 7;
-      grid-row-end: 8;
-      grid-column-start: 1;
-      grid-column-end: 2;
+      grid-row-start: 6;
+      grid-row-end: 7;
+      grid-column-start: 2;
+      grid-column-end: 3;
     }
   }
 
   @media (max-width: 900px) {
     grid-template-rows: 40px auto auto auto auto auto auto;
-    grid-template-columns: auto;
+    grid-template-columns: 75px auto;
   }
 `;
 
@@ -354,3 +470,7 @@ export const InfoDiscipline = styled.div`
     font-weight: bold;
   }
 `;
+
+export const StaffMainSTYLED = styled.main.attrs(() => ({
+  className: 'col-md-9 ms-sm-auto col-lg-10 px-md-4',
+}))``;

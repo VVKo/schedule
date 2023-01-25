@@ -23,7 +23,6 @@ const StaffWorkShop = () => {
 
   const { currentSemester, user } = state;
 
-
   if (
     user.role !== 'staff' ||
     typeof currentSemester === 'undefined' ||
@@ -149,14 +148,26 @@ const StaffWorkShop = () => {
                 </li>
                 <li className="nav-item">
                   <NavLink
-                      to={`${match.url}/busyauds`}
-                      className={({ isActive }) =>
-                          isActive ? 'nav-link active' : 'nav-link'
-                      }
+                    to={`${match.url}/busyauds`}
+                    className={({ isActive }) =>
+                      isActive ? 'nav-link active' : 'nav-link'
+                    }
                   >
                     Зайнятість аудиторій
                   </NavLink>
                 </li>
+
+                <li className="nav-item">
+                  <NavLink
+                      to={`${match.url}/population`}
+                      className={({ isActive }) =>
+                          isActive ? 'nav-link active' : 'nav-link'
+                      }
+                  >
+                    Популяція
+                  </NavLink>
+                </li>
+
                 <li className="nav-item">
                   <NavLink
                     to={`${match.url}/printer`}

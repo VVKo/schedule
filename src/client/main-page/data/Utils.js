@@ -1,6 +1,6 @@
 const APIs = {
   rozkladChNU_API:
-    'https://script.google.com/macros/s/AKfycbxiawqME4hcUsUq7tVXpEfeiaNWUz3CDiFiiC1U_8k--_3SZe3d1EiUtaazx7crzEI/exec',
+    'https://script.google.com/macros/s/AKfycbzthxLojygkg-2czBL9iGG8BIQ7rFKE67_vUI2d0XF8IRjfPFG-eGI_Vg2WhoQ3qec/exec',
   driver_API:
     'https://script.google.com/macros/s/AKfycbzPGSRA_iPCjt5IwrgY4AxPuCoKuP5gofysbI79ovilw_vob9UeHMD1ZzZoVicUhoA1/exec',
 };

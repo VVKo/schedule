@@ -220,6 +220,12 @@ const rozkladReducer = (state, action) => {
           },
         },
       };
+
+    case 'EDIT_AUD_IN_SCHEDULE':
+      return {
+        ...state,
+      };
+
     case 'ADD_TO_SCHEDULE':
       return {
         ...state,

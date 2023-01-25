@@ -284,6 +284,42 @@ export const RozkladProvider = ({ children }) => {
     });
   };
 
+  const editAud = txt => {
+    const toastName = 'editAud';
+    const API = 'rozkladChNU_API';
+    const action = 'EDITAUDINSCHEDULE';
+    setLoading('Редагуємо розклад ...', toastName);
+    getDataNEW(API, action, txt).then(resp => {
+      const obj = JSON.parse(txt);
+      const {
+        sem,
+        folderID,
+        academicRow,
+        academicCol,
+        teacherRow,
+        teacherCol,
+        audRow,
+        audCol,
+        targetAudRow,
+        newAud,
+      } = obj;
+
+      const academicloadfonddata = state.academicloadfond[sem].data;
+      academicloadfonddata[academicRow - 4][academicCol - 1] = newAud;
+
+      const teacherfonddata = state.teacherfond[sem].data;
+
+      const audfonddata = state.audfond[sem].data;
+      if (audRow) audfonddata[audRow - 4][audCol - 1] = '';
+      if (targetAudRow) audfonddata[targetAudRow - 4][audCol - 1] = '+';
+
+      updateContext('EDIT_AUD_IN_SCHEDULE', {
+        sem,
+        data: { academicloadfonddata, teacherfonddata, audfonddata },
+      });
+      updateToast(resp.status, toastName);
+    });
+  };
   const addToSchedule = (sem, folderID, arr) => {
     setLoading('Збереження...', 'addtoschedule');
     getData(
@@ -487,6 +523,7 @@ export const RozkladProvider = ({ children }) => {
         addToSchedule,
         uploadToAudFond,
         uploadToLoadFond,
+        editAud,
       }}
     >
       {children}

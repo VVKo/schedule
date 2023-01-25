@@ -1,5 +1,5 @@
 import React from 'react';
-import {useParams, useRouteMatch} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import StaffAudFond from './StaffAudFond';
 import StaffGroupFond from './StaffGroupFond';
 import StaffTeacherFond from './StaffTeacherFond';
@@ -9,13 +9,15 @@ import StaffSchedule from './StaffSchedule';
 import StaffPreviewGroup from './StaffPreviewGroup';
 import StaffPrinter from './StaffPrinter';
 import StaffTeacherSchedule from './StaffTeacherSchedule';
-import DropDownList from "./DropDownList";
-import StaffBusyAuds from "./StaffBusyAuds";
+import DropDownList from './DropDownList';
+import StaffBusyAuds from './StaffBusyAuds';
+import StaffPopulation from './StaffPopulation';
+import { StaffMainSTYLED } from '../../../Styled/StaffWorkShop/STYLED';
 
 const StaffMain = () => {
   const params = useParams();
   return (
-    <main className="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <StaffMainSTYLED>
       {params.func === 'addaud' && <StaffAudFond />}
       {params.func === 'addgroup' && <StaffGroupFond />}
       {params.func === 'addteacher' && <StaffTeacherFond />}
@@ -27,7 +29,8 @@ const StaffMain = () => {
       {params.func === 'teacherschedule' && <StaffTeacherSchedule />}
       {params.func === 'dropdown' && <DropDownList />}
       {params.func === 'busyauds' && <StaffBusyAuds />}
-    </main>
+      {params.func === 'population' && <StaffPopulation />}
+    </StaffMainSTYLED>
   );
 };
 

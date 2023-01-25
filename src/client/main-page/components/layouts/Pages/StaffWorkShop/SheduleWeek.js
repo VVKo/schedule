@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { Button, Nav, OverlayTrigger, Popover } from 'react-bootstrap';
-import { FiEdit3, FiEye, FiTrash2 } from 'react-icons/fi';
+import { FiEdit, FiEdit3, FiEye, FiTrash2 } from 'react-icons/fi';
 import { Week } from '../../../Styled/StaffWorkShop/STYLED';
 import RozkladContext from '../../../../context/RozkladContext';
 import FormAddDisciplineToSchedule from '../../Forms/FormAddDisciplineToSchedule';
+import FormEditPara from '../../Forms/FormEditPara';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const FullDay = {
@@ -47,6 +48,36 @@ const SheduleWeek = ({ wn, group }) => {
   };
 
   const TriggerExample = ({ obj }) => {
+    const handleEditPara = e => {
+      const {
+        academicRow,
+        academicCol,
+        teacherRow,
+        teacherCol,
+        audRow,
+        audCol,
+      } = e.currentTarget.dataset;
+
+      setShowModal(true);
+
+      setDataForModal({
+        title: `Редагуємо пару`,
+        size: 'xl',
+        body: {
+          func: FormEditPara,
+          data: {
+            ...{
+              academicRow,
+              academicCol,
+              teacherRow,
+              teacherCol,
+              audRow,
+              audCol,
+            },
+          },
+        },
+      });
+    };
     const handleRemoveFromSchedule = e => {
       const {
         academicRow,
@@ -56,14 +87,6 @@ const SheduleWeek = ({ wn, group }) => {
         audRow,
         audCol,
       } = e.currentTarget.dataset;
-      // console.log('asdasdasdasdasdasdasd', {
-      //   academicRow,
-      //   academicCol,
-      //   teacherRow,
-      //   teacherCol,
-      //   audRow,
-      //   audCol,
-      // });
 
       deleteFromSchedule(
         currentSemester.name,
@@ -82,6 +105,16 @@ const SheduleWeek = ({ wn, group }) => {
       <Popover id="popover-basic">
         <Popover.Header as="h3">
           <Nav className="justify-content-end">
+            <FiEdit
+              size={24}
+              data-academic-row={obj.academicRow}
+              data-academic-col={obj.academicCol}
+              data-teacher-row={obj.teacherRow}
+              data-teacher-col={obj.teacherCol}
+              data-aud-row={obj.audRow}
+              data-aud-col={obj.audCol}
+              onClick={handleEditPara}
+            />
             <FiTrash2
               size={24}
               data-academic-row={obj.academicRow}

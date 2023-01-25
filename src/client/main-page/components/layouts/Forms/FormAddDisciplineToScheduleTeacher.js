@@ -1,6 +1,4 @@
 import React, { useContext } from 'react';
-import { FaTrash } from 'react-icons/fa';
-import { FiPlusCircle } from 'react-icons/fi';
 import { Col, Row, Button } from 'react-bootstrap';
 import { MdOutlineAddTask } from 'react-icons/md';
 import RozkladContext from '../../../context/RozkladContext';
@@ -43,9 +41,7 @@ const FormAddDisciplineToScheduleTeacher = ({ para, week, day, teacher }) => {
   const freeGroups = rowAcademicLoadFond
     .filter(r => r[loadCol] === '')
     .map(r => [r[0], r[2], r[5]]);
-  const freeTeachers = rowTeacherFond
-    .filter(r => r[teacherCol] === '')
-    .map(r => [r[0], r[1]]);
+
   const freeAuds = rowAudFond
     .filter(r => r[audCol] === '')
     .map(r => [r[0], r[4], r[5]]);

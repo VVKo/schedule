@@ -14,13 +14,57 @@ import {
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
+import {
+  Document,
+  Font,
+  Page,
+  PDFDownloadLink,
+  StyleSheet,
+} from '@react-pdf/renderer';
 import RozkladContext from '../../../../context/RozkladContext';
 import SheduleWeek from './SheduleWeek';
 import ScheduleInfoByGroup from './ScheduleInfoByGroup';
 import SheduleWeekTeacher from './SheduleWeekTeacher';
 import ScheduleInfoByTeacher from './ScheduleInfoByTeacher';
 import { Hello } from './DropDownList';
+import ForPrint from './PDFWorkShop/ForPrint';
+import ScheduleSingle from './PDFWorkShop/ScheduleSingle';
 
+Font.register({
+  family: 'Roboto',
+  fonts: [
+    {
+      src:
+        'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Regular.ttf',
+    },
+    {
+      src:
+        'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Bold.ttf',
+      fontWeight: 'bold',
+    },
+    {
+      src:
+        'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Italic.ttf',
+      fontStyle: 'italic',
+    },
+  ],
+});
+const styles = StyleSheet.create({
+  page: {
+    fontFamily: 'Roboto',
+    fontSize: '10pt',
+    paddingTop: '10mm',
+    paddingLeft: '10mm',
+    paddingRight: '10mm',
+    flexDirection: 'column',
+  },
+  logo: {
+    width: 74,
+    height: 66,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+});
 const StaffTeacherSchedule = () => {
   const match = useRouteMatch();
 
@@ -37,9 +81,15 @@ const StaffTeacherSchedule = () => {
     teacherfond,
     currentSemester,
     currentAcademicYear,
+    disciplinefond,
   } = state;
 
   if (!academicloadfond || !academicloadfond[currentSemester.name]) return null;
+
+  const forPRINT = {};
+  disciplinefond[currentSemester.name].data.forEach(r => {
+    forPRINT[r[0]] = r[1] === '' ? r[0] : r[1];
+  });
 
   const toggleActive = e => {
     const { eventkey } = e.currentTarget.dataset;
@@ -64,6 +114,28 @@ const StaffTeacherSchedule = () => {
         <Container>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h3 className="h3">{teacher}</h3>
+            <PDFDownloadLink
+              document={
+                <Document>
+                  <Page
+                    size={'A2'}
+                    orientation={'landscape'}
+                    style={styles.page}
+                  >
+                    <ScheduleSingle
+                      teacher={teacher}
+                      fond={academicloadfond[currentSemester.name].data}
+                      forPRINT={forPRINT}
+                    />
+                  </Page>
+                </Document>
+              }
+              fileName={`${teacher}.pdf`}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? `Генерується документ ${teacher}.pdf` : 'Завантажити!'
+              }
+            </PDFDownloadLink>
             {academicloadfond[currentSemester.name].data
               .filter(r => r[4] === teacher)
               .filter(r => +r[6] - +r[7] !== 0).length > 0 && (
@@ -93,7 +165,7 @@ const StaffTeacherSchedule = () => {
               {btnName}
             </Dropdown.Toggle>
 
-            <Dropdown.Menu>
+            <Dropdown.Menu style={{ maxHeight: '120px', overflowY: 'scroll' }}>
               {teachers.map((teacher, idx) => {
                 return (
                   <Dropdown.Item as="button" key={`${teacher}`}>

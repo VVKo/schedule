@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { ButtonToolbar, Container, Dropdown } from 'react-bootstrap';
 import {
   NavLink,
   Route,
@@ -6,45 +7,46 @@ import {
   useParams,
   useRouteMatch,
 } from 'react-router-dom';
-import { ButtonToolbar, Container, Dropdown } from 'react-bootstrap';
+import ScheduleWeekPopulation from './ScheduleWeekPopulation';
 import RozkladContext from '../../../../context/RozkladContext';
-import ScheduleWeekAud from './ScheduleWeekAud';
 
-const StaffBusyAuds = () => {
+const StaffPopulation = () => {
   const match = useRouteMatch();
   const { state } = useContext(RozkladContext);
-  const [btnName, setBtnName] = useState('Оберіть аудиторію');
+  const [btnName, setBtnName] = useState('Оберіть корпус');
 
   const { academicloadfond, currentSemester, audfond } = state;
 
   if (!academicloadfond || !academicloadfond[currentSemester.name]) return null;
 
-  const auds = audfond[currentSemester.name].data.map(r => r[4]);
+  const korpuses = [
+    ...new Set(audfond[currentSemester.name].data.map(r => r[0])),
+  ].sort();
   const changeButtonName = e => {
     setBtnName(e.currentTarget.text);
   };
-
-  const Aud = () => {
+  const Population = () => {
     const params = useParams();
-    const { audID } = params;
-    const aud = auds[+audID];
+    const { korpusID } = params;
+    const korpus = korpuses[+korpusID];
 
     return (
       <>
         <Container>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h3 className="h3">{aud}</h3>
+            <h3 className="h3">{korpus}</h3>
           </div>
         </Container>
-        <ScheduleWeekAud aud={aud} wn={'НТ'} />
-        <ScheduleWeekAud aud={aud} wn={'ПТ'} />
+        <ScheduleWeekPopulation wn={'НТ'} korpus={korpus} />
+        <ScheduleWeekPopulation wn={'ПТ'} korpus={korpus} />
       </>
     );
   };
+
   return (
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 className="h2">Аудиторний фонд</h1>
+        <h1 className="h2">Популяція</h1>
         <ButtonToolbar
           aria-label="Toolbar with button groups"
           className="mb-2 mb-md-0"
@@ -55,7 +57,7 @@ const StaffBusyAuds = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu style={{ maxHeight: '120px', overflowY: 'scroll' }}>
-              {auds.map((aud, idx) => {
+              {korpuses.map((aud, idx) => {
                 return (
                   <Dropdown.Item as="button" key={`${aud}`}>
                     <NavLink
@@ -74,14 +76,13 @@ const StaffBusyAuds = () => {
           </Dropdown>
         </ButtonToolbar>
       </div>
-
       <Switch>
-        <Route path={`${match.path}/:audID`}>
-          <Aud />
+        <Route path={`${match.path}/:korpusID`}>
+          <Population />
         </Route>
       </Switch>
     </>
   );
 };
 
-export default StaffBusyAuds;
+export default StaffPopulation;

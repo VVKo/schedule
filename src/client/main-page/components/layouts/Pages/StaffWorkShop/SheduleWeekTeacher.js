@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
-import { Button, Nav, OverlayTrigger, Popover } from 'react-bootstrap';
+import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
 import { FiEdit3, FiEye, FiTrash2 } from 'react-icons/fi';
 import { Week } from '../../../Styled/StaffWorkShop/STYLED';
 import RozkladContext from '../../../../context/RozkladContext';
-import FormAddDisciplineToSchedule from '../../Forms/FormAddDisciplineToSchedule';
 import FormAddDisciplineToScheduleTeacher from '../../Forms/FormAddDisciplineToScheduleTeacher';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
@@ -81,18 +80,18 @@ const SheduleWeekTeacher = ({ wn, teacher }) => {
     const popover = (
       <Popover id="popover-basic">
         <Popover.Header as="h3">
-          <Nav className="justify-content-end">
-            <FiTrash2
-              size={24}
-              data-academic-row={obj.academicRow}
-              data-academic-col={obj.academicCol}
-              data-teacher-row={obj.teacherRow}
-              data-teacher-col={obj.teacherCol}
-              data-aud-row={obj.audRow}
-              data-aud-col={obj.audCol}
-              onClick={handleRemoveFromSchedule}
-            />
-          </Nav>
+          {/* <Nav className="justify-content-end"> */}
+          {/*  <FiTrash2 */}
+          {/*    size={24} */}
+          {/*    data-academic-row={obj.academicRow} */}
+          {/*    data-academic-col={obj.academicCol} */}
+          {/*    data-teacher-row={obj.teacherRow} */}
+          {/*    data-teacher-col={obj.teacherCol} */}
+          {/*    data-aud-row={obj.audRow} */}
+          {/*    data-aud-col={obj.audCol} */}
+          {/*    onClick={handleRemoveFromSchedule} */}
+          {/*  /> */}
+          {/* </Nav> */}
         </Popover.Header>
         <Popover.Body>
           <div>{obj.disc}</div>
@@ -228,9 +227,9 @@ const SheduleWeekTeacher = ({ wn, teacher }) => {
         {arr.map((o, idx) => (
           <TriggerExample key={idx} obj={o} />
         ))}
-        {maybeArr.map((o, idx) => (
-          <TriggerExampleMaybe key={idx} obj={o} />
-        ))}
+
+        {arr.length === 0 &&
+          maybeArr.map((o, idx) => <TriggerExampleMaybe key={idx} obj={o} />)}
       </>
     );
   };
