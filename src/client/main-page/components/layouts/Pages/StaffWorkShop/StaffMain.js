@@ -13,6 +13,7 @@ import DropDownList from './DropDownList';
 import StaffBusyAuds from './StaffBusyAuds';
 import StaffPopulation from './StaffPopulation';
 import { StaffMainSTYLED } from '../../../Styled/StaffWorkShop/STYLED';
+import StaffSchedule2 from './StaffSchedule2';
 
 const StaffMain = () => {
   const params = useParams();
@@ -23,13 +24,14 @@ const StaffMain = () => {
       {params.func === 'addteacher' && <StaffTeacherFond />}
       {params.func === 'adddisc' && <StaffDisciplineFond />}
       {params.func === 'addload' && <StaffLoadFond />}
-      {params.func === 'totalschedule' && <StaffSchedule />}
+      {/* {params.func === 'totalschedule' && <StaffSchedule />} */}
       {params.func === 'preview' && <StaffPreviewGroup />}
       {params.func === 'printer' && <StaffPrinter />}
       {params.func === 'teacherschedule' && <StaffTeacherSchedule />}
       {params.func === 'dropdown' && <DropDownList />}
       {params.func === 'busyauds' && <StaffBusyAuds />}
       {params.func === 'population' && <StaffPopulation />}
+      {params.func === 'schedule2' && <StaffSchedule2 />}
     </StaffMainSTYLED>
   );
 };

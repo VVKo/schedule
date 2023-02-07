@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
 import { Button, Nav, OverlayTrigger, Popover } from 'react-bootstrap';
-import { FiEdit, FiEdit3, FiEye, FiTrash2 } from 'react-icons/fi';
+import { FiEdit, FiEdit3, FiEye, FiPlus, FiTrash2 } from 'react-icons/fi';
+import { HiStatusOnline } from 'react-icons/hi';
 import { Week } from '../../../Styled/StaffWorkShop/STYLED';
 import RozkladContext from '../../../../context/RozkladContext';
 import FormAddDisciplineToSchedule from '../../Forms/FormAddDisciplineToSchedule';
 import FormEditPara from '../../Forms/FormEditPara';
+import FormAdd from '../../Forms/FormAdd';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const FullDay = {
@@ -15,7 +17,7 @@ const FullDay = {
   Fri: { day: "П'ятниця", backgr: '#fff', cn: 'friday' },
 };
 
-const SheduleWeek = ({ wn, group }) => {
+const SheduleWeek2 = ({ wn, group, hlt }) => {
   const {
     state,
     setShowModal,
@@ -49,6 +51,73 @@ const SheduleWeek = ({ wn, group }) => {
     });
   };
 
+  const TriggerMaybe = ({ obj }) => {
+    const handleAddPara = e => {
+      const {
+        academicRow,
+        academicCol,
+        teacherRow,
+        teacherCol,
+        audRow,
+        audCol,
+      } = e.currentTarget.dataset;
+      setShowModal(true);
+
+      setDataForModal({
+        title: `Додати дисципліну`,
+        size: 'xl',
+        body: {
+          func: FormAdd,
+          data: {
+            ...{
+              academicRow,
+              academicCol,
+              teacherRow,
+              teacherCol,
+              audRow,
+              audCol,
+            },
+          },
+        },
+      });
+    };
+    const popover = (
+      <Popover id="popover-basic">
+        <Popover.Header as="h3">
+          <Nav className="justify-content-end">
+            <FiPlus
+              size={24}
+              data-academic-row={obj.academicRow}
+              data-academic-col={obj.academicCol}
+              data-teacher-row={obj.teacherRow}
+              data-teacher-col={obj.teacherCol}
+              data-aud-row={obj.audRow}
+              data-aud-col={obj.audCol}
+              onClick={handleAddPara}
+            />
+          </Nav>
+        </Popover.Header>
+        <Popover.Body>
+          <div>{obj.disc}</div>
+          <div>{obj.група}</div>
+          <div>{obj.тип}</div>
+          <div>{obj.викладач}</div>
+          <div>{obj['місце проведення']}</div>
+        </Popover.Body>
+      </Popover>
+    );
+    return (
+      <OverlayTrigger
+        placement="top"
+        delay={{ show: 250, hide: 1500 }}
+        overlay={popover}
+      >
+        <Button variant={obj.викладач === hlt ? "warning" :"outline-dark"}>
+          <FiEye />
+        </Button>
+      </OverlayTrigger>
+    );
+  };
   const TriggerExample = ({ obj }) => {
     const handleEditPara = e => {
       const {
@@ -145,7 +214,11 @@ const SheduleWeek = ({ wn, group }) => {
         delay={{ show: 250, hide: 1500 }}
         overlay={popover}
       >
-        <Button variant="success">
+        <Button
+          variant={`${
+            obj['місце проведення'] === 'ONLINE' ? 'info' : 'success'
+          }`}
+        >
           <FiEye />
         </Button>
       </OverlayTrigger>
@@ -165,22 +238,16 @@ const SheduleWeek = ({ wn, group }) => {
       idx + 4,
       ...r,
     ]);
+
+    const freeTeachers = teachers
+      .filter(r => r[col + 1 - 5] === '')
+      .map(r => r[1]);
+
     const arr = academicloadfond[currentSemester.name].data
       .map((r, idx) => [idx + 4, ...r])
       .filter(r => r[2].includes(`${group}гр`))
       .filter(r => r[col + 1] !== '')
       .map(r => {
-        totalTasks.push({
-          academicRow: r[0],
-          academicCol: col + 1,
-          teacherRow: teachers.filter(ro => r[5] === ro[1])[0][0],
-          teacherCol: col - 4,
-          audRow:
-            r[col + 1] !== 'ONLINE'
-              ? auds.filter(ro => r[col + 1] === ro[5])[0][0]
-              : null,
-          audCol: col - 2,
-        });
         return {
           disc: r[1],
           група: r[2],
@@ -199,6 +266,28 @@ const SheduleWeek = ({ wn, group }) => {
         };
       });
 
+    const maybearr = academicloadfond[currentSemester.name].data
+      .map((r, idx) => [idx + 4, ...r])
+      .filter(r => r[2].includes(`${group}гр`))
+      .filter(r => r[7] - r[8] > 0)
+      .filter(r => r[col + 1] === '')
+      .filter(r => freeTeachers.indexOf(r[5]) > -1)
+      .map(r => {
+        return {
+          disc: r[1],
+          група: r[2],
+          тип: r[3],
+          викладач: r[5],
+          'місце проведення': r[col + 1],
+          academicRow: r[0],
+          academicCol: col + 1,
+          teacherRow: teachers.filter(ro => r[5] === ro[1])[0][0],
+          teacherCol: col - 4,
+          audRow: null,
+          audCol: col - 2,
+        };
+      });
+
     return (
       <>
         <FiEdit3
@@ -211,6 +300,8 @@ const SheduleWeek = ({ wn, group }) => {
         {arr.map((o, idx) => (
           <TriggerExample key={idx} obj={o} />
         ))}
+        {arr.length === 0 &&
+          maybearr.map((o, idx) => <TriggerMaybe key={idx} obj={o} />)}
       </>
     );
   };
@@ -266,4 +357,4 @@ const SheduleWeek = ({ wn, group }) => {
   );
 };
 
-export default SheduleWeek;
+export default SheduleWeek2;

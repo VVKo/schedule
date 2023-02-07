@@ -127,9 +127,10 @@ const StaffSchedule = () => {
                     style={styles.page}
                   >
                     <ScheduleSingleGroup
-                      group={gr}
+
                       fond={academicloadfond[currentSemester.name].data}
                       forPRINT={forPRINT}
+                      state={state}
                     />
                   </Page>
                 </Document>

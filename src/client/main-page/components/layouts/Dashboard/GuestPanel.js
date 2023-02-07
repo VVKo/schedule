@@ -16,6 +16,7 @@ const GuestPanel = () => {
     setCurrentAcademicYear,
     setCurrentSemester,
     setCurrentGroup,
+    setCurrentTeacher,
     createNewAcademicYear,
     getAudFond,
     getGroupFond,
@@ -27,6 +28,8 @@ const GuestPanel = () => {
   const {
     currentDep,
     currentAcademicYear,
+    currentTeacher,
+    currentGroup,
     audfond,
     teacherfond,
     groupfond,
@@ -120,7 +123,7 @@ const GuestPanel = () => {
       </StyledBox>
 
       <StyledBox
-        defaultValue={'Виберіть групу'}
+        defaultValue={currentGroup}
         name="group"
         ref={groupeRef}
         disabled={true}
@@ -142,12 +145,13 @@ const GuestPanel = () => {
       </StyledBox>
 
       <StyledBox
-        defaultValue={'Виберіть викладача'}
+        defaultValue={currentTeacher}
         name="teacher"
         ref={teacherRef}
         disabled={true}
         onChange={e => {
           const val = e.target.value;
+          setCurrentTeacher(val);
 
           if (val !== 'Виберіть викладача') {
             groupeRef.current.disabled = true;

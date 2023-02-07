@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Container } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 import {
   Document,
   Font,
@@ -7,6 +7,7 @@ import {
   PDFDownloadLink,
   StyleSheet,
 } from '@react-pdf/renderer';
+import { ImFilePdf } from 'react-icons/im';
 import RozkladContext from '../../../context/RozkladContext';
 import ScheduleSingleGroup from '../Pages/StaffWorkShop/PDFWorkShop/ScheduleSingleGroup';
 import SheduleWeekPublicGroup from './SheduleWeekPublicGoup';
@@ -54,31 +55,41 @@ const SchedulePublic = () => {
     currentSemester,
     user,
     currentGroup,
+    currentTeacher,
     academicloadfond,
     disciplinefond,
   } = state;
+
 
   if (
     user.role === 'staff' ||
     !academicloadfond ||
     !disciplinefond ||
-    typeof currentSemester === 'undefined' ||
-    currentSemester.name === 'Виберіть семестр' ||
-    !currentGroup ||
-    currentGroup === 'Виберіть групу'
+    (typeof currentSemester === 'undefined' &&
+      typeof currentTeacher === 'undefined')
   )
     return null;
+
+  if (
+    currentGroup === 'Виберіть групу' &&
+    currentTeacher === 'Виберіть викладача'
+  )
+    return null;
+
+
+  console.log('currentTeacher', currentTeacher, 'currentGroup', currentGroup);
 
   const forPRINT = {};
   disciplinefond[currentSemester.name].data.forEach(r => {
     forPRINT[r[0]] = r[1] === '' ? r[0] : r[1];
   });
+
   return (
     <>
       <div>
         <Container>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h3 className="h3">{currentGroup}</h3>
+            <h3 className="h3">{currentGroup === 'Виберіть групу' ? currentTeacher : currentGroup}</h3>
             <PDFDownloadLink
               document={
                 <Document>
@@ -88,19 +99,21 @@ const SchedulePublic = () => {
                     style={styles.page}
                   >
                     <ScheduleSingleGroup
-                      group={currentGroup}
                       fond={academicloadfond[currentSemester.name].data}
                       forPRINT={forPRINT}
+                      state={state}
                     />
                   </Page>
                 </Document>
               }
-              fileName={`${currentGroup}.pdf`}
+              fileName={`${currentGroup === 'Виберіть групу' ? currentTeacher : currentGroup}.pdf`}
             >
               {({ blob, url, loading, error }) =>
-                loading
-                  ? `Генерується документ ${currentGroup}.pdf`
-                  : 'Завантажити!'
+                loading ? (
+                  `Генерується документ ${currentGroup === 'Виберіть групу' ? currentTeacher : currentGroup}.pdf`
+                ) : (
+                  <ImFilePdf size={32} />
+                )
               }
             </PDFDownloadLink>
           </div>
@@ -108,12 +121,12 @@ const SchedulePublic = () => {
       </div>
       <div>
         <Container>
-          <SheduleWeekPublicGroup group={currentGroup} wn={'НТ'} />
+          <SheduleWeekPublicGroup wn={'НТ'} />
         </Container>
       </div>
       <div>
         <Container>
-          <SheduleWeekPublicGroup group={currentGroup} wn={'ПТ'} />
+          <SheduleWeekPublicGroup wn={'ПТ'} />
         </Container>
       </div>
     </>

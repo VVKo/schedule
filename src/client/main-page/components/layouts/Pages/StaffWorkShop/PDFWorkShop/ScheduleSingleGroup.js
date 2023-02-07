@@ -1,5 +1,6 @@
-import React from 'react';
-import {Font, StyleSheet, Text, View} from '@react-pdf/renderer';
+import React, { useContext } from 'react';
+import { Font, StyleSheet, Text, View } from '@react-pdf/renderer';
+import RozkladContext from '../../../../../context/RozkladContext';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const FullDay = {
@@ -15,17 +16,18 @@ Font.register({
   fonts: [
     {
       src:
-          'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Regular.ttf',
+        'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Regular.ttf',
     },
     {
       src:
-          'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Bold.ttf',
+        'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Bold.ttf',
       fontWeight: 'bold',
     },
     {
-      src: 'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Italic.ttf',
+      src:
+        'https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/modern/theme-material/resources/fonts/roboto/Roboto-Italic.ttf',
       fontStyle: 'italic',
-    }
+    },
   ],
 });
 
@@ -95,12 +97,16 @@ const styles = StyleSheet.create({
     minHeight: '2cm',
   },
 });
-const ScheduleSingleGroup = ({ fond, forPRINT, group }) => {
+const ScheduleSingleGroup = ({ fond, forPRINT, state }) => {
+  const { currentGroup, currentTeacher } = state;
+
+  console.log('ScheduleSingleGroup', currentGroup, currentTeacher);
+
   const RowDay = () => {
     return (
       <View style={{ display: 'flex', flexDirection: 'row' }}>
         <View style={styles.first}>
-          <Text>Група</Text>
+          <Text></Text>
         </View>
         <View style={styles.dayWidth}>
           <Text>Понеділок</Text>
@@ -126,19 +132,33 @@ const ScheduleSingleGroup = ({ fond, forPRINT, group }) => {
     const w = week === '1т.' ? 0 : 1;
     const p = +para - 1;
     const col = 8 + 16 * d + 2 * p + w;
-    const arr = fond
-      .map((r, idx) => [idx + 4, ...r])
-      .filter(r => r[2].includes(`${group}гр`))
-      .filter(r => r[col + 1] !== '')
-      .map(r => {
-        return {
-          disc: forPRINT[r[1]],
-          група: r[2],
-          тип: r[3],
-          викладач: r[5],
-          'місце проведення': r[col + 1],
-        };
-      });
+    const arr =
+      currentGroup !== 'Виберіть групу'
+        ? fond
+            .map((r, idx) => [idx + 4, ...r])
+            .filter(r => r[2].includes(`${currentGroup}гр`))
+            .filter(r => r[col + 1] !== '')
+            .map(r => {
+              return {
+                disc: forPRINT[r[1]],
+                група: r[2],
+                тип: r[3],
+                викладач: r[5],
+                'місце проведення': r[col + 1],
+              };
+            })
+        : fond
+            .map((r, idx) => [idx + 4, ...r])
+            .filter(r => r[5] === currentTeacher)
+            .filter(r => r[col + 1] !== '')
+            .map(r => {
+              return {
+                disc: forPRINT[r[1]],
+                група: r[2],
+                тип: r[3],
+                'місце проведення': r[col + 1],
+              };
+            });
     return (
       <View
         style={{
@@ -165,8 +185,8 @@ const ScheduleSingleGroup = ({ fond, forPRINT, group }) => {
           >
             <Text style={{ fontWeight: 'bold' }}>{o.disc}</Text>
             <Text>{o.тип}</Text>
-            <Text>{o.група}</Text>
-            <Text>{o.викладач}</Text>
+            {currentGroup !== 'Виберіть групу' ? <Text>{o.група.split("+").filter(g => g.includes(`${currentGroup}гр`))}</Text> : <Text>{o.група}</Text>}
+            {currentGroup !== 'Виберіть групу' && <Text>{o.викладач}</Text>}
             <Text>
               {o['місце проведення'] === 'ONLINE'
                 ? o['місце проведення']

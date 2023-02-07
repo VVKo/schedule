@@ -64,7 +64,6 @@ const StaffPrinter = () => {
           return errors;
         }}
         onSubmit={values => {
-          console.log(values);
           setGrChoice(values.groups);
           setDayChoice(values.days);
           setShowGeneratorButton(false);

@@ -5,8 +5,7 @@ import RozkladContext from '../../../context/RozkladContext';
 import Spinner from '../../Spinner/Spinner';
 
 import StaffWorkShop from './StaffWorkShop/StaffWorkShop';
-import FineScheduleNew from '../Schedule/FineScheduleNew';
-import ScheduleSingleGroup from './StaffWorkShop/PDFWorkShop/ScheduleSingleGroup';
+
 import SchedulePublic from '../Schedule/SchedulePublic';
 
 const FineHeader = () => {

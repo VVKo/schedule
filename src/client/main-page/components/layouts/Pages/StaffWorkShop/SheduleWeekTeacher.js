@@ -109,7 +109,11 @@ const SheduleWeekTeacher = ({ wn, teacher }) => {
         delay={{ show: 250, hide: 1500 }}
         overlay={popover}
       >
-        <Button variant="success">
+        <Button
+          variant={`${
+            obj['місце проведення'] === 'ONLINE' ? 'info' : 'success'
+          }`}
+        >
           <FiEye />
         </Button>
       </OverlayTrigger>

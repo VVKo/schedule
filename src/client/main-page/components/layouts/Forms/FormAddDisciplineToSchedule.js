@@ -1,6 +1,4 @@
 import React, { useContext } from 'react';
-import { FaTrash } from 'react-icons/fa';
-import { FiPlusCircle } from 'react-icons/fi';
 import { Col, Row, Button } from 'react-bootstrap';
 import { MdOutlineAddTask } from 'react-icons/md';
 import RozkladContext from '../../../context/RozkladContext';

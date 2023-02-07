@@ -128,14 +128,24 @@ const StaffWorkShop = () => {
               <ul className="nav flex-column">
                 <li className="nav-item">
                   <NavLink
-                    to={`${match.url}/totalschedule`}
+                    to={`${match.url}/schedule2`}
                     className={({ isActive }) =>
                       isActive ? 'nav-link active' : 'nav-link'
                     }
                   >
-                    Весь розклад
+                    Розклад 2.0
                   </NavLink>
                 </li>
+                {/* <li className="nav-item"> */}
+                {/*  <NavLink */}
+                {/*    to={`${match.url}/totalschedule`} */}
+                {/*    className={({ isActive }) => */}
+                {/*      isActive ? 'nav-link active' : 'nav-link' */}
+                {/*    } */}
+                {/*  > */}
+                {/*    Весь розклад */}
+                {/*  </NavLink> */}
+                {/* </li> */}
                 <li className="nav-item">
                   <NavLink
                     to={`${match.url}/teacherschedule`}
@@ -159,10 +169,10 @@ const StaffWorkShop = () => {
 
                 <li className="nav-item">
                   <NavLink
-                      to={`${match.url}/population`}
-                      className={({ isActive }) =>
-                          isActive ? 'nav-link active' : 'nav-link'
-                      }
+                    to={`${match.url}/population`}
+                    className={({ isActive }) =>
+                      isActive ? 'nav-link active' : 'nav-link'
+                    }
                   >
                     Популяція
                   </NavLink>

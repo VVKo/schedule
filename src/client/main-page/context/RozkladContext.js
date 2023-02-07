@@ -25,6 +25,8 @@ export const RozkladProvider = ({ children }) => {
       size: 'xl',
       body: { func: '', data: {} },
     },
+    currentTeacher: 'Виберіть викладача',
+    currentGroup: 'Виберіть групу',
   };
 
   const [state, dispatch] = useReducer(rozkladReducer, initState);
@@ -44,6 +46,8 @@ export const RozkladProvider = ({ children }) => {
     dispatch({ type: 'SET_CURRENTSEMESTER', payload: obj });
   const setCurrentGroup = gr =>
     dispatch({ type: 'SET_CURRENTGROUP', payload: gr });
+  const setCurrentTeacher = teacher =>
+      dispatch({ type: 'SET_CURRENTTEACHER', payload: teacher });
   const setXlsId = id => dispatch({ type: 'SET_XLSID', payload: id });
   const setDataForModal = obj =>
     dispatch({ type: 'SET_DATAFORMODAL', payload: obj });
@@ -502,6 +506,7 @@ export const RozkladProvider = ({ children }) => {
         setCurrentAcademicYear,
         setCurrentSemester,
         setCurrentGroup,
+        setCurrentTeacher,
         setActiveId,
         createNewAcademicYear,
         getAudFond,

@@ -2,8 +2,7 @@ import React, { useContext } from 'react';
 import { Button, Nav, OverlayTrigger, Popover } from 'react-bootstrap';
 import { FiEye } from 'react-icons/fi';
 import RozkladContext from '../../../context/RozkladContext';
-import {Week} from "../../Styled/StaffWorkShop/STYLED";
-
+import { Week } from '../../Styled/StaffWorkShop/STYLED';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 const FullDay = {
@@ -14,10 +13,15 @@ const FullDay = {
   Fri: { day: "П'ятниця", backgr: '#fff', cn: 'friday' },
 };
 
-const SheduleWeekPublicGroup = ({ wn, group }) => {
+const SheduleWeekPublicGroup = ({ wn }) => {
   const { state } = useContext(RozkladContext);
 
-  const { academicloadfond, currentSemester } = state;
+  const {
+    academicloadfond,
+    currentSemester,
+    currentTeacher,
+    currentGroup,
+  } = state;
 
   if (!academicloadfond) return null;
 
@@ -32,7 +36,11 @@ const SheduleWeekPublicGroup = ({ wn, group }) => {
           <div>{obj.група}</div>
           <div>{obj.тип}</div>
           <div>{obj.викладач}</div>
-          <div>{obj['місце проведення']}</div>
+          <div>
+            {obj['місце проведення'] === 'ONLINE'
+              ? obj['місце проведення']
+              : obj['місце проведення'].split(' -- ')[0]}
+          </div>
         </Popover.Body>
       </Popover>
     );
@@ -43,7 +51,11 @@ const SheduleWeekPublicGroup = ({ wn, group }) => {
         delay={{ show: 250, hide: 1500 }}
         overlay={popover}
       >
-        <Button variant="success">
+        <Button
+          variant={`${
+            obj['місце проведення'] === 'ONLINE' ? 'info' : 'success'
+          }`}
+        >
           <FiEye />
         </Button>
       </OverlayTrigger>
@@ -56,19 +68,34 @@ const SheduleWeekPublicGroup = ({ wn, group }) => {
     const p = +para - 1;
     const col = 8 + 16 * d + 2 * p + w;
 
-    const arr = academicloadfond[currentSemester.name].data
-      .map((r, idx) => [idx + 4, ...r])
-      .filter(r => r[2].includes(`${group}гр`))
-      .filter(r => r[col + 1] !== '')
-      .map(r => {
-        return {
-          disc: r[1],
-          група: r[2],
-          тип: r[3],
-          викладач: r[5],
-          'місце проведення': r[col + 1],
-        };
-      });
+    const arr =
+      currentGroup !== 'Виберіть групу'
+        ? academicloadfond[currentSemester.name].data
+            .map((r, idx) => [idx + 4, ...r])
+            .filter(r => r[2].includes(`${currentGroup}гр`))
+            .filter(r => r[col + 1] !== '')
+            .map(r => {
+              return {
+                disc: r[1],
+                група: r[2],
+                тип: r[3],
+                викладач: r[5],
+                'місце проведення': r[col + 1],
+              };
+            })
+        : academicloadfond[currentSemester.name].data
+            .map((r, idx) => [idx + 4, ...r])
+            .filter(r => r[5] === currentTeacher)
+            .filter(r => r[col + 1] !== '')
+            .map(r => {
+              return {
+                disc: r[1],
+                група: r[2],
+                тип: r[3],
+                // викладач: r[5],
+                'місце проведення': r[col + 1],
+              };
+            });
 
     return (
       <>
@@ -89,7 +116,7 @@ const SheduleWeekPublicGroup = ({ wn, group }) => {
               wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
             }`}
           >
-            {group}
+            #
           </div>
           <div>1п</div>
           <div>2п</div>
@@ -100,11 +127,11 @@ const SheduleWeekPublicGroup = ({ wn, group }) => {
         </div>
         <div className={'paralist tuesday'}>
           <div
-              className={`text-light ${
-                  wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
-              }`}
+            className={`text-light ${
+              wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
+            }`}
           >
-            {group}
+            #
           </div>
           <div>1п</div>
           <div>2п</div>
@@ -115,11 +142,11 @@ const SheduleWeekPublicGroup = ({ wn, group }) => {
         </div>
         <div className={'paralist wednesday'}>
           <div
-              className={`text-light ${
-                  wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
-              }`}
+            className={`text-light ${
+              wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
+            }`}
           >
-            {group}
+            #
           </div>
           <div>1п</div>
           <div>2п</div>
@@ -130,11 +157,11 @@ const SheduleWeekPublicGroup = ({ wn, group }) => {
         </div>
         <div className={'paralist thursday'}>
           <div
-              className={`text-light ${
-                  wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
-              }`}
+            className={`text-light ${
+              wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
+            }`}
           >
-            {group}
+            #
           </div>
           <div>1п</div>
           <div>2п</div>
@@ -145,11 +172,11 @@ const SheduleWeekPublicGroup = ({ wn, group }) => {
         </div>
         <div className={'paralist friday'}>
           <div
-              className={`text-light ${
-                  wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
-              }`}
+            className={`text-light ${
+              wn === 'НТ' ? 'bg-primary ' : 'bg-secondary '
+            }`}
           >
-            {group}
+            #
           </div>
           <div>1п</div>
           <div>2п</div>
