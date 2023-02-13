@@ -138,8 +138,10 @@ const DynamicCdnWebpackPluginConfig = {
   // set "verbose" to true to print console logs on CDN usage while webpack builds
   verbose: false,
   resolver: (packageName, packageVersion, options) => {
+
     const packageSuffix = isProd ? '.min.js' : '.js';
     const moduleDetails = moduleToCdn(packageName, packageVersion, options);
+    // console.log('PackageName', packageName, packageVersion, options, packageSuffix, moduleDetails)
     if (moduleDetails) {
       return moduleDetails;
     }
@@ -152,6 +154,13 @@ const DynamicCdnWebpackPluginConfig = {
       //     var: 'ReactTransitionGroup',
       //     version: packageVersion,
       //     url: `https://unpkg.com/react-transition-group@${packageVersion}/dist/react-transition-group${packageSuffix}`,
+      //   };
+      // case 'react-toastify':
+      //   return {
+      //     name: packageName,
+      //     var: 'ReactToastify',
+      //     version: packageVersion,
+      //     url: `https://unpkg.com/browse/react-toastify@${packageVersion}/dist/react-toastify.cjs${isProd ? '.production.min.js' : '.development.js'}`,
       //   };
       case 'react-bootstrap':
         return {

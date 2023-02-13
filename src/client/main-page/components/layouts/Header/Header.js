@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StyledNavbar } from '../../Styled/StyledComponents';
 import GuestPanel from '../Dashboard/GuestPanel';
 import RozkladContext from '../../../context/RozkladContext';
+import {Navbar} from "react-bootstrap";
 
 const CHeader = ({ text }) => {
   const { getUser } = useContext(RozkladContext);
@@ -11,12 +12,14 @@ const CHeader = ({ text }) => {
   }, []);
   return (
     <>
-      <StyledNavbar>
-        <a href="#">
-          <h1 className="header"> {text} </h1>
-        </a>
+      <Navbar bg={'light'} expand={false} className="mb-3">
+        {/* <StyledNavbar> */}
+        {/*<a href="#">*/}
+        {/*  <h1 className="header"> {text} </h1>*/}
+        {/*</a>*/}
         <GuestPanel />
-      </StyledNavbar>
+        {/* </StyledNavbar> */}
+      </Navbar>
     </>
   );
 };
