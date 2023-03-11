@@ -49,6 +49,7 @@ export const ScheduleContainer = styled.div`
 
 export const StyledMain = styled.main`
   //max-width: 768px;
+  height: 100%;
   width: 100%;
   //margin-top: 90px;
   padding: 0;

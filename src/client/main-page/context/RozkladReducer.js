@@ -50,10 +50,22 @@ const rozkladReducer = (state, action) => {
         currentDep: state.departments[action.payload],
         user: {
           ...state.user,
-          role:
-            state.departments[action.payload].users.includes(
-              state.user.email
-            ) && 'staff',
+          role: state.departments[action.payload].users.includes(
+            state.user.email
+          )
+            ? 'staff'
+            : 'public',
+        },
+      };
+
+    case 'RESET_CURRENTDEP':
+      return {
+        ...state,
+        currentDep: undefined,
+        currentSemester: undefined,
+        user: {
+          ...state.user,
+          role: 'public',
         },
       };
     case 'SET_CURRENTACADEMICYEAR':

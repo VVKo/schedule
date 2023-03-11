@@ -40,6 +40,7 @@ export const RozkladProvider = ({ children }) => {
   const setActiveId = val => dispatch({ type: 'SET_ACTIVEID', payload: val });
   const setShowModal = val => dispatch({ type: 'SET_SHOWMODAL', payload: val });
   const setCurrentDep = id => dispatch({ type: 'SET_CURRENTDEP', payload: id });
+  const resetCurrentDep = () => dispatch({ type: 'RESET_CURRENTDEP' });
   const setCurrentAcademicYear = obj =>
     dispatch({ type: 'SET_CURRENTACADEMICYEAR', payload: obj });
   const setCurrentSemester = obj =>
@@ -503,6 +504,7 @@ export const RozkladProvider = ({ children }) => {
         addAudToServer,
         getDepartments,
         setCurrentDep,
+        resetCurrentDep,
         setCurrentAcademicYear,
         setCurrentSemester,
         setCurrentGroup,

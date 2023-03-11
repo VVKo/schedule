@@ -18,7 +18,7 @@ import StaffSchedule2 from './StaffSchedule2';
 const StaffMain = () => {
   const params = useParams();
   return (
-    <StaffMainSTYLED>
+    <main>
       {params.func === 'addaud' && <StaffAudFond />}
       {params.func === 'addgroup' && <StaffGroupFond />}
       {params.func === 'addteacher' && <StaffTeacherFond />}
@@ -32,7 +32,7 @@ const StaffMain = () => {
       {params.func === 'busyauds' && <StaffBusyAuds />}
       {params.func === 'population' && <StaffPopulation />}
       {params.func === 'schedule2' && <StaffSchedule2 />}
-    </StaffMainSTYLED>
+    </main>
   );
 };
 

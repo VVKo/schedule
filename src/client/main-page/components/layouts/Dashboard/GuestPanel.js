@@ -50,7 +50,7 @@ const GuestPanel = () => {
     academicloadfond,
   } = state;
 
-  if (!currentDep && !currentAcademicYear) return <Spinner />;
+  if (!currentDep && !currentAcademicYear) return null;
 
   const fondInit = (val, fond, getFond) => {
     if (!fond) {

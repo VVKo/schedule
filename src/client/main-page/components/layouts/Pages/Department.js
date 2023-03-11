@@ -35,6 +35,7 @@ const FineHeader = () => {
 const Department = () => {
   const match = useRouteMatch();
   const params = useParams();
+    console.log('Department',match, params)
   const { setCurrentDep } = useContext(RozkladContext);
 
   useEffect(() => {
@@ -46,13 +47,9 @@ const Department = () => {
       <Switch>
         <Route path={`${match.path}`}>
           <>
-            <FineHeader />
-            <StaffWorkShop />
+            {/*<FineHeader />*/}
+            {/*<StaffWorkShop />*/}
             <SchedulePublic />
-            {/* <FineScheduleNew weekNumber="1" /> */}
-
-            {/* <hr /> */}
-            {/* <FineScheduleNew weekNumber="2" /> */}
           </>
         </Route>
       </Switch>

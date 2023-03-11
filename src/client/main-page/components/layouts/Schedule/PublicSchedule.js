@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import {
   Document,
   Font,
@@ -8,10 +8,10 @@ import {
   StyleSheet,
 } from '@react-pdf/renderer';
 import { ImFilePdf } from 'react-icons/im';
-import RozkladContext from '../../../context/RozkladContext';
+import { Link } from 'react-router-dom';
 import ScheduleSingleGroup from '../Pages/StaffWorkShop/PDFWorkShop/ScheduleSingleGroup';
+import RozkladContext from '../../../context/RozkladContext';
 import SheduleWeekPublicGroup from './SheduleWeekPublicGoup';
-import { StaffMainSTYLED } from '../../Styled/StaffWorkShop/STYLED';
 
 Font.register({
   family: 'Roboto',
@@ -48,8 +48,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
 });
-const SchedulePublic = () => {
-  console.log('SchedulePublic')
+const PublicSchedule = () => {
   const { state } = useContext(RozkladContext);
 
   const {
@@ -60,23 +59,6 @@ const SchedulePublic = () => {
     academicloadfond,
     disciplinefond,
   } = state;
-
-
-  if (
-    user.role === 'staff' ||
-    !academicloadfond ||
-    !disciplinefond ||
-    (typeof currentSemester === 'undefined' &&
-      typeof currentTeacher === 'undefined')
-  )
-    return null;
-
-  if (
-    currentGroup === 'Виберіть групу' &&
-    currentTeacher === 'Виберіть викладача'
-  )
-    return null;
-
 
   console.log('currentTeacher', currentTeacher, 'currentGroup', currentGroup);
 
@@ -90,7 +72,15 @@ const SchedulePublic = () => {
       <div>
         <Container>
           <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h3 className="h3">{currentGroup === 'Виберіть групу' ? currentTeacher : currentGroup}</h3>
+            <h3 className="h3">
+              {!currentGroup ? currentTeacher : currentGroup}
+            </h3>
+            <Link to={'/grouplist'}>
+              <h5>До груп</h5>
+            </Link>
+            <Link to={'/teacherlist'}>
+              <h5>До викладачів</h5>
+            </Link>
             <PDFDownloadLink
               document={
                 <Document>
@@ -107,11 +97,13 @@ const SchedulePublic = () => {
                   </Page>
                 </Document>
               }
-              fileName={`${currentGroup === 'Виберіть групу' ? currentTeacher : currentGroup}.pdf`}
+              fileName={`${!currentGroup ? currentTeacher : currentGroup}.pdf`}
             >
               {({ blob, url, loading, error }) =>
                 loading ? (
-                  `Генерується документ ${currentGroup === 'Виберіть групу' ? currentTeacher : currentGroup}.pdf`
+                  `Генерується документ ${
+                    !currentGroup ? currentTeacher : currentGroup
+                  }.pdf`
                 ) : (
                   <ImFilePdf size={32} />
                 )
@@ -133,5 +125,4 @@ const SchedulePublic = () => {
     </>
   );
 };
-
-export default SchedulePublic;
+export default PublicSchedule;

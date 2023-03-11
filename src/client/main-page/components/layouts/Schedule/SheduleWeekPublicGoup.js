@@ -21,9 +21,15 @@ const SheduleWeekPublicGroup = ({ wn }) => {
     currentSemester,
     currentTeacher,
     currentGroup,
+    disciplinefond
   } = state;
 
   if (!academicloadfond) return null;
+
+  const forPRINT = {};
+  disciplinefond[currentSemester.name].data.forEach(r => {
+    forPRINT[r[0]] = r[1] === '' ? r[0] : r[1];
+  });
 
   const TriggerExample = ({ obj }) => {
     const popover = (
@@ -56,7 +62,7 @@ const SheduleWeekPublicGroup = ({ wn }) => {
             obj['місце проведення'] === 'ONLINE' ? 'info' : 'success'
           }`}
         >
-          <FiEye />
+          <FiEye /> {obj.disc}
         </Button>
       </OverlayTrigger>
     );
@@ -68,34 +74,33 @@ const SheduleWeekPublicGroup = ({ wn }) => {
     const p = +para - 1;
     const col = 8 + 16 * d + 2 * p + w;
 
-    const arr =
-      currentGroup !== 'Виберіть групу'
-        ? academicloadfond[currentSemester.name].data
-            .map((r, idx) => [idx + 4, ...r])
-            .filter(r => r[2].includes(`${currentGroup}гр`))
-            .filter(r => r[col + 1] !== '')
-            .map(r => {
-              return {
-                disc: r[1],
-                група: r[2],
-                тип: r[3],
-                викладач: r[5],
-                'місце проведення': r[col + 1],
-              };
-            })
-        : academicloadfond[currentSemester.name].data
-            .map((r, idx) => [idx + 4, ...r])
-            .filter(r => r[5] === currentTeacher)
-            .filter(r => r[col + 1] !== '')
-            .map(r => {
-              return {
-                disc: r[1],
-                група: r[2],
-                тип: r[3],
-                // викладач: r[5],
-                'місце проведення': r[col + 1],
-              };
-            });
+    const arr = currentGroup
+      ? academicloadfond[currentSemester.name].data
+          .map((r, idx) => [idx + 4, ...r])
+          .filter(r => r[2].includes(`${currentGroup}гр`))
+          .filter(r => r[col + 1] !== '')
+          .map(r => {
+            return {
+              disc: forPRINT[r[1]],
+              група: r[2],
+              тип: r[3],
+              викладач: r[5],
+              'місце проведення': r[col + 1],
+            };
+          })
+      : academicloadfond[currentSemester.name].data
+          .map((r, idx) => [idx + 4, ...r])
+          .filter(r => r[5] === currentTeacher)
+          .filter(r => r[col + 1] !== '')
+          .map(r => {
+            return {
+              disc: forPRINT[r[1]],
+              група: r[2],
+              тип: r[3],
+              // викладач: r[5],
+              'місце проведення': r[col + 1],
+            };
+          });
 
     return (
       <>

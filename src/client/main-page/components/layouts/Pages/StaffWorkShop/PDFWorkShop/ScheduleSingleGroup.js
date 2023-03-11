@@ -132,33 +132,32 @@ const ScheduleSingleGroup = ({ fond, forPRINT, state }) => {
     const w = week === '1т.' ? 0 : 1;
     const p = +para - 1;
     const col = 8 + 16 * d + 2 * p + w;
-    const arr =
-      currentGroup !== 'Виберіть групу'
-        ? fond
-            .map((r, idx) => [idx + 4, ...r])
-            .filter(r => r[2].includes(`${currentGroup}гр`))
-            .filter(r => r[col + 1] !== '')
-            .map(r => {
-              return {
-                disc: forPRINT[r[1]],
-                група: r[2],
-                тип: r[3],
-                викладач: r[5],
-                'місце проведення': r[col + 1],
-              };
-            })
-        : fond
-            .map((r, idx) => [idx + 4, ...r])
-            .filter(r => r[5] === currentTeacher)
-            .filter(r => r[col + 1] !== '')
-            .map(r => {
-              return {
-                disc: forPRINT[r[1]],
-                група: r[2],
-                тип: r[3],
-                'місце проведення': r[col + 1],
-              };
-            });
+    const arr = currentGroup
+      ? fond
+          .map((r, idx) => [idx + 4, ...r])
+          .filter(r => r[2].includes(`${currentGroup}гр`))
+          .filter(r => r[col + 1] !== '')
+          .map(r => {
+            return {
+              disc: forPRINT[r[1]],
+              група: r[2],
+              тип: r[3],
+              викладач: r[5],
+              'місце проведення': r[col + 1],
+            };
+          })
+      : fond
+          .map((r, idx) => [idx + 4, ...r])
+          .filter(r => r[5] === currentTeacher)
+          .filter(r => r[col + 1] !== '')
+          .map(r => {
+            return {
+              disc: forPRINT[r[1]],
+              група: r[2],
+              тип: r[3],
+              'місце проведення': r[col + 1],
+            };
+          });
     return (
       <View
         style={{
@@ -185,8 +184,16 @@ const ScheduleSingleGroup = ({ fond, forPRINT, state }) => {
           >
             <Text style={{ fontWeight: 'bold' }}>{o.disc}</Text>
             <Text>{o.тип}</Text>
-            {currentGroup !== 'Виберіть групу' ? <Text>{o.група.split("+").filter(g => g.includes(`${currentGroup}гр`))}</Text> : <Text>{o.група}</Text>}
-            {currentGroup !== 'Виберіть групу' && <Text>{o.викладач}</Text>}
+            {currentGroup ? (
+              <Text>
+                {o.група
+                  .split('+')
+                  .filter(g => g.includes(`${currentGroup}гр`))}
+              </Text>
+            ) : (
+              <Text>{o.група}</Text>
+            )}
+            {currentGroup && <Text>{o.викладач}</Text>}
             <Text>
               {o['місце проведення'] === 'ONLINE'
                 ? o['місце проведення']
